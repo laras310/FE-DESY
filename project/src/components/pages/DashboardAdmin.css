@@ -1,14 +1,7 @@
 html{
     background-color: #c9c9c944;
 }
-.App{
-    min-height: 100vh;
-}
 
-.logo{
-    text-align: center;
-    height: 20vmin;
-}
 
 .card{
     background-color: white;
@@ -25,6 +18,11 @@ html{
     justify-content: space-evenly;
     flex-wrap: wrap;
     gap: 20px;
+    
+}
+
+.card-section{
+    margin: 2rem;
 }
 .flex{
     display: flex;
@@ -34,12 +32,16 @@ html{
 }
 
 .p-17{
-    padding: 17%;
+    padding: 16%;
 }
 
 .m-0{
     margin: 0;
 }
+
+/* .mt-5{
+    padding-top: 10rem;
+} */
 
 .header{
     position: fixed;
