@@ -7,7 +7,7 @@ import DashboardAdmin from './components/pages/DashboardAdmin';
 import { Switch, Route } from 'react-router-dom';
 import ListPekerjaan from './components/pages/ListPekerjaan';
 import DaftarPekerjaan from './components/pages/DaftarPekerjaan';
-import DismissibleExample from './components/includes/DismissibleExample';
+import DetailPekerjaan from './components/pages/DetailPekerjaan';
 
 function App() {
   return (
@@ -28,8 +28,8 @@ function App() {
       <Route path="/daftar-pekerjaan">
         <DaftarPekerjaan></DaftarPekerjaan>
       </Route>
-      <Route path="/toast">
-        <DismissibleExample/>
+      <Route path="/detail-pekerjaan">
+        <DetailPekerjaan></DetailPekerjaan>
       </Route>
     </Switch>
     

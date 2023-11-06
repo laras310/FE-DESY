@@ -7,11 +7,12 @@ import { Bell } from 'react-bootstrap-icons';
 
 export default function Header(){
     return(
-    <Navbar bg="light" className='justify-content-end ' >
-        <Bell size={25} />
-        <Nav className="mx-4">
-            <Image src="/assets/images/profil.jpg" alt="Profile" roundedCircle width={40} height={40} />
-        </Nav>
-    </Navbar>
+        <></>
+    // <Navbar bg="light" className='justify-content-end ' >
+    //     <Bell size={25} />
+    //     <Nav className="mx-4">
+    //         <Image src="/assets/images/profil.jpg" alt="Profile" roundedCircle width={40} height={40} />
+    //     </Nav>
+    // </Navbar>
     )
 }

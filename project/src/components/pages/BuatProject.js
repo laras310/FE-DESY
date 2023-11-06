@@ -2,7 +2,7 @@ import { Card, Button, Form } from 'react-bootstrap';
 import Modal from 'react-bootstrap/Modal';
 import ProgressBar from 'react-bootstrap/ProgressBar';
 
-export default function ModalPekerjaan(props) {
+export default function ModalBuatPekerjaan(props) {
     return (
       <Modal
         {...props}

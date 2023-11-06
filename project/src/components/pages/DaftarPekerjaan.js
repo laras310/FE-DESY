@@ -9,6 +9,7 @@ import styled from 'styled-components';
 import { Button} from 'react-bootstrap';
 import { useState } from 'react';
 import ModalPekerjaan from '../includes/ModalPekerjaan';
+// import ModalDetail from '../includes/ModalDetail';
 
 const StyledCard = styled(Card)`
   transition: transform 0.2s;
@@ -21,6 +22,7 @@ const StyledCard = styled(Card)`
 function DaftarPekerjaan() {
   const history = useHistory()
   const [modalShow, setModalShow] =useState(false)
+  // const [modalDetailShow, setModalDetailShow]= useState(false)
 
   return (
     <div>
@@ -34,12 +36,13 @@ function DaftarPekerjaan() {
             <Row >
               <Col md={4}>
                 <StyledCard className='my-3 '  
-                // onClick={handleClick}
+                  
                 >
-                  <Card.Body>
-                    <Card.Title>Pekerjaan Idle</Card.Title>
+                  <Card.Body >
+                    <Card.Title >Proyek Idle</Card.Title>
                     <Card.Text >1</Card.Text>
                     <Button onClick={() => setModalShow(true)}>Update Cepat</Button>
+                    {/* <Button onClick={() => setModalDetailShow(true)}>Detail</Button> */}
                     
                   </Card.Body>
                 </StyledCard>
@@ -49,7 +52,7 @@ function DaftarPekerjaan() {
               <Col md={4}>
                 <StyledCard className='my-3 ' >
                   <Card.Body>
-                    <Card.Title>Pekerjaan Berjalan</Card.Title>
+                    <Card.Title>Proyek Berjalan</Card.Title>
                     <Card.Text >2</Card.Text>
                     <Button onClick={() => setModalShow(true)}>Update Cepat</Button>
                   </Card.Body>
@@ -58,7 +61,7 @@ function DaftarPekerjaan() {
               <Col md={4}>
                 <StyledCard className='my-3 ' >
                   <Card.Body>
-                    <Card.Title>Pekerjaan Selesai</Card.Title>
+                    <Card.Title>Proyek Selesai</Card.Title>
                     <Card.Text >3</Card.Text>
                     <Button onClick={() => setModalShow(true)}>Update Cepat</Button>
                   </Card.Body>
@@ -71,6 +74,9 @@ function DaftarPekerjaan() {
            show={modalShow}
         onHide={() => setModalShow(false)}
            />
+           {/* <ModalDetail
+           show={modalDetailShow}
+           onhide={()=> setModalDetailShow(false)}/> */}
            
       </Container>
       <Container>

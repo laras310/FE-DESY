@@ -2,17 +2,26 @@ import Header from "../includes/Header";
 import MyBurgerMenu from "../includes/MyBurgerMenu";
 import { ListGroup, Button, Card, Container, Table } from "react-bootstrap";
 import { useState } from "react";
+import { useHistory } from "react-router-dom";
 import { Star, StarFill, ChatDots, Paperclip } from "react-bootstrap-icons";
 // import ZeroList from "../includes/ZeroList";
 import styled from 'styled-components';
 // import Table from "react-bootstrap/Table";
 
-const StyledContainer = styled(Container)`
-  // transition: transform 0.2s;
+const StyledStar = styled(Star)`
+  transition: transform 0.2s;
 
-  // &:hover {
-  //   transform: scale(1.05);
-  // }
+  &:hover {
+    transform: scale(1.5);
+  }
+`
+;
+const StyledStarFill = styled(StarFill)`
+  transition: transform 0.2s;
+
+  &:hover {
+    transform: scale(1.5);
+  }
 `
 ;
 
@@ -24,6 +33,7 @@ const initialItems = [
   ];
 
 export default function ListPekerjaan(){
+  const history = useHistory()
     const alertClicked = () => {
         alert('You clicked the third ListGroupItem');
       };
@@ -96,17 +106,16 @@ export default function ListPekerjaan(){
               </thead>
               <tbody>
                 {items.map((item) => (
-                  <tr key={item.id}>
+                  <tr key={item.id} >
                     <td onClick={() => toggleStar(item.id)}>
-                      {item.starred ? <Star className="align-middle" /> : <StarFill className="text-warning" />}
+                      {item.starred ? <StyledStar className="align-middle" /> : <StyledStarFill className="text-warning" />}
                     </td>
-                    <td>{item.projectName}</td>
-                    <td>{item.namaAM}</td>
-                    <td>{item.unit}</td>
-                    <td>{item.update}</td>
+                    <td onClick={()=>history.push('/detail-pekerjaan')}>{item.projectName}</td>
+                    <td onClick={()=>history.push('/detail-pekerjaan')}>{item.namaAM}</td>
+                    <td onClick={()=>history.push('/detail-pekerjaan')}>{item.unit}</td>
+                    <td onClick={()=>history.push('/detail-pekerjaan')}>{item.update}</td>
                     <td className="d-flex flex-row justify-content-evenly"><h4><Paperclip/> 1</h4>
                     <h4><ChatDots/> 2</h4></td>
-                    {/* <td></td> */}
                   </tr>
                 ))}
               </tbody>
