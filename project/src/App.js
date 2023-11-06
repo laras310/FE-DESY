@@ -6,6 +6,8 @@ import DashboardUser from './components/pages/DashboardUser';
 import DashboardAdmin from './components/pages/DashboardAdmin';
 import { Switch, Route } from 'react-router-dom';
 import ListPekerjaan from './components/pages/ListPekerjaan';
+import DaftarPekerjaan from './components/pages/DaftarPekerjaan';
+import DismissibleExample from './components/includes/DismissibleExample';
 
 function App() {
   return (
@@ -22,6 +24,12 @@ function App() {
       </Route>
       <Route path="/list-pekerjaan">
         <ListPekerjaan></ListPekerjaan>
+      </Route>
+      <Route path="/daftar-pekerjaan">
+        <DaftarPekerjaan></DaftarPekerjaan>
+      </Route>
+      <Route path="/toast">
+        <DismissibleExample/>
       </Route>
     </Switch>
     
