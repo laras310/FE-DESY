@@ -26,9 +26,12 @@ export default function Login() {
       method: 'POST',
       headers: {
         "Content-Type": "application/json",
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Headers': '*',
+        // 'Access-Control-Allow-Credentials':'true'
       },
-      withCredentials: true,
-      url: '/auth/token/request',
+      // withCredentials: true,
+      url: 'https://api.pins.co.id/api/auth/token/request',
       data: {
         username: username,
         password: password
@@ -45,7 +48,7 @@ export default function Login() {
           'token_type', response.data.data.token_type
         )
         localStorage.setItem('role', role)
-        console.log(Cookies)
+        console.log(localStorage)
         if (role === 'user') {
           history.push('/user-dashboard')
           

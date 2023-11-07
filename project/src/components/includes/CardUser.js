@@ -5,54 +5,64 @@ import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import { useHistory } from 'react-router-dom';
-import CardUser from '../includes/CardUser';
+import styled from 'styled-components';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 
-function DashboardUser() {
-  const [profil, setProfil] = useState([]);
+const StyledCard = styled(Card)`
+  transition: transform 0.2s;
 
-useEffect(() => {
-  axios({
-    method: "GET",
-    url: "https://api.pins.co.id/api/auth/token/detail",
-    headers: {
-      Authorization: 'Bearer ' + localStorage.getItem('access_token')
-    }
-  })
-    .then((response) => {
-      const res = response.data.data;
-      setProfil(res);
-    })
-    .catch((error) => {
-      if (error.response) {
-        console.log(error.response.data);
-        console.log(error.response.status);
-        console.log(error.response.headers);
-      } else if (error.request) {
-        console.log(error.request);
-      } else {
-        console.log(error.message);
+  &:hover {
+    transform: scale(1.05);
+  }
+`;
+
+const CardUser = ({profil}) =>{
+    
+  const history = useHistory()
+    function handleClick() {
+        history.push("/list-pekerjaan");
       }
-    });
-}, []);
 
-useEffect(() => {
-  // Memantau perubahan nilai profil
-  console.log(profil);
-}, [profil]);
-
-
-  return (
-    <div>
+      useEffect(() => {
+        axios({
+          method: "GET",
+          url: "https://jobcard-api.pins.co.id/api/task/all",
+          headers: {
+            Authorization: 'Bearer ' + localStorage.getItem('access_token')
+          }
+        })
+          .then((response) => {
+            const res = response.data.data;
+            console.log(res)
+            // setProfil(res);
+          })
+          .catch((error) => {
+            if (error.response) {
+              console.log(error.response.data);
+              console.log(error.response.status);
+              console.log(error.response.headers);
+            } else if (error.request) {
+              console.log(error.request);
+            } else {
+              console.log(error.message);
+            }
+          });
+      }, []);
       
-      <MyBurgerMenu/>
-      <Header></Header>
-      <CardUser profil={profil}/>
-      {/* <Container className='justify-content-center d-flex align-items-start flex-column p-3 pt-5'>
+      useEffect(() => {
+        // Memantau perubahan nilai profil
+        console.log(profil);
+      }, [profil]);
+
+    return(
+        <Container className='justify-content-center d-flex align-items-start flex-column p-3 pt-5'>
           <h1 className='m-0 light pt-5'>Selamat Pagi,</h1>
           <h1 >{profil.name}</h1>
           
+          {/* <div style={{margin:"12px"}} className='border border-success pt-3'> */}
+            
+          {/* </div> */}
           <Container fluid>
             <Row >
               <Col md={4}>
@@ -84,9 +94,8 @@ useEffect(() => {
             </Row>
            </Container>
           
-      </Container> */}
-    </div>
-  );
+      </Container>
+    )
 }
 
-export default DashboardUser;
+export default CardUser;
