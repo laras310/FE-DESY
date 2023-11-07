@@ -23,12 +23,12 @@ function App() {
           component={DashboardUser}
           isAuthorized={isAuthorized && userRole === 'user'}
         />
-        <ProtectedRoute
-          path="/admin-dashboard"
-          component={DashboardAdmin}
-          isAuthorized={isAuthorized && userRole === 'admin'}
-        />
-        <Redirect to="/login" />
+      <ProtectedRoute
+        path="/admin-dashboard"
+        component={DashboardAdmin}
+        isAuthorized={isAuthorized && userRole === 'admin'}
+      />
+      <Redirect to="/login" />
       {/* <Route exact path="/login">
         <Login></Login>
       </Route>

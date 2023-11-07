@@ -46,12 +46,12 @@ export default function Login() {
         )
         localStorage.setItem('role', role)
         console.log(Cookies)
-        // if (role === 'user') {
-          history.push('/user')
+        if (role === 'user') {
+          history.push('/user-dashboard')
           
-        // } else {
-          // history.push('/admin')
-        // }
+        } else {
+          history.push('/admin-dashboard')
+        }
         // Handle any further logic or UI updates here
       })
       .catch(error => {
