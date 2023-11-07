@@ -8,13 +8,29 @@ import { Switch, Route } from 'react-router-dom';
 import ListPekerjaan from './components/pages/ListPekerjaan';
 import DaftarPekerjaan from './components/pages/DaftarPekerjaan';
 import DetailPekerjaan from './components/pages/DetailPekerjaan';
+import ProtectedRoute from './components/route/ProtectedRoute';
+import { Redirect } from 'react-router-dom';
 
 function App() {
+  const isAuthorized = localStorage.getItem('access_token') !== null;
+  const userRole = localStorage.getItem('role');
+  console.log(userRole)
   return (
     <Switch>
-      <Route exact path="/login">
+      <Route path="/login" component={Login}></Route>
+      <ProtectedRoute
+          path="/user-dashboard"
+          component={DashboardUser}
+          isAuthorized={isAuthorized && userRole === 'user'}
+        />
+        <ProtectedRoute
+          path="/admin-dashboard"
+          component={DashboardAdmin}
+          isAuthorized={isAuthorized && userRole === 'admin'}
+        />
+        <Redirect to="/login" />
+      {/* <Route exact path="/login">
         <Login></Login>
-        {/* <Tes></Tes> */}
       </Route>
       <Route path="/user">
         <DashboardUser></DashboardUser>
@@ -30,7 +46,7 @@ function App() {
       </Route>
       <Route path="/detail-pekerjaan">
         <DetailPekerjaan></DetailPekerjaan>
-      </Route>
+      </Route> */}
     </Switch>
     
   

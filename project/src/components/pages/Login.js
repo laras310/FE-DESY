@@ -4,22 +4,28 @@ import Container from 'react-bootstrap/Container';
 import Form from 'react-bootstrap/Form';
 import Card from 'react-bootstrap/Card';
 import { FloatingLabel } from 'react-bootstrap';
-import { useHistory } from 'react-router-dom';
+import { history } from 'react-router-dom';
 import axios from 'axios';
 import { useState, useRef, useEffect, useContext } from 'react';
+import { useHistory } from 'react-router-dom/cjs/react-router-dom.min';
+import Cookies from 'js-cookie';
+
+// Untuk menyimpan access token dalam cookie
+
+
 
 export default function Login() {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [role, setRole] = useState('')
 
+  const history=useHistory()
+
   function LogMeIn(event){
     axios({
       method: 'POST',
       headers: {
         "Content-Type": "application/json",
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Headers': '*',
       },
       withCredentials: true,
       url: '/auth/token/request',
@@ -30,17 +36,22 @@ export default function Login() {
     })
       .then(response => {
         // history.push(redirect || '/');
+        Cookies.set('access_token', response.data.data.access_token);
         localStorage.setItem(
-          'session',
-          JSON.stringify(response.data.data.access_token)
+          'access_token',
+          response.data.data.access_token
+        )
+        localStorage.setItem(
+          'token_type', response.data.data.token_type
         )
         localStorage.setItem('role', role)
-        if (role === 'user') {
-          setTimeout(() => window.location.replace("/user"), 1000)
+        console.log(Cookies)
+        // if (role === 'user') {
+          history.push('/user')
           
-        } else {
-          setTimeout(() => window.location.replace("/admin"), 1000)
-        }
+        // } else {
+          // history.push('/admin')
+        // }
         // Handle any further logic or UI updates here
       })
       .catch(error => {
