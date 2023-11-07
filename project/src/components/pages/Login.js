@@ -1,35 +1,135 @@
-// import logo from '../logo.svg';
-// import '../../App.css';
-import './Login.css';
-// import MyBurgerMenu from './MyBurgerMenu';
+import React from 'react';
+import Button from 'react-bootstrap/Button';
+import Container from 'react-bootstrap/Container';
+import Form from 'react-bootstrap/Form';
+import Card from 'react-bootstrap/Card';
+import { FloatingLabel } from 'react-bootstrap';
+import { history } from 'react-router-dom';
+import axios from 'axios';
+import { useState, useRef, useEffect, useContext } from 'react';
+import { useHistory } from 'react-router-dom/cjs/react-router-dom.min';
+import Cookies from 'js-cookie';
 
-function Login() {
-  return (
-    <div className="App">
-      {/* <MyBurgerMenu /> */}
-      {/* <header className="App-header"> */}
+// Untuk menyimpan access token dalam cookie
 
-        <div className='card'>
-          <img src='/assets/images/PINS-Logo-IoT2.png' alt="logo" className='logo'/>
-          <div className='p-0'>
-            <p>Selamat datang di Aplikasi</p>
-            <p>Distributed Electronic Assignment System (DESY)</p>
-          </div>
-          <br/>
-          <p>Silahkan login untuk melanjutkan</p>
+
+
+export default function Login() {
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
+  const [role, setRole] = useState('')
+
+  const history=useHistory()
+
+  function LogMeIn(event){
+    axios({
+      method: 'POST',
+      headers: {
+        "Content-Type": "application/json",
+      },
+      withCredentials: true,
+      url: '/auth/token/request',
+      data: {
+        username: username,
+        password: password
+      },
+    })
+      .then(response => {
+        // history.push(redirect || '/');
+        Cookies.set('access_token', response.data.data.access_token);
+        localStorage.setItem(
+          'access_token',
+          response.data.data.access_token
+        )
+        localStorage.setItem(
+          'token_type', response.data.data.token_type
+        )
+        localStorage.setItem('role', role)
+        console.log(Cookies)
+        // if (role === 'user') {
+          history.push('/user')
           
-          <form action="#" className='form container p-0'>
-              <input name="email" placeholder='Email Address'/>
-              <input name="password" placeholder='Password LDAP' type='password'/>
-              <button type="submit">LOGIN AS USER</button>
-              <p>or</p>
-              <button type="submit">LOGIN AS ADMIN</button>
-          </form>
+        // } else {
+          // history.push('/admin')
+        // }
+        // Handle any further logic or UI updates here
+      })
+      .catch(error => {
+        if (error.response) {
+          // The request was made, but the server responded with a non-2xx status code
+          console.error("Error status:", error.response.status);
+          console.error("Error data:", error.response.data);
+        } else {
+          // Something happened in setting up the request that triggered an error
+          console.error("Error message:", error.message);
+        }
+      });
+    
+    event.preventDefault();    
+  }
 
-        {/* </header> */}
-        </div>
-      </div>
+  return (
+    <Container className='vh-100 justify-content-center d-flex align-items-center justify-content-center'>
+      <Card style={{width:'60vh'}} className='justify-content-center d-flex align-items-center justify-content-center text-center p-5 shadow'>
+           <Card.Img variant="top" src="/assets/images/PINS-Logo-IoT2.png" style={{ width: '50%' }}
+         />
+         <Card.Subtitle className='mt-5 fw-normal mb-2'>Selamat datang di Aplikasi</Card.Subtitle>
+         <Card.Title className='fw-normal mb-2'>
+          Distributed Electronic Assignment System (DESY)
+         </Card.Title>
+         <Card.Body>Silahkan login untuk melanjutkan</Card.Body>
+        
+         <Form className='w-100' onSubmit={LogMeIn}>
+            <FloatingLabel controlId="username" label="Username" className='mb-3'>
+              <Form.Control
+              type="text"
+                placeholder='Username' name="username" onChange={e => setUsername(e.target.value)} value={username}
+            />
+            </FloatingLabel>
+            
+           <FloatingLabel controlId="password" label="Password" className='mb-3'>
+            <Form.Control
+              type="password"
+                placeholder='Password' name="password" onChange={e => setPassword(e.target.value)} value={password}
+            />
+           </FloatingLabel>
+           <FloatingLabel controlId="floatingSelect" label="Login as" className='mb-3'>
+              <Form.Select aria-label="Floating label select example"
+              value={role}
+              onChange={e => setRole(e.target.value)}
+              >
+                <option  disabled value=""> -- select an option -- </option>
+                <option value="user">User</option>
+                <option value="admin">Admin</option>
+              </Form.Select>
+            </FloatingLabel>
+
+            {/* <Form.Label>Login as</Form.Label>
+            <Form.Check
+            inline
+            label="User"
+            name="option"
+            type="radio"
+            value="user"
+            checked={role === 'user'}
+            onChange={e => setRole(e.target.value)}
+          />
+          
+          <Form.Check
+            inline
+            label="Admin"
+            name="option"
+            type="radio"
+            value="admin"
+          /> */}
+           <Button variant="danger" type="submit" name="asuser" className=' my-2 mt-3 w-100' 
+           >LOGIN</Button>
+           {/* <p className='text-center m-0'>or</p> */}
+           {/* <Button variant="danger" type="submit" name="asadmin" className='my-2 mt-3 w-100' 
+           >LOGIN AS ADMIN</Button> */}
+         </Form>
+      </Card>
+
+    </Container>
   );
 }
-
-export default Login;
