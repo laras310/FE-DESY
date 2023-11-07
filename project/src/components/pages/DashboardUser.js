@@ -6,6 +6,7 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import { useHistory } from 'react-router-dom';
 import styled from 'styled-components';
+import { useState } from 'react';
 
 const StyledCard = styled(Card)`
   transition: transform 0.2s;
@@ -21,6 +22,7 @@ function DashboardUser() {
   function handleClick() {
     history.push("/list-pekerjaan");
   }
+  const [profil, setProfil]=useState()
 
   return (
     <div>

@@ -12,7 +12,7 @@ import DetailPekerjaan from './components/pages/DetailPekerjaan';
 function App() {
   return (
     <Switch>
-      <Route exact path="/">
+      <Route exact path="/login">
         <Login></Login>
         {/* <Tes></Tes> */}
       </Route>
