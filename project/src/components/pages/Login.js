@@ -4,9 +4,8 @@ import Container from 'react-bootstrap/Container';
 import Form from 'react-bootstrap/Form';
 import Card from 'react-bootstrap/Card';
 import { FloatingLabel } from 'react-bootstrap';
-import { history } from 'react-router-dom';
 import axios from 'axios';
-import { useState, useRef, useEffect, useContext } from 'react';
+import { useState} from 'react';
 import { useHistory } from 'react-router-dom/cjs/react-router-dom.min';
 import Cookies from 'js-cookie';
 
@@ -48,14 +47,13 @@ export default function Login() {
           'token_type', response.data.data.token_type
         )
         localStorage.setItem('role', role)
-        console.log(localStorage)
         if (role === 'user') {
-          history.push('/user-dashboard')
+          window.location.replace("/user-dashboard");
           
-        } else {
-          history.push('/admin-dashboard')
+        } 
+        else if (role === 'admin') {
+          window.location.replace("/admin-dashboard");
         }
-        // Handle any further logic or UI updates here
       })
       .catch(error => {
         if (error.response) {

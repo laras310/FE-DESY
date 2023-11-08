@@ -34,8 +34,6 @@ const CardUser = ({profil}) =>{
         })
           .then((response) => {
             const res = response.data.data;
-            console.log(res)
-            // setProfil(res);
           })
           .catch((error) => {
             if (error.response) {
@@ -49,11 +47,6 @@ const CardUser = ({profil}) =>{
             }
           });
       }, []);
-      
-      useEffect(() => {
-        // Memantau perubahan nilai profil
-        console.log(profil);
-      }, [profil]);
 
     return(
         <Container className='justify-content-center d-flex align-items-start flex-column p-3 pt-5'>
