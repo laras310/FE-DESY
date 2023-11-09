@@ -57,7 +57,7 @@ export default function ListPekerjaan(){
       <Header></Header>
       {/* <ZeroList/> */}
         
-        <div className="p-4">
+        <Container className='justify-content-center d-flex align-items-start flex-column p-3 pt-5'>
             {/* <DataTable
             columns={columns}
             data={data}
@@ -88,11 +88,11 @@ export default function ListPekerjaan(){
                 ))}
             </ListGroup>
             </Card> */}
-          <h1>Pekerjaan Berjalan</h1>
-          <Container 
-          className="border border-secondary rounded"
+          
+          <Card 
+          className="w-100 p-3"
           >
-            
+            <h1>Pekerjaan Berjalan</h1>
             <Table hover className="rounded text-center" responsive="sm">
               <thead>
                 <tr>
@@ -120,8 +120,8 @@ export default function ListPekerjaan(){
                 ))}
               </tbody>
             </Table>
-          </Container>
-        </div>
+          </Card>
+        </Container>
     </div>
     )
 }

@@ -6,7 +6,7 @@ import Offcanvas from 'react-bootstrap/Offcanvas';
 import { Image, Dropdown} from 'react-bootstrap';
 import ProfilToggle from './Atom/ProfilToggle';
 import NotifToggle from './Atom/NotifToggle';
-import ModalBuatProject from './Atom/ModalBuatProject';
+// import ModalBuatProject from './Atom/ModalBuatProject';
 
 import { useState } from 'react';
 
@@ -31,7 +31,7 @@ export default function AdminMenu(){
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
   return(
-    <Navbar className="bg-body-tertiary" expand={'lg'}>
+    <Navbar className="bg-body-tertiary shadow" expand={'lg'}>
       <Container fluid>
         <div className='justify-content-start'>
           <Navbar.Toggle />
@@ -48,7 +48,7 @@ export default function AdminMenu(){
         <Navbar.Offcanvas
           id={`offcanvasNavbar-expand-lg`}
           aria-labelledby={`offcanvasNavbarLabel-expand-lg`}
-          placement="end"
+          placement="start"
         >
           <Offcanvas.Header closeButton>
             <Offcanvas.Title id={`offcanvasNavbarLabel-expand-lg`}>
@@ -59,9 +59,8 @@ export default function AdminMenu(){
             <Nav className="justify-content-end flex-grow-1 pe-3">
               <Nav.Link 
               href="/admin-dashboard"
-              // onClick={()=>window.location.replace("/admin-dashboard")}
               >Home</Nav.Link>
-              <Nav.Link href="/all-task">Daftar Pekerjaan</Nav.Link>
+              <Nav.Link href="/all-task">Proyek</Nav.Link>
             </Nav>
                 
           </Offcanvas.Body>
@@ -83,7 +82,7 @@ export default function AdminMenu(){
             </Dropdown.Menu>
           </Dropdown>
         </div>
-        <ModalBuatProject show={show} onHide={handleClose}/>
+        {/* <ModalBuatProject show={show} onHide={handleClose}/> */}
       </Container>
     </Navbar>
   )

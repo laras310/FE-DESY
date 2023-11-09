@@ -6,6 +6,7 @@ import { useHistory } from "react-router-dom";
 import { Star, StarFill, ChatDots, Paperclip } from "react-bootstrap-icons";
 // import ZeroList from "../includes/ZeroList";
 import styled from 'styled-components';
+import axios from "axios";
 
 const StyledStar = styled(Star)`
   transition: transform 0.2s;
@@ -26,9 +27,9 @@ const StyledStarFill = styled(StarFill)`
 
 
 const initialItems = [
-    { id: 1, projectName: 'Project 1',namaAM: 'Jane Doe', unit:'Bisnis', starred: false, update:'1 Mei 2023, 11:14:21' },
-    { id: 2, projectName: 'Project 2',namaAM: 'Jane Doe', unit:'Bisnis', starred: true, update:'1 Mei 2023, 11:14:21'},
-    { id: 3, projectName: 'Project 3',namaAM: 'Jane Doe', unit:'Bisnis', starred: false, update:'1 Mei 2023, 11:14:21'},
+    { id: 1, projectName: 'Project 1',namaAM: 'Jane Doe', unit:'0%', starred: false, update:'1 Mei 2023, 11:14:21' },
+    { id: 2, projectName: 'Project 2',namaAM: 'Jane Doe', unit:'0%', starred: true, update:'1 Mei 2023, 11:14:21'},
+    { id: 3, projectName: 'Project 3',namaAM: 'Jane Doe', unit:'0%', starred: false, update:'1 Mei 2023, 11:14:21'},
   ];
 
 export default function AllTask(){
@@ -57,7 +58,10 @@ export default function AllTask(){
       {/* <ZeroList/> */}
         
         <div className="p-4">
-          <h1>Pekerjaan Berjalan</h1>
+          <h1>AllTask</h1>
+          <Button
+          onClick={()=>history.push("/buat-task")}
+          >Buat Project</Button>
            <Container 
           className="border border-secondary rounded"
           >
@@ -67,10 +71,10 @@ export default function AllTask(){
                 <tr>
                   <th>#</th>
                   <th>Project Name</th>
-                  <th>Nama AM</th>
                   <th>Unit</th>
+                  <th>Progress(%)</th>
                   <th>Last Update</th>
-                  <th>Tindakan</th>
+                  {/* <th>Tindakan</th> */}
                 </tr>
               </thead>
               <tbody>
@@ -83,8 +87,8 @@ export default function AllTask(){
                     <td onClick={()=>history.push('/detail-pekerjaan')}>{item.namaAM}</td>
                     <td onClick={()=>history.push('/detail-pekerjaan')}>{item.unit}</td>
                     <td onClick={()=>history.push('/detail-pekerjaan')}>{item.update}</td>
-                    <td className="d-flex flex-row justify-content-evenly"><h4><Paperclip/> 1</h4>
-                    <h4><ChatDots/> 2</h4></td>
+                    {/* <td className="d-flex flex-row justify-content-evenly"><h4><Paperclip/> 1</h4>
+                    <h4><ChatDots/> 2</h4></td> */}
                   </tr>
                 ))}
               </tbody>

@@ -6,7 +6,6 @@ import Card from 'react-bootstrap/Card';
 import { FloatingLabel } from 'react-bootstrap';
 import axios from 'axios';
 import { useState} from 'react';
-import { useHistory } from 'react-router-dom/cjs/react-router-dom.min';
 import Cookies from 'js-cookie';
 
 // Untuk menyimpan access token dalam cookie
@@ -17,8 +16,6 @@ export default function Login() {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [role, setRole] = useState('')
-
-  const history=useHistory()
 
   function LogMeIn(event){
     axios({

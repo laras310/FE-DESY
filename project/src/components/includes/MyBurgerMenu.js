@@ -4,10 +4,12 @@ import { Navbar, Image, Button } from 'react-bootstrap';
 import { Offcanvas, Nav, Container, Dropdown } from 'react-bootstrap';
 import ProfilToggle from './Atom/ProfilToggle';
 import NotifToggle from './Atom/NotifToggle';
+import { Link, useLocation } from 'react-router-dom';
 
 function MyBurgerMenu() {
   const [showProfilDropdown, setShowProfilDropdown] = useState(false);
   const [showNotifDropdown, setShowNotifDropdown] = useState(false);
+  const location = useLocation();
 
   const handleProfilDropdownToggle = () => {
     setShowProfilDropdown(!showProfilDropdown);
@@ -20,9 +22,14 @@ function MyBurgerMenu() {
   function logout(event){
     localStorage.clear()
   }
+  const menuItems = [
+    { path: '/user-dashboard', label: 'Home' },
+    { path: '/daftar-pekerjaan', label: 'Daftar Pekerjaan' },
+    // Tambahkan menu lain jika ada
+  ];
 
   return (
-    <Navbar className="bg-body-tertiary" expand={'lg'}>
+    <Navbar className="bg-body-tertiary shadow" expand={'lg'}>
       <Container fluid>
         <div className='justify-content-start'>
           <Navbar.Toggle />
@@ -47,10 +54,22 @@ function MyBurgerMenu() {
             </Offcanvas.Title>
           </Offcanvas.Header>
           <Offcanvas.Body>
-            <Nav className="justify-content-end flex-grow-1 pe-3">
-              <Nav.Link href="/user-dashboard">Home</Nav.Link>
-              <Nav.Link href="/daftar-pekerjaan">Daftar Pekerjaan</Nav.Link>
-            </Nav>
+          <Nav className="justify-content-end flex-grow-1 pe-3" variant="pills" activeKey={location.pathname}>
+      {menuItems.map((item) => (
+        <Nav.Link key={item.path} href={item.path} className={location.pathname === item.path ? 'active' : ''}>
+          {item.label}
+        </Nav.Link>
+      ))}
+    </Nav>
+            {/* <Nav className="justify-content-end flex-grow-1 pe-3" variant="pills" activeKey={location.pathname === '/user-dashboard' ? '/user-dashboard' : '/daftar-pekerjaan'}>
+                <Nav.Link href='/user-dashboard'>
+                  Home
+                  </Nav.Link>
+              <Nav.Link href='/daftar-pekerjaan'>
+                Daftar Pekerjaan
+                </Nav.Link>
+              
+            </Nav> */}
           </Offcanvas.Body>
         </Navbar.Offcanvas>
         <div className='d-flex justify-content-end align-items-center flex-row'>

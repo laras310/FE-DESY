@@ -62,7 +62,9 @@ const CardUser = ({profil}) =>{
                 <StyledCard className='my-3 shadow' style={{height:'30vh'}} 
                 onClick={handleClick}>
                   <Card.Body>
-                    <Card.Title>Pekerjaan Idle</Card.Title>
+                    <Card.Title>
+                      <a href='/list-pekerjaan'>Pekerjaan Idle
+                        </a></Card.Title>
                     <Card.Text style={{fontSize:'5rem'}}>1</Card.Text>
                   </Card.Body>
                 </StyledCard>
