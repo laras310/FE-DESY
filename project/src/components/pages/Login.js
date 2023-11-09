@@ -4,9 +4,8 @@ import Container from 'react-bootstrap/Container';
 import Form from 'react-bootstrap/Form';
 import Card from 'react-bootstrap/Card';
 import { FloatingLabel } from 'react-bootstrap';
-import { history } from 'react-router-dom';
 import axios from 'axios';
-import { useState, useRef, useEffect, useContext } from 'react';
+import { useState} from 'react';
 import { useHistory } from 'react-router-dom/cjs/react-router-dom.min';
 import Cookies from 'js-cookie';
 
@@ -26,9 +25,12 @@ export default function Login() {
       method: 'POST',
       headers: {
         "Content-Type": "application/json",
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Headers': '*',
+        // 'Access-Control-Allow-Credentials':'true'
       },
-      withCredentials: true,
-      url: '/auth/token/request',
+      // withCredentials: true,
+      url: 'https://api.pins.co.id/api/auth/token/request',
       data: {
         username: username,
         password: password
@@ -45,14 +47,13 @@ export default function Login() {
           'token_type', response.data.data.token_type
         )
         localStorage.setItem('role', role)
-        console.log(Cookies)
-        // if (role === 'user') {
-          history.push('/user')
+        if (role === 'user') {
+          window.location.replace("/user-dashboard");
           
-        // } else {
-          // history.push('/admin')
-        // }
-        // Handle any further logic or UI updates here
+        } 
+        else if (role === 'admin') {
+          window.location.replace("/admin-dashboard");
+        }
       })
       .catch(error => {
         if (error.response) {

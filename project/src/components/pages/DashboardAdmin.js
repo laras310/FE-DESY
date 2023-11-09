@@ -4,10 +4,11 @@ import Header from '../includes/Header';
 import Container from 'react-bootstrap/Container';
 import Card from 'react-bootstrap/Card';
 import FilterBar from '../includes/FilterBar';
-import Button from 'react-bootstrap/Button';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
+import CardAdmin from '../includes/CardAdmin';
 import SearchBar from '../includes/SearchBar';
+import { useState, useEffect } from 'react';
+import axios from 'axios';
+import { Row, Col } from 'react-bootstrap';
 
 function DashboardAdmin() {
   // const [searchQuery, setSearchQuery] = useState('');
@@ -17,6 +18,37 @@ function DashboardAdmin() {
   //   // Lakukan sesuatu dengan searchQuery, misalnya: melakukan pencarian
   //   console.log('Search Query:', searchQuery);
   // };
+
+  const [profil, setProfil] = useState([]);
+  useEffect(() => {
+    axios({
+      method: "GET",
+      url: "https://api.pins.co.id/api/auth/token/detail",
+      headers: {
+        Authorization: 'Bearer ' + localStorage.getItem('access_token')
+      }
+    })
+      .then((response) => {
+        const res = response.data.data;
+        setProfil(res);
+      })
+      .catch((error) => {
+        if (error.response) {
+          console.log(error.response.data);
+          console.log(error.response.status);
+          console.log(error.response.headers);
+        } else if (error.request) {
+          console.log(error.request);
+        } else {
+          console.log(error.message);
+        }
+      });
+  }, []);
+  
+  // useEffect(() => {
+  //   // Memantau perubahan nilai profil
+  //   console.log(data);
+  // }, [data]);
   return (
     <div >
       <MenuAdmin />
@@ -24,13 +56,14 @@ function DashboardAdmin() {
       
       <Container className='justify-content-center d-flex align-items-start flex-column p-3 pt-5'>
           <h1 className='m-0 light pt-5'>Selamat Pagi,</h1>
-          <h1 >John Doe</h1>
+          <h1 >{profil.name}</h1>
           
           <SearchBar/>
 
           <FilterBar />
+          {/* <CardAdmin/> */}
 
-          <Container fluid>
+          {/* <Container fluid>
             <Row>
               <Col md={4}>
                 <Card className='my-3 shadow' style={{height:'30vh'}}>
@@ -104,9 +137,9 @@ function DashboardAdmin() {
                 </Card>
               </Col>
             </Row>
-           </Container>
+           </Container> */}
           
-      </Container>
+      </Container> 
     </div>
   );
 }

@@ -8,7 +8,7 @@ import { useHistory } from 'react-router-dom';
 import styled from 'styled-components';
 import { Button} from 'react-bootstrap';
 import { useState } from 'react';
-import ModalPekerjaan from '../includes/ModalPekerjaan';
+import ModalPekerjaan from '../includes/Atom/ModalPekerjaan';
 // import ModalDetail from '../includes/ModalDetail';
 
 const StyledCard = styled(Card)`

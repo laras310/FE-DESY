@@ -10,25 +10,41 @@ import DaftarPekerjaan from './components/pages/DaftarPekerjaan';
 import DetailPekerjaan from './components/pages/DetailPekerjaan';
 import ProtectedRoute from './components/route/ProtectedRoute';
 import { Redirect } from 'react-router-dom';
+import AllTask from './components/pages/AllTask';
 
 function App() {
   const isAuthorized = localStorage.getItem('access_token') !== null;
   const userRole = localStorage.getItem('role');
-  console.log(userRole)
+  console.log(isAuthorized,userRole)
   return (
     <Switch>
-      <Route path="/login" component={Login}></Route>
+      <Route exact path="/login" component={Login}></Route>
       <ProtectedRoute
-          path="/user-dashboard"
+          exact path="/user-dashboard"
           component={DashboardUser}
           isAuthorized={isAuthorized && userRole === 'user'}
         />
-        <ProtectedRoute
-          path="/admin-dashboard"
-          component={DashboardAdmin}
-          isAuthorized={isAuthorized && userRole === 'admin'}
-        />
-        <Redirect to="/login" />
+      <ProtectedRoute
+        exact path="/admin-dashboard"
+        component={DashboardAdmin}
+        isAuthorized={isAuthorized && userRole === 'admin'}
+      />
+      <ProtectedRoute
+        exact path="/daftar-pekerjaan"
+        component={DaftarPekerjaan}
+        isAuthorized={isAuthorized && userRole === 'user'}
+      />
+      <ProtectedRoute
+        exact path="/list-pekerjaan"
+        component={ListPekerjaan}
+        isAuthorized={isAuthorized && userRole === 'user'}
+      />
+      <ProtectedRoute
+        exact path="/all-task"
+        component={AllTask}
+        isAuthorized={isAuthorized && userRole === 'admin'}
+      />
+      <Redirect to="/login" />
       {/* <Route exact path="/login">
         <Login></Login>
       </Route>
