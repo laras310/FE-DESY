@@ -42,10 +42,7 @@ const PersonCard = () => {
             }
           });
       }, []);
-      
-      useEffect(() => {
-        // Memantau perubahan nilai profil
-      }, [data]);
+
   const calculateProjectCounts = (tasks) => {
     let idleCount = 0;
     let onProgressCount = 0;
@@ -97,8 +94,8 @@ const PersonCard = () => {
             <Card className='my-3 shadow' style={{ height: '30vh' }}>
               <Card.Body className='text-center'>
                 {/* <Card.Subtitle>Unit</Card.Subtitle> */}
-                <Card.Title>{item.name}</Card.Title>
-                <Card.Subtitle>{item.role[0].position.name}</Card.Subtitle>
+                <Card.Title className='text-truncate'>{item.name}</Card.Title>
+                <Card.Subtitle className='text-truncate'>{item.role[0].position.name}</Card.Subtitle>
                 <hr></hr>
 
                 <Card.Text className='d-flex justify-content-center flex-row'>

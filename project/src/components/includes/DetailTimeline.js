@@ -9,11 +9,8 @@ import styled from 'styled-components';
 import { Form } from 'react-bootstrap';
 import { ArrowLeftShort, Briefcase, StarFill } from 'react-bootstrap-icons';
 import { Timeline } from 'rsuite';
-import CreditCardIcon from '@rsuite/icons/legacy/CreditCard';
-import PlaneIcon from '@rsuite/icons/legacy/Plane';
-import TruckIcon from '@rsuite/icons/legacy/Truck';
-import UserIcon from '@rsuite/icons/legacy/User';
-import CheckIcon from '@rsuite/icons/legacy/Check';
+import AdminMenu from './MenuAdmin';
+import { useEffect, useState } from 'react';
 
 const StyledCard = styled(Card)`
   transition: transform 0.2s;
@@ -24,20 +21,36 @@ const StyledCard = styled(Card)`
 `;
 
 export default function DetailTimeline(){
+
+    const [userRole, setUserRole] = useState([]);
+    
     
   const history = useHistory()
+  useEffect(() => {
+    setUserRole(localStorage.getItem('role')) ;
+    },[])
   function handleClick() {
-      history.push("/list-pekerjaan");
+    if (userRole === 'admin') {
+        console.log("admin")
+        // window.location.replace("/user-dashboard");
+        history.push('/all-task');
+    } else {
+        // console.log("user")
+        history.push('/daftar-pekerjaan');
     }
+  }
 
     return(
         <>
-        <MyBurgerMenu/>
+        {
+            userRole === "admin" ? <AdminMenu/> : <MyBurgerMenu/>
+        }
+        
         <Container className='justify-content-center d-flex align-items-start flex-column p-3 pt-5'>
-            <a href="/daftar-pekerjaan"><ArrowLeftShort/> Back</a>
+            <a onClick={handleClick} style={{ cursor: 'pointer' }}><ArrowLeftShort/> Back</a>
             <Container fluid>
                 <Row>
-                    <Col>
+                    <Col md={6} className='mb-3'>
                     <h1>Detail</h1>
                     <Card>
                         <Card.Body>
@@ -59,7 +72,7 @@ export default function DetailTimeline(){
                     </Card>
                         
                     </Col>
-                    <Col >
+                    <Col md={6} className='mb-3'>
                     <h1>Timeline</h1>
                     <Timeline align="left">
                         <Timeline.Item>

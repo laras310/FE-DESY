@@ -6,6 +6,7 @@ import Offcanvas from 'react-bootstrap/Offcanvas';
 import { Image, Dropdown} from 'react-bootstrap';
 import ProfilToggle from './Atom/ProfilToggle';
 import NotifToggle from './Atom/NotifToggle';
+import { useLocation } from 'react-router-dom';
 // import ModalBuatProject from './Atom/ModalBuatProject';
 
 import { useState } from 'react';
@@ -13,6 +14,7 @@ import { useState } from 'react';
 export default function AdminMenu(){
   const [showProfilDropdown, setShowProfilDropdown] = useState(false);
   const [showNotifDropdown, setShowNotifDropdown] = useState(false);
+  const location = useLocation();
 
   const handleProfilDropdownToggle = () => {
     setShowProfilDropdown(!showProfilDropdown);
@@ -25,17 +27,17 @@ export default function AdminMenu(){
   function logout(event){
     localStorage.clear()
   }
-
-  const [show, setShow] = useState(false);
-
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
+  const menuItems = [
+    { path: '/admin-dashboard', label: 'Home' },
+    { path: '/all-task', label: 'Proyek' },
+    // Tambahkan menu lain jika ada
+  ];
   return(
     <Navbar className="bg-body-tertiary shadow" expand={'lg'}>
       <Container fluid>
         <div className='justify-content-start'>
           <Navbar.Toggle />
-          <Navbar.Brand href="/user">
+          <Navbar.Brand href="/admin-dashboard">
             <Image
               src="/assets/images/PINS-Logo-IoT2.png"
               height="40"
@@ -56,11 +58,12 @@ export default function AdminMenu(){
             </Offcanvas.Title>
           </Offcanvas.Header>
           <Offcanvas.Body>
-            <Nav className="justify-content-end flex-grow-1 pe-3">
-              <Nav.Link 
-              href="/admin-dashboard"
-              >Home</Nav.Link>
-              <Nav.Link href="/all-task">Proyek</Nav.Link>
+          <Nav className="justify-content-end flex-grow-1 pe-3" variant="underline" activeKey={location.pathname}>
+            {menuItems.map((item) => (
+              <Nav.Link key={item.path} href={item.path} className={location.pathname === item.path ? 'active' : ''}>
+                {item.label}
+              </Nav.Link>
+            ))}
             </Nav>
                 
           </Offcanvas.Body>

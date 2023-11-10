@@ -54,13 +54,13 @@ function MyBurgerMenu() {
             </Offcanvas.Title>
           </Offcanvas.Header>
           <Offcanvas.Body>
-          <Nav className="justify-content-end flex-grow-1 pe-3" variant="pills" activeKey={location.pathname}>
-      {menuItems.map((item) => (
-        <Nav.Link key={item.path} href={item.path} className={location.pathname === item.path ? 'active' : ''}>
-          {item.label}
-        </Nav.Link>
-      ))}
-    </Nav>
+          <Nav className="justify-content-end flex-grow-1 pe-3" variant="underline" activeKey={location.pathname}>
+          {menuItems.map((item) => (
+            <Nav.Link key={item.path} href={item.path} className={location.pathname === item.path ? 'active' : ''}>
+              {item.label}
+            </Nav.Link>
+          ))}
+          </Nav>
             {/* <Nav className="justify-content-end flex-grow-1 pe-3" variant="pills" activeKey={location.pathname === '/user-dashboard' ? '/user-dashboard' : '/daftar-pekerjaan'}>
                 <Nav.Link href='/user-dashboard'>
                   Home

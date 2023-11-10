@@ -51,16 +51,19 @@ export default function BuatTask(){
     setItems(updatedItems);
   };
     return(
-        <div>
-      
+        
+      <>
       <AdminMenu></AdminMenu>
       <Header></Header>
       {/* <ZeroList/> */}
-        
-        <div className="p-4">
+        <Container>
+        <Container className="p-4">
+          <Button href="/all-task">Back</Button>
+          <Card>
+          
             <h1>Buat Task</h1>
-          <Button>Back</Button>
-           <Card>
+          
+           
             <Card.Title>
                 <Card.Body>
                     <Form>
@@ -79,10 +82,7 @@ export default function BuatTask(){
                         <Form.Group>
                             <Form.Label>Assign ke</Form.Label>
                             <Form.Control
-                            aria-describedby="passwordHelpBlock"></Form.Control>
-                            <Form.Text id="passwordHelpBlock" muted>
-                                Bila penerima lebih dari satu, pisahkan dengan koma "," ex: "Martin, Juan"
-                            </Form.Text>
+                            ></Form.Control>
                         </Form.Group>
                         
                         <Button>Submit</Button>
@@ -90,7 +90,8 @@ export default function BuatTask(){
                 </Card.Body>
             </Card.Title>
            </Card>
-        </div> 
-    </div>
+        </Container> 
+    </Container>
+    </>
     )
 }

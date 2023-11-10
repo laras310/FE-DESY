@@ -98,7 +98,7 @@ const ProjectCard = () => {
             <Card className='my-3 shadow' style={{ height: '30vh' }}>
               <Card.Body className='text-center'>
                 <Card.Subtitle>Unit</Card.Subtitle>
-                <Card.Title>{item.name}</Card.Title>
+                <Card.Title className='text-truncate'>{item.name}</Card.Title>
                 <hr></hr>
 
                 <Card.Text className='d-flex justify-content-center flex-row'>
