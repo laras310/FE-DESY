@@ -26,11 +26,11 @@ const StyledCard = styled(Card)`
 export default function DetailTimeline(){
     const location = useLocation();
     const [userRole, setUserRole] = useState([]);
-    const [data, setData] = useState([]);
-
+    const data = location.state.data
+// setData()
     const history = useHistory()
     useEffect(() => {
-        setData(location.state.data)
+        
         setUserRole(localStorage.getItem('role')) ;
         },[])
     function handleClick() {
@@ -76,7 +76,7 @@ export default function DetailTimeline(){
                                 <Form.Label>Users</Form.Label>
                                 {
                                     data.users.map((user)=>(
-                                        <Form.Control value={user.name} disabled></Form.Control>
+                                        <Form.Control value={user['name']} disabled></Form.Control>
                                     ))
                                 }
                                 
