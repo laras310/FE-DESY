@@ -11,6 +11,9 @@ import { ArrowLeftShort, Briefcase, StarFill } from 'react-bootstrap-icons';
 import { Timeline } from 'rsuite';
 import AdminMenu from './MenuAdmin';
 import { useEffect, useState } from 'react';
+import axios from 'axios';
+import { useLocation } from "react-router-dom";
+import { format, parseISO } from 'date-fns';
 
 const StyledCard = styled(Card)`
   transition: transform 0.2s;
@@ -21,24 +24,25 @@ const StyledCard = styled(Card)`
 `;
 
 export default function DetailTimeline(){
-
+    const location = useLocation();
     const [userRole, setUserRole] = useState([]);
-    
-    
-  const history = useHistory()
-  useEffect(() => {
-    setUserRole(localStorage.getItem('role')) ;
-    },[])
-  function handleClick() {
-    if (userRole === 'admin') {
-        console.log("admin")
-        // window.location.replace("/user-dashboard");
-        history.push('/all-task');
-    } else {
-        // console.log("user")
-        history.push('/daftar-pekerjaan');
+    const [data, setData] = useState([]);
+
+    const history = useHistory()
+    useEffect(() => {
+        setData(location.state.data)
+        setUserRole(localStorage.getItem('role')) ;
+        },[])
+    function handleClick() {
+        if (userRole === 'admin') {
+            console.log("admin")
+            // window.location.replace("/user-dashboard");
+            history.push('/all-task');
+        } else {
+            // console.log("user")
+            history.push('/daftar-pekerjaan');
+        }
     }
-  }
 
     return(
         <>
@@ -57,15 +61,25 @@ export default function DetailTimeline(){
                             <Form>
                             <Form.Group>
                                 <Form.Label>Nama Proyek</Form.Label>
-                                <Form.Control></Form.Control>
+                                <Form.Control value={data.name} disabled></Form.Control>
                             </Form.Group>
                             <Form.Group>
                                 <Form.Label>Nama Unit</Form.Label>
-                                <Form.Control></Form.Control>
+                                <Form.Control value={data.unit['name']}disabled></Form.Control>
                             </Form.Group>
                             <Form.Group>
                                 <Form.Label>Tanggal Mulai</Form.Label>
-                                <Form.Control></Form.Control>
+                                <Form.Control value={format(parseISO(data.created_at), 'dd MMMM yyyy HH:mm:ss')
+                                    } disabled></Form.Control>
+                            </Form.Group>
+                            <Form.Group>
+                                <Form.Label>Users</Form.Label>
+                                {
+                                    data.users.map((user)=>(
+                                        <Form.Control value={user.name} disabled></Form.Control>
+                                    ))
+                                }
+                                
                             </Form.Group>
                         </Form>
                         </Card.Body>

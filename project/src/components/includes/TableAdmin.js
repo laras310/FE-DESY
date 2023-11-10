@@ -92,9 +92,10 @@ export default function TableAdmin({ data }) {
                 <Column align="center" width={80} >
                     <HeaderCell>...</HeaderCell>
 
-                    <Cell style={{ padding: '6px' }}>
+                    <Cell style={{ padding: '6px' }} dataKey='id'>
                     {rowData => (
-                        <Button appearance="link" onClick={() => history.push('/timeline')}>
+                        <Button appearance="link" onClick={() => history.push({pathname:'/timeline',
+                        state:{data:rowData}})}>
                         Detail
                         </Button>
                     )}
