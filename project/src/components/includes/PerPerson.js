@@ -23,7 +23,8 @@ const PersonCard = () => {
           url:"https://jobcard-api.pins.co.id/api/task/each-user",
           headers: {
             Authorization: 'Bearer ' + localStorage.getItem('access_token')
-          }
+          },
+          'Access-Control-Allow-Origin':'*'
         })
           .then((response) => {
             const res = response.data.data;

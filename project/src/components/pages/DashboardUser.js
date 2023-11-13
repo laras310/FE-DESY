@@ -1,4 +1,3 @@
-import Header from '../includes/Header';
 import MyBurgerMenu from '../includes/MyBurgerMenu';
 import CardUser from '../includes/CardUser';
 import { useEffect, useState } from 'react';
@@ -36,7 +35,6 @@ useEffect(() => {
     <div>
       
       <MyBurgerMenu/>
-      <Header></Header>
       <CardUser profil={profil}/>
     </div>
   );

@@ -1,27 +1,16 @@
-import Header from './Header';
 import MyBurgerMenu from './MyBurgerMenu';
 import Card from 'react-bootstrap/Card';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import { useHistory } from 'react-router-dom';
-import styled from 'styled-components';
 import { Form } from 'react-bootstrap';
-import { ArrowLeftShort, Briefcase, StarFill } from 'react-bootstrap-icons';
+import { ArrowLeftShort} from 'react-bootstrap-icons';
 import { Timeline } from 'rsuite';
 import AdminMenu from './MenuAdmin';
 import { useEffect, useState } from 'react';
-import axios from 'axios';
 import { useLocation } from "react-router-dom";
 import { format, parseISO } from 'date-fns';
-
-const StyledCard = styled(Card)`
-  transition: transform 0.2s;
-
-  &:hover {
-    transform: scale(1.05);
-  }
-`;
 
 export default function DetailTimeline(){
     const location = useLocation();
@@ -51,7 +40,7 @@ export default function DetailTimeline(){
         }
         
         <Container className='justify-content-center d-flex align-items-start flex-column p-3 pt-5'>
-            <a onClick={handleClick} style={{ cursor: 'pointer' }}><ArrowLeftShort/> Back</a>
+            <a onClick={()=>handleClick()} style={{ cursor: 'pointer' }}><ArrowLeftShort/> Back</a>
             <Container fluid>
                 <Row>
                     <Col md={6} className='mb-3'>

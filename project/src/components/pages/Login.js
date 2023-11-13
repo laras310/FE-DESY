@@ -34,7 +34,6 @@ export default function Login() {
       },
     })
       .then(response => {
-        // history.push(redirect || '/');
         Cookies.set('access_token', response.data.data.access_token);
         localStorage.setItem(
           'access_token',

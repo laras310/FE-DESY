@@ -34,7 +34,7 @@ export default function TableAdmin({ data }) {
 
   return (
     <Container className='mt-5'>
-      <Card style={{ minHeight: '80vh', marginBottom:'4rem' }}>
+      <Card style={{  marginBottom:'4rem' }}>
         <Card.Body>
           <h2>All Task</h2>
           <Button className='btn btn-danger mb-3 btn-sm'

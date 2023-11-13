@@ -13,7 +13,7 @@ function DashboardAdmin() {
       method: "GET",
       url: "https://api.pins.co.id/api/auth/token/detail",
       headers: {
-        Authorization: 'Bearer ' + localStorage.getItem('access_token')
+        Authorization: 'Bearer ' + localStorage.getItem('access_token'),
       }
     })
       .then((response) => {
@@ -32,11 +32,7 @@ function DashboardAdmin() {
         }
       });
   }, []);
-  
-  // useEffect(() => {
-  //   // Memantau perubahan nilai profil
-  //   console.log(data);
-  // }, [data]);
+
   return (
     <div >
       <MenuAdmin />

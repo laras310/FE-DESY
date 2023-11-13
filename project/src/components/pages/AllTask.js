@@ -71,12 +71,12 @@ export default function AllTask(){
       
       <AdminMenu></AdminMenu>
       <Header></Header>
-      <Container>
+      {/* <Container> */}
       {profil <1 ? <ZeroList/>
       : 
       <TableAdmin data={profil}/>
       }
-      </Container>
+      {/* </Container> */}
     </div>
     )
 }

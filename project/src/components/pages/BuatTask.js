@@ -1,4 +1,3 @@
-import Header from "../includes/Header";
 import AdminMenu from "../includes/MenuAdmin";
 import { Form, Button, Card, Container, Table } from "react-bootstrap";
 import { useState } from "react";
@@ -32,65 +31,136 @@ const initialItems = [
     { id: 3, projectName: 'Project 3',namaAM: 'Jane Doe', unit:'0%', starred: false, update:'1 Mei 2023, 11:14:21'},
   ];
 
+
 export default function BuatTask(){
   const history = useHistory()
-    const alertClicked = () => {
-        alert('You clicked the third ListGroupItem');
-      };
-    
-      const [items, setItems] = useState(initialItems);
+  const [selectedValue, setSelectedValue] = useState({
+    name:'',
+    pic:'',
+    unit:'',
+    assign:''
+  });
+  const [data, setData] = useState({
+    name:'',
+    pic:'',
+    unit:'',
+    assign:''
+  });
 
-  const toggleStar = (id) => {
-    const updatedItems = items.map((item) => {
-      if (item.id === id) {
-        return { ...item, starred: !item.starred };
-      }
-      return item;
-    });
+  // const handleInputChange = (e) => {
+  //   setSelectedValue(e.target.value);
+  // };
 
-    setItems(updatedItems);
-  };
+  const handleInputChange = (e) =>{
+    const {value, name} = e.target
+    setData(prevNote=> ({
+    ...prevNote, [name]:value
+    }))
+    setSelectedValue(prevNote=> ({
+      ...prevNote, [name]:value
+      }))
+  }
     return(
         
       <>
       <AdminMenu></AdminMenu>
-      <Header></Header>
-      {/* <ZeroList/> */}
-        <Container>
-        <Container className="p-4">
-          <Button href="/all-task">Back</Button>
-          <Card>
+        <Container className='mt-5'>
+        {/* <Container className="p-4"> */}
           
-            <h1>Buat Task</h1>
-          
-           
-            <Card.Title>
+          <Card style={{  marginBottom:'4rem' }}> 
                 <Card.Body>
+                  <h2>Buat Task</h2>
+                  
                     <Form>
                         <Form.Group>
                             <Form.Label>Nama Proyek</Form.Label>
                             <Form.Control></Form.Control>
                         </Form.Group>
                         <Form.Group>
-                            <Form.Label>Nama PIC</Form.Label>
-                            <Form.Control></Form.Control>
+                            <Form.Label>Nama pic</Form.Label>
+                            <Form.Control id="pic" name="pic"
+                            as="input"
+                            list="picOptions"
+                            placeholder="Type to search..."
+                            value={selectedValue.pic}
+                            onChange={handleInputChange}
+                            />
+                            <datalist id="picOptions">
+                              <option value="pic 1" />
+                              <option value="pic 2" />
+                              <option value="pic 3" />
+                              <option value="pic 1" />
+                              <option value="pic 2" />
+                              <option value="pic 3" />
+                              <option value="pic 1" />
+                              <option value="pic 2" />
+                              <option value="pic 3" />
+                              <option value="pic 1" />
+                              <option value="pic 2" />
+                              <option value="pic 3" />
+
+                              {/* Add more options as needed */}
+                            </datalist>
                         </Form.Group>
                         <Form.Group>
                             <Form.Label>Nama Unit</Form.Label>
-                            <Form.Control></Form.Control>
+                            <Form.Control id="unit" name="unit"
+                            as="input"
+                            list="unitOptions"
+                            placeholder="Type to search..."
+                            value={selectedValue.unit}
+                            onChange={handleInputChange}
+                            />
+                            <datalist id="unitOptions">
+                              <option value="Unit 1" />
+                              <option value="Unit 2" />
+                              <option value="Unit 3" />
+                              <option value="Unit 1" />
+                              <option value="Unit 2" />
+                              <option value="Unit 3" />
+                              <option value="Unit 1" />
+                              <option value="Unit 2" />
+                              <option value="Unit 3" />
+                              <option value="Unit 1" />
+                              <option value="Unit 2" />
+                              <option value="Unit 3" />
+
+                              {/* Add more options as needed */}
+                            </datalist>
                         </Form.Group>
                         <Form.Group>
                             <Form.Label>Assign ke</Form.Label>
-                            <Form.Control
-                            ></Form.Control>
+                            <Form.Control id="assign" name="assign"
+                            as="input"
+                            list="assignOptions"
+                            placeholder="Type to search..."
+                            value={selectedValue.assign}
+                            onChange={handleInputChange}/>
+                            <datalist id="assignOptions">
+                              <option value="Unit 1" />
+                              <option value="Unit 2" />
+                              <option value="Unit 3" />
+                              <option value="Unit 1" />
+                              <option value="Unit 2" />
+                              <option value="Unit 3" />
+                              <option value="Unit 1" />
+                              <option value="Unit 2" />
+                              <option value="Unit 3" />
+                              <option value="Unit 1" />
+                              <option value="Unit 2" />
+                              <option value="Unit 3" />
+
+                              {/* Add more options as needed */}
+                            </datalist>
                         </Form.Group>
-                        
+
+                        <Button onClick={()=>history.goBack()} className="btn-danger" size="small">Back</Button>
                         <Button>Submit</Button>
                     </Form>
                 </Card.Body>
-            </Card.Title>
+            
            </Card>
-        </Container> 
+        {/* </Container>  */}
     </Container>
     </>
     )
