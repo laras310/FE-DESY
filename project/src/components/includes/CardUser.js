@@ -1,5 +1,3 @@
-import Header from '../includes/Header';
-import MyBurgerMenu from '../includes/MyBurgerMenu';
 import Card from 'react-bootstrap/Card';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
@@ -10,6 +8,7 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 
 const StyledCard = styled(Card)`
+  cursor: pointer; 
   transition: transform 0.2s;
 
   &:hover {
@@ -18,22 +17,51 @@ const StyledCard = styled(Card)`
 `;
 
 const CardUser = ({profil}) =>{
-    
   const history = useHistory()
-    function handleClick() {
-        history.push("/list-pekerjaan");
-      }
+
+  const [data, setData]=useState({
+    idle:"",
+    onProgress:"",
+    finished:""
+  })
+  const [task, setTask]=useState([])
 
       useEffect(() => {
         axios({
           method: "GET",
-          url: "https://jobcard-api.pins.co.id/api/task/all",
+          url: "https://jobcard-api.pins.co.id/api/task/by-user?user_id=450",
+          // url: "https://jobcard-api.pins.co.id/api/task/by-user?user_id=" + profil.id,
           headers: {
             Authorization: 'Bearer ' + localStorage.getItem('access_token')
-          }
+          },
         })
           .then((response) => {
             const res = response.data.data;
+            setData(res)
+            let idleCount = 0;
+            let onProgressCount = 0;
+            let finishedCount = 0;
+            res.tasks.forEach((task)=>{
+              switch (task.status) {
+                case 'Idle':
+                  idleCount++;
+                  break;
+                case 'On progress':
+                  onProgressCount++;
+                  break;
+                case 'Finished':
+                  finishedCount++;
+                  break;
+                default:
+                  // Do nothing for other statuses
+                  break;
+              }
+            })
+            setTask(
+              {idle:idleCount,
+              onProgress:onProgressCount,
+              finished:finishedCount}
+            )
           })
           .catch((error) => {
             if (error.response) {
@@ -52,41 +80,40 @@ const CardUser = ({profil}) =>{
         <Container className='justify-content-center d-flex align-items-start flex-column p-3 pt-5'>
           <h1 className='m-0 light pt-5'>Selamat Pagi,</h1>
           <h1 >{profil.name}</h1>
-          
-          {/* <div style={{margin:"12px"}} className='border border-success pt-3'> */}
-            
-          {/* </div> */}
           <Container fluid>
             <Row >
               <Col md={4}>
-                <StyledCard className='my-3 shadow' style={{height:'30vh'}} 
-                onClick={handleClick}>
+                <StyledCard className='my-3 shadow  text-center' style={{height:'30vh'}} 
+                onClick={()=>history.push("/list-pekerjaan", {status:'idle', user_id:data.id})}>
                   <Card.Body>
-                    <Card.Title>Pekerjaan Idle</Card.Title>
-                    <Card.Text style={{fontSize:'5rem'}}>1</Card.Text>
+                    <Card.Title>
+                      Pekerjaan Idle
+                        </Card.Title>
+                    <Card.Text style={{fontSize:'5rem'}}>{task.idle}</Card.Text>
                   </Card.Body>
                 </StyledCard>
               </Col>
               <Col md={4}>
-                <StyledCard className='my-3 shadow' style={{height:'30vh'}}>
+                <StyledCard className='my-3 shadow  text-center' style={{height:'30vh'}}
+                onClick={()=>history.push("/list-pekerjaan", {status:'On progress', user_id:data.id})}>
                   <Card.Body>
                     <Card.Title>Pekerjaan Berjalan</Card.Title>
-                    <Card.Text style={{fontSize:'5rem'}}>2</Card.Text>
+                    <Card.Text style={{fontSize:'5rem'}}>{task.onProgress}</Card.Text>
                   </Card.Body>
                 </StyledCard>
               </Col>
               <Col md={4}>
-                <StyledCard className='my-3 shadow' style={{height:'30vh'}}>
+                <StyledCard className='my-3 shadow text-center' style={{height:'30vh'}}
+                onClick={()=>history.push("/list-pekerjaan", {status:'finished', user_id:data.id})}>
                   <Card.Body>
                     <Card.Title>Pekerjaan Selesai</Card.Title>
-                    <Card.Text style={{fontSize:'5rem'}}>3</Card.Text>
+                    <Card.Text style={{fontSize:'5rem'}}>{task.finished}</Card.Text>
                   </Card.Body>
                 </StyledCard>
               </Col>
               
             </Row>
            </Container>
-          
       </Container>
     )
 }

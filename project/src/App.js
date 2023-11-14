@@ -1,16 +1,15 @@
-import logo from './logo.svg';
 import './App.css';
-// import Login from './components/pages/Login';
 import Login from './components/pages/Login';
 import DashboardUser from './components/pages/DashboardUser';
 import DashboardAdmin from './components/pages/DashboardAdmin';
 import { Switch, Route } from 'react-router-dom';
 import ListPekerjaan from './components/pages/ListPekerjaan';
 import DaftarPekerjaan from './components/pages/DaftarPekerjaan';
-import DetailPekerjaan from './components/pages/DetailPekerjaan';
 import ProtectedRoute from './components/route/ProtectedRoute';
 import { Redirect } from 'react-router-dom';
 import AllTask from './components/pages/AllTask';
+import DetailTimeline from './components/includes/DetailTimeline';
+import BuatTask from './components/pages/BuatTask';
 
 function App() {
   const isAuthorized = localStorage.getItem('access_token') !== null;
@@ -37,32 +36,24 @@ function App() {
       <ProtectedRoute
         exact path="/list-pekerjaan"
         component={ListPekerjaan}
-        isAuthorized={isAuthorized && userRole === 'user'}
+        isAuthorized={isAuthorized && userRole === 'user' | userRole==='admin'}
       />
       <ProtectedRoute
         exact path="/all-task"
         component={AllTask}
         isAuthorized={isAuthorized && userRole === 'admin'}
       />
+      <ProtectedRoute
+        exact path="/timeline"
+        component={DetailTimeline}
+        isAuthorized={isAuthorized && userRole === 'user' | userRole==='admin'}
+      />
+      <ProtectedRoute
+        exact path="/buat-task"
+        component={BuatTask}
+        isAuthorized={isAuthorized && userRole === 'admin'}
+      />
       <Redirect to="/login" />
-      {/* <Route exact path="/login">
-        <Login></Login>
-      </Route>
-      <Route path="/user">
-        <DashboardUser></DashboardUser>
-      </Route>
-      <Route path="/admin">
-        <DashboardAdmin></DashboardAdmin>
-      </Route>
-      <Route path="/list-pekerjaan">
-        <ListPekerjaan></ListPekerjaan>
-      </Route>
-      <Route path="/daftar-pekerjaan">
-        <DaftarPekerjaan></DaftarPekerjaan>
-      </Route>
-      <Route path="/detail-pekerjaan">
-        <DetailPekerjaan></DetailPekerjaan>
-      </Route> */}
     </Switch>
     
   

@@ -15,7 +15,7 @@ const StyledCard = styled(Card)`
   transition: transform 0.2s;
 
   &:hover {
-    transform: scale(1.05);
+    transform: scale(1.03);
   }
 `;
 
@@ -29,31 +29,31 @@ function DaftarPekerjaan() {
       
       <MyBurgerMenu/>
       <Header></Header>
-      <Container className='justify-content-center d-flex align-items-start flex-column p-3 pt-5'>
-
-          <Container className='border shadow rounded' fluid>
-            <h3>Project task Berbintang</h3>
-            <Row >
+      <Container className='justify-content-center d-flex align-items-start flex-column p-3 pt-5' >
+        <Container fluid>
+        <Row className='mb-3'>
+          <Col>
+          <Card>
+            <Card.Body>
+              <h3>Project Berbintang</h3>
+              <Row>
               <Col md={4}>
-                <StyledCard className='my-3 '  
-                  
+                <StyledCard className='my-3 '
                 >
                   <Card.Body >
-                    <Card.Title >Proyek Idle</Card.Title>
-                    <Card.Text >1</Card.Text>
+                    <Card.Title ><a href='/timeline'>nama proyek</a></Card.Title>
+                    <Card.Text >deskripsi</Card.Text>
                     <Button onClick={() => setModalShow(true)}>Update Cepat</Button>
-                    {/* <Button onClick={() => setModalDetailShow(true)}>Detail</Button> */}
                     
                   </Card.Body>
                 </StyledCard>
-                {/* </Container> */}
                 
               </Col>
               <Col md={4}>
                 <StyledCard className='my-3 ' >
                   <Card.Body>
-                    <Card.Title>Proyek Berjalan</Card.Title>
-                    <Card.Text >2</Card.Text>
+                    <Card.Title ><a href='/timeline'>nama proyek</a></Card.Title>
+                    <Card.Text >deskripsi</Card.Text>
                     <Button onClick={() => setModalShow(true)}>Update Cepat</Button>
                   </Card.Body>
                 </StyledCard>
@@ -61,15 +61,42 @@ function DaftarPekerjaan() {
               <Col md={4}>
                 <StyledCard className='my-3 ' >
                   <Card.Body>
-                    <Card.Title>Proyek Selesai</Card.Title>
-                    <Card.Text >3</Card.Text>
+                    <Card.Title ><a href='/timeline'>nama proyek</a></Card.Title>
+                    <Card.Text >deskripsi</Card.Text>
                     <Button onClick={() => setModalShow(true)}>Update Cepat</Button>
                   </Card.Body>
                 </StyledCard>
               </Col>
-              
-            </Row>
-           </Container>
+              </Row>
+            </Card.Body>
+          </Card>
+          </Col>
+        </Row>
+        <Row>
+          <Col>
+            <Card>
+              <Card.Body>
+                <h3>Project Berjalan</h3>
+                <StyledCard className="mt-3 p-2">
+                        <Card.Title>Smart Branch Solution</Card.Title>
+                        <Card.Subtitle>Abhiyoga - Enterpirise</Card.Subtitle>
+                    </StyledCard>
+              </Card.Body>
+            </Card>
+          </Col>
+          <Col>
+            <Card>
+              <Card.Body>
+                <h3>Project Berjalan</h3>
+                <StyledCard className="mt-3 p-2">
+                        <Card.Title>Smart Branch Solution</Card.Title>
+                        <Card.Subtitle>Abhiyoga - Enterpirise</Card.Subtitle>
+                    </StyledCard>
+              </Card.Body>
+            </Card>
+          </Col>
+        </Row>
+        </Container>
            <ModalPekerjaan
            show={modalShow}
         onHide={() => setModalShow(false)}
@@ -78,46 +105,6 @@ function DaftarPekerjaan() {
            show={modalDetailShow}
            onhide={()=> setModalDetailShow(false)}/> */}
            
-      </Container>
-      <Container>
-        {/* <h3>Project Berjalan</h3> */}
-        <Row>
-            <Col>
-                <Card className="shadow p-4">
-                    <h3>Project Berjalan</h3>
-                    <StyledCard className="mt-3 p-2">
-                        <Card.Title>Smart Branch Solution</Card.Title>
-                        <Card.Subtitle>Abhiyoga - Enterpirise</Card.Subtitle>
-                    </StyledCard>
-                    <StyledCard className="mt-3 p-2">
-                        <Card.Title>Smart Branch Solution</Card.Title>
-                        <Card.Subtitle>Abhiyoga - Enterpirise</Card.Subtitle>
-                    </StyledCard>
-                    <StyledCard className="mt-3 p-2">
-                        <Card.Title>Smart Branch Solution</Card.Title>
-                        <Card.Subtitle>Abhiyoga - Enterpirise</Card.Subtitle>
-                    </StyledCard>
-                </Card>
-            </Col>
-            <Col>
-            <Card className="shadow p-4">
-                    <h3>Project Berjalan</h3>
-                    <StyledCard className="mt-3 p-2">
-                        <Card.Title>Smart Branch Solution</Card.Title>
-                        <Card.Subtitle>Abhiyoga - Enterpirise</Card.Subtitle>
-                    </StyledCard>
-                    <StyledCard className="mt-3 p-2">
-                        <Card.Title>Smart Branch Solution</Card.Title>
-                        <Card.Subtitle>Abhiyoga - Enterpirise</Card.Subtitle>
-                    </StyledCard>
-                    <StyledCard className="mt-3 p-2">
-                        <Card.Title>Smart Branch Solution</Card.Title>
-                        <Card.Subtitle>Abhiyoga - Enterpirise</Card.Subtitle>
-                    </StyledCard>
-                </Card>
-            </Col>
-        </Row>
-            
       </Container>
     </div>
   );

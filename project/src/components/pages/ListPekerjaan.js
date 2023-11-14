@@ -1,12 +1,13 @@
-import Header from "../includes/Header";
 import MyBurgerMenu from "../includes/MyBurgerMenu";
-import { ListGroup, Button, Card, Container, Table } from "react-bootstrap";
-import { useState } from "react";
+import { Card, Container, Table} from "react-bootstrap";
+import { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
-import { Star, StarFill, ChatDots, Paperclip } from "react-bootstrap-icons";
-// import ZeroList from "../includes/ZeroList";
+import { Star, StarFill, ArrowLeftShort} from "react-bootstrap-icons";
 import styled from 'styled-components';
-// import Table from "react-bootstrap/Table";
+import { useLocation } from "react-router-dom";
+import { format, parseISO } from 'date-fns';
+import axios from "axios";
+import AdminMenu from "../includes/MenuAdmin";
 
 const StyledStar = styled(Star)`
   transition: transform 0.2s;
@@ -24,104 +25,139 @@ const StyledStarFill = styled(StarFill)`
   }
 `
 ;
-
-
-const initialItems = [
-    { id: 1, projectName: 'Project 1',namaAM: 'Jane Doe', unit:'Bisnis', starred: false, update:'1 Mei 2023, 11:14:21' },
-    { id: 2, projectName: 'Project 2',namaAM: 'Jane Doe', unit:'Bisnis', starred: true, update:'1 Mei 2023, 11:14:21'},
-    { id: 3, projectName: 'Project 3',namaAM: 'Jane Doe', unit:'Bisnis', starred: false, update:'1 Mei 2023, 11:14:21'},
-  ];
-
 export default function ListPekerjaan(){
   const history = useHistory()
-    const alertClicked = () => {
-        alert('You clicked the third ListGroupItem');
-      };
-    
-      const [items, setItems] = useState(initialItems);
+  const location = useLocation();
+  const statusNama = location.state.status;
+  const user_id = location.state.user_id;
+  const [dataAll, setDataAll] = useState([])
+  const [userRole, setUserRole] = useState([]);
 
-  const toggleStar = (id) => {
-    const updatedItems = items.map((item) => {
-      if (item.id === id) {
-        return { ...item, starred: !item.starred };
+  const toggleStar = (task_id, is_favorite) => {
+    let favorite = "";
+  
+    if (is_favorite === 1) {
+      favorite = 0;
+    } else {
+      favorite = 1;
+    }
+  
+    axios({
+      method: "PATCH",
+      // url:"https://http://jobcard-api.pins.co.id/api/task/favorite?user_id="+ user_id+"&task_id="+task_id+"&is_favorite="+favorite,
+      url: "https://jobcard-api.pins.co.id/api/task/favorite",
+      headers: {
+        Authorization: 'Bearer ' + localStorage.getItem('access_token')
+      },
+      data: {
+        user_id: user_id,
+        task_id: task_id,
+        is_favorite: favorite
       }
-      return item;
+    })
+    .then((response) => {
+      // const res = response.data.data;
+      console.log(response);
+      // window.location.reload()
+    })
+    .catch((error) => {
+      console.error(error);
     });
-
-    setItems(updatedItems);
   };
+
+useEffect(() => {
+  setUserRole(localStorage.getItem('role')) ;
+  axios({
+    method: "GET",
+    url: "https://jobcard-api.pins.co.id/api/task/by-user?user_id="+ user_id,
+    // url: "https://jobcard-api.pins.co.id/api/task/by-user?user_id=" ,
+    headers: {
+      Authorization: 'Bearer ' + localStorage.getItem('access_token')
+    },
+  })
+    .then((response) => {
+      const res = response.data.data;
+      setDataAll(res.tasks)
+    })
+    .catch((error) => {
+      if (error.response) {
+        console.log(error.response.data);
+        console.log(error.response.status);
+        console.log(error.response.headers);
+      } else if (error.request) {
+        console.log(error.request);
+      } else {
+        console.log(error.message);
+      }
+    });
+}, []);
+
+function handleClick() {
+  history.goBack();
+}
+  
     return(
         <div>
-      
-      <MyBurgerMenu/>
-      <Header></Header>
-      {/* <ZeroList/> */}
+      {
+            userRole === "admin" ? <AdminMenu/> : <MyBurgerMenu/>
+        }
         
-        <div className="p-4">
-            {/* <DataTable
-            columns={columns}
-            data={data}
-            /> */}
-
-
-            {/* <Card >
-            <ListGroup >
-                {items.map((item) => (
-                <ListGroup.Item key={item.id} >
-                    <StyledContainer className="d-flex flex-row justify-content-center align-items-center">
-                        <p onClick={() => toggleStar(item.id)}>{item.starred ? <Star className="align-middle"></Star> : <StarFill className="text-warning"></StarFill>}</p>
-                        <Container className="d-flex flex-row">
-                            <Container className="d-flex flex-column" action onClick={alertClicked}>
-                                <p className="m-0">{item.projectName}</p>
-                                <p className="m-0">{item.unit}</p>
-                            </Container>
-                            <Container className= "d-flex flex-column align-items-end">
-                                <p className="small">Update Terakhir {item.update}</p>
-                                <div className="d-flex flex-row">
-                                    <h4 className="align-self-end mx-4"><Paperclip/> 1</h4>
-                                    <h4><ChatDots/> 2</h4>
-                                </div>
-                            </Container>
-                        </Container>    
-                    </StyledContainer>
-                </ListGroup.Item>
-                ))}
-            </ListGroup>
-            </Card> */}
-          <h1>Pekerjaan Berjalan</h1>
-          <Container 
-          className="border border-secondary rounded"
+        <Container className='justify-content-center d-flex align-items-start flex-column p-3 pt-5'>          
+          <Card 
+          className="w-100 p-3"
           >
+            <a onClick={()=>handleClick()} style={{ cursor: 'pointer' }}><ArrowLeftShort/> Back</a>
+            <h1>Pekerjaan {statusNama}</h1>
             
-            <Table hover className="rounded text-center" responsive="sm">
+            <Table hover className="rounded text-center" responsive="sm" >
               <thead>
                 <tr>
                   <th>#</th>
                   <th>Project Name</th>
-                  <th>Nama AM</th>
-                  <th>Unit</th>
+                  <th>Status</th>
+                  <th>Progress (%)</th>
                   <th>Last Update</th>
-                  <th>Tindakan</th>
+                  <th>Dibuat tanggal</th>
                 </tr>
               </thead>
-              <tbody>
-                {items.map((item) => (
+              <tbody style={{cursor:"pointer"}}>
+                
+                {dataAll.map((item) => (
+                 item.status === statusNama ? (
                   <tr key={item.id} >
-                    <td onClick={() => toggleStar(item.id)}>
-                      {item.starred ? <StyledStar className="align-middle" /> : <StyledStarFill className="text-warning" />}
+                    <td onClick={() => toggleStar(item.id,item.pivot.is_favorite)}>
+                      {item.pivot.is_favorite === 0 ? <StyledStar className="align-middle" /> : <StyledStarFill className="text-warning" />}
                     </td>
-                    <td onClick={()=>history.push('/detail-pekerjaan')}>{item.projectName}</td>
-                    <td onClick={()=>history.push('/detail-pekerjaan')}>{item.namaAM}</td>
-                    <td onClick={()=>history.push('/detail-pekerjaan')}>{item.unit}</td>
-                    <td onClick={()=>history.push('/detail-pekerjaan')}>{item.update}</td>
-                    <td className="d-flex flex-row justify-content-evenly"><h4><Paperclip/> 1</h4>
-                    <h4><ChatDots/> 2</h4></td>
-                  </tr>
+                    <td 
+                    onClick={() => history.push({pathname:'/timeline',
+                        state:{data:item}})}
+                        >{item.name}</td>
+                    <td 
+                    onClick={() => history.push({pathname:'/timeline',
+                        state:{data:item}})}
+                        >{item.status}</td>
+                    <td 
+                    onClick={() => history.push({pathname:'/timeline',
+                        state:{data:item}})}
+                        >{item.progress}</td>
+                    
+                    <td 
+                    onClick={() => history.push({pathname:'/timeline',
+                        state:{data:item}})}
+                        >{format(parseISO(item.updated_at), 'dd MMMM yyyy HH:mm:ss')}</td>
+                    <td 
+                    onClick={() => history.push({pathname:'/timeline',
+                        state:{data:item}})}
+                        >{format(parseISO(item.created_at), 'dd MMMM yyyy HH:mm:ss')}
+                        </td>
+                    {/* <td className="d-flex flex-row justify-content-evenly"><h4><Paperclip/> 1</h4>
+                    <h4><ChatDots/> 2</h4></td> */}
+                  </tr>): null
                 ))}
               </tbody>
             </Table>
-          </Container>
-        </div>
+          </Card>
+        </Container>
     </div>
     )
 }
