@@ -1,15 +1,13 @@
 import React from 'react';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import ToggleButton from 'react-bootstrap/ToggleButton';
-import { Container, Row,Col, Card } from "react-bootstrap";
-import axios from 'axios';
+import { Container, Row } from "react-bootstrap";
 import ProjectCard from './PerUnit';
 import PersonCard from './PerPerson';
 
 function FilterBar() {
     const [radioValue, setRadioValue] = useState('person');
-    const [searchData, setSearchData] = useState([]);
   
     const radios = [
       { name: 'Per Person', value: 'person' },

@@ -2,10 +2,12 @@ import React from 'react';
 import { Card, Col, Container, Form, Row, InputGroup, FormControl } from 'react-bootstrap';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
+import { useHistory } from 'react-router-dom/cjs/react-router-dom.min';
 
 const PersonCard = () => {
     const [data, setData]=useState([])
     const [searchTerm, setSearchTerm] =useState('')
+    const history=useHistory()
     
     const [filteredData, setFilteredData] = useState([]);
     const handleSearch = (e) => {
@@ -94,21 +96,23 @@ const PersonCard = () => {
           <Col md={4} key={item.id}>
             <Card className='my-3 shadow' style={{ height: '30vh' }}>
               <Card.Body className='text-center'>
-                {/* <Card.Subtitle>Unit</Card.Subtitle> */}
                 <Card.Title className='text-truncate'>{item.name}</Card.Title>
                 <Card.Subtitle className='text-truncate'>{item.role[0].position.name}</Card.Subtitle>
                 <hr></hr>
 
                 <Card.Text className='d-flex justify-content-center flex-row'>
-                  <Container className='d-flex justify-content-center flex-column'>
+                  <Container className='d-flex justify-content-center flex-column'
+                  onClick={()=>history.push("/list-pekerjaan", {status:'idle', user_id:item.id})}>
                     <h5>Idle</h5>
                     <p className='fs-1'>{idleCount}</p>
                   </Container>
-                  <Container className='d-flex justify-content-center flex-column'>
+                  <Container className='d-flex justify-content-center flex-column'
+                  onClick={()=>history.push("/list-pekerjaan", {status:'On progress', user_id:item.id})}>
                     <h5>Berjalan</h5>
                     <p className='fs-1'>{onProgressCount}</p>
                   </Container>
-                  <Container className='d-flex justify-content-center flex-column'>
+                  <Container className='d-flex justify-content-center flex-column'
+                  onClick={()=>history.push("/list-pekerjaan", {status:'finished', user_id:item.id})}>
                     <h5>Selesai</h5>
                     <p className='fs-1'>{finishedCount}</p>
                   </Container>

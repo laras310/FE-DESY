@@ -1,5 +1,3 @@
-import Header from '../includes/Header';
-import MyBurgerMenu from '../includes/MyBurgerMenu';
 import Card from 'react-bootstrap/Card';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
@@ -86,7 +84,7 @@ const CardUser = ({profil}) =>{
             <Row >
               <Col md={4}>
                 <StyledCard className='my-3 shadow  text-center' style={{height:'30vh'}} 
-                onClick={()=>history.push("/list-pekerjaan", {data:data.tasks, status:'Idle', user_id:data.id})}>
+                onClick={()=>history.push("/list-pekerjaan", {status:'idle', user_id:data.id})}>
                   <Card.Body>
                     <Card.Title>
                       Pekerjaan Idle
@@ -97,7 +95,7 @@ const CardUser = ({profil}) =>{
               </Col>
               <Col md={4}>
                 <StyledCard className='my-3 shadow  text-center' style={{height:'30vh'}}
-                onClick={()=>history.push("/list-pekerjaan", {data:data.tasks, status:'Berjalan', user_id:data.id})}>
+                onClick={()=>history.push("/list-pekerjaan", {status:'On progress', user_id:data.id})}>
                   <Card.Body>
                     <Card.Title>Pekerjaan Berjalan</Card.Title>
                     <Card.Text style={{fontSize:'5rem'}}>{task.onProgress}</Card.Text>
@@ -106,7 +104,7 @@ const CardUser = ({profil}) =>{
               </Col>
               <Col md={4}>
                 <StyledCard className='my-3 shadow text-center' style={{height:'30vh'}}
-                onClick={()=>history.push("/list-pekerjaan", {data:data.tasks, status:'Selesai', user_id:data.id})}>
+                onClick={()=>history.push("/list-pekerjaan", {status:'finished', user_id:data.id})}>
                   <Card.Body>
                     <Card.Title>Pekerjaan Selesai</Card.Title>
                     <Card.Text style={{fontSize:'5rem'}}>{task.finished}</Card.Text>

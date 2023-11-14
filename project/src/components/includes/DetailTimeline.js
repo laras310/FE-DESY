@@ -6,11 +6,11 @@ import Col from 'react-bootstrap/Col';
 import { useHistory } from 'react-router-dom';
 import { Form } from 'react-bootstrap';
 import { ArrowLeftShort} from 'react-bootstrap-icons';
-import { Timeline } from 'rsuite';
 import AdminMenu from './MenuAdmin';
 import { useEffect, useState } from 'react';
 import { useLocation } from "react-router-dom";
 import { format, parseISO } from 'date-fns';
+import TimelineOnly from './TimelineOnly';
 
 export default function DetailTimeline(){
     const location = useLocation();
@@ -23,14 +23,7 @@ export default function DetailTimeline(){
         setUserRole(localStorage.getItem('role')) ;
         },[])
     function handleClick() {
-        if (userRole === 'admin') {
-            console.log("admin")
-            // window.location.replace("/user-dashboard");
-            history.push('/all-task');
-        } else {
-            // console.log("user")
-            history.push('/daftar-pekerjaan');
-        }
+        history.goBack();
     }
 
     return(
@@ -52,24 +45,35 @@ export default function DetailTimeline(){
                                 <Form.Label>Nama Proyek</Form.Label>
                                 <Form.Control value={data.name} disabled></Form.Control>
                             </Form.Group>
-                            <Form.Group>
+                            {
+                                data.unit != null ? 
+                                <Form.Group>
                                 <Form.Label>Nama Unit</Form.Label>
                                 <Form.Control value={data.unit['name']}disabled></Form.Control>
                             </Form.Group>
+                            :
+                            null
+                            }
+
                             <Form.Group>
                                 <Form.Label>Tanggal Mulai</Form.Label>
                                 <Form.Control value={format(parseISO(data.created_at), 'dd MMMM yyyy HH:mm:ss')
                                     } disabled></Form.Control>
                             </Form.Group>
-                            <Form.Group>
+                            {
+                                data.users != null ?
+                                <Form.Group>
                                 <Form.Label>Users</Form.Label>
                                 {
                                     data.users.map((user)=>(
                                         <Form.Control value={user['name']} disabled></Form.Control>
                                     ))
                                 }
-                                
-                            </Form.Group>
+                                </Form.Group>
+                                :
+                                null
+                            }
+
                         </Form>
                         </Card.Body>
                     </Card>
@@ -77,28 +81,7 @@ export default function DetailTimeline(){
                     </Col>
                     <Col md={6} className='mb-3'>
                     <h1>Timeline</h1>
-                    <Timeline align="left">
-                        <Timeline.Item>
-                        <p>2018-03-01</p>
-                        <p>Your order starts processing</p>
-                        </Timeline.Item>
-                        <Timeline.Item>
-                        <p>2018-03-02</p>
-                        <p>Order out of stock</p>
-                        </Timeline.Item>
-                        <Timeline.Item>
-                        <p>2018-03-10</p>
-                        <p>Arrival</p>
-                        </Timeline.Item>
-                        <Timeline.Item>
-                        <p>2018-03-12</p>
-                        <p>Order out of the library</p>
-                        </Timeline.Item>
-                        <Timeline.Item>
-                        <p>2018-03-15</p>
-                        <p>Sending you a piece</p>
-                        </Timeline.Item>
-                    </Timeline>
+                    <TimelineOnly task_id={data.id}/>
                     </Col>
                 </Row>
             </Container>

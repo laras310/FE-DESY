@@ -2,10 +2,12 @@ import React from 'react';
 import { Card, Col, Container, Form, Row, InputGroup, FormControl } from 'react-bootstrap';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
+import { useHistory } from 'react-router-dom';
 
 const ProjectCard = () => {
     const [data, setData]=useState([])
     const [searchTerm, setSearchTerm] =useState('')
+    const history = useHistory()
 
     const [filteredData, setFilteredData] = useState([]);
     const handleSearch = (e) => {
@@ -102,15 +104,18 @@ const ProjectCard = () => {
                 <hr></hr>
 
                 <Card.Text className='d-flex justify-content-center flex-row'>
-                  <Container className='d-flex justify-content-center flex-column'>
+                  <Container className='d-flex justify-content-center flex-column'
+                  onClick={()=>history.push("/list-pekerjaan", {status:'idle', user_id:item.id})}>
                     <h5>Idle</h5>
                     <p className='fs-1'>{idleCount}</p>
                   </Container>
-                  <Container className='d-flex justify-content-center flex-column'>
+                  <Container className='d-flex justify-content-center flex-column'
+                  onClick={()=>history.push("/list-pekerjaan", {status:'On progress', user_id:item.id})}>
                     <h5>Berjalan</h5>
                     <p className='fs-1'>{onProgressCount}</p>
                   </Container>
-                  <Container className='d-flex justify-content-center flex-column'>
+                  <Container className='d-flex justify-content-center flex-column'
+                  onClick={()=>history.push("/list-pekerjaan", {status:'finished', user_id:item.id})}>
                     <h5>Selesai</h5>
                     <p className='fs-1'>{finishedCount}</p>
                   </Container>

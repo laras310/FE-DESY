@@ -1,13 +1,10 @@
-import logo from './logo.svg';
 import './App.css';
-// import Login from './components/pages/Login';
 import Login from './components/pages/Login';
 import DashboardUser from './components/pages/DashboardUser';
 import DashboardAdmin from './components/pages/DashboardAdmin';
 import { Switch, Route } from 'react-router-dom';
 import ListPekerjaan from './components/pages/ListPekerjaan';
 import DaftarPekerjaan from './components/pages/DaftarPekerjaan';
-import DetailPekerjaan from './components/pages/DetailPekerjaan';
 import ProtectedRoute from './components/route/ProtectedRoute';
 import { Redirect } from 'react-router-dom';
 import AllTask from './components/pages/AllTask';
@@ -39,7 +36,7 @@ function App() {
       <ProtectedRoute
         exact path="/list-pekerjaan"
         component={ListPekerjaan}
-        isAuthorized={isAuthorized && userRole === 'user'}
+        isAuthorized={isAuthorized && userRole === 'user' | userRole==='admin'}
       />
       <ProtectedRoute
         exact path="/all-task"
