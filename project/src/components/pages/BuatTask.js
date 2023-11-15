@@ -1,5 +1,5 @@
 import AdminMenu from "../includes/MenuAdmin";
-import { Form, Button, Card, Container, Table } from "react-bootstrap";
+import { Form, Button, Card, Container,  } from "react-bootstrap";
 import { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { WithContext as ReactTags } from 'react-tag-input';
@@ -119,12 +119,6 @@ export default function BuatTask(){
 
   const sendForm = (e) =>{
     const idArrayAsNumbers = userTags.map(item => parseInt(item.id, 10));
-    console.log(selectedValue.name,
-      selectedValue.pic,
-      selectedValue.unit,
-      idArrayAsNumbers,
-      isProject,
-      "awal")
     axios({
       method: 'POST',
       headers: {
@@ -142,6 +136,7 @@ export default function BuatTask(){
     })
       .then(response => {
         alert('berhasil')
+        history.goBack()
       })
       .catch(error => {
         if (error.response) {

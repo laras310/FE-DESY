@@ -1,15 +1,12 @@
-import Header from '../includes/Header';
 import MyBurgerMenu from '../includes/MyBurgerMenu';
 import Card from 'react-bootstrap/Card';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
-import { useHistory } from 'react-router-dom';
 import styled from 'styled-components';
 import { Button} from 'react-bootstrap';
 import { useState } from 'react';
 import ModalPekerjaan from '../includes/Atom/ModalPekerjaan';
-// import ModalDetail from '../includes/ModalDetail';
 
 const StyledCard = styled(Card)`
   transition: transform 0.2s;
@@ -20,7 +17,6 @@ const StyledCard = styled(Card)`
 `;
 
 function DaftarPekerjaan() {
-  const history = useHistory()
   const [modalShow, setModalShow] =useState(false)
   // const [modalDetailShow, setModalDetailShow]= useState(false)
 
@@ -28,7 +24,6 @@ function DaftarPekerjaan() {
     <div>
       
       <MyBurgerMenu/>
-      <Header></Header>
       <Container className='justify-content-center d-flex align-items-start flex-column p-3 pt-5' >
         <Container fluid>
         <Row className='mb-3'>
@@ -101,9 +96,6 @@ function DaftarPekerjaan() {
            show={modalShow}
         onHide={() => setModalShow(false)}
            />
-           {/* <ModalDetail
-           show={modalDetailShow}
-           onhide={()=> setModalDetailShow(false)}/> */}
            
       </Container>
     </div>

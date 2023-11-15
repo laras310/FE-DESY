@@ -6,6 +6,7 @@ import { useHistory } from 'react-router-dom';
 import styled from 'styled-components';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import { useLocation } from 'react-router-dom';
 
 const StyledCard = styled(Card)`
   cursor: pointer; 
@@ -17,8 +18,7 @@ const StyledCard = styled(Card)`
 `;
 
 const CardUser = ({profil}) =>{
-  const history = useHistory()
-
+  const history = useHistory();
   const [data, setData]=useState({
     idle:"",
     onProgress:"",
@@ -26,55 +26,92 @@ const CardUser = ({profil}) =>{
   })
   const [task, setTask]=useState([])
 
-      useEffect(() => {
-        axios({
-          method: "GET",
-          url: "https://jobcard-api.pins.co.id/api/task/by-user?user_id=450",
-          // url: "https://jobcard-api.pins.co.id/api/task/by-user?user_id=" + profil.id,
-          headers: {
-            Authorization: 'Bearer ' + localStorage.getItem('access_token')
-          },
-        })
-          .then((response) => {
-            const res = response.data.data;
-            setData(res)
-            let idleCount = 0;
-            let onProgressCount = 0;
-            let finishedCount = 0;
-            res.tasks.forEach((task)=>{
-              switch (task.status) {
-                case 'Idle':
-                  idleCount++;
-                  break;
-                case 'On progress':
-                  onProgressCount++;
-                  break;
-                case 'Finished':
-                  finishedCount++;
-                  break;
-                default:
-                  // Do nothing for other statuses
-                  break;
-              }
-            })
-            setTask(
-              {idle:idleCount,
-              onProgress:onProgressCount,
-              finished:finishedCount}
-            )
-          })
-          .catch((error) => {
-            if (error.response) {
-              console.log(error.response.data);
-              console.log(error.response.status);
-              console.log(error.response.headers);
-            } else if (error.request) {
-              console.log(error.request);
-            } else {
-              console.log(error.message);
-            }
-          });
-      }, []);
+  function getTask(){
+    let idleCount = 0;
+    let onProgressCount = 0;
+    let finishedCount = 0;
+
+    if (profil){
+      profil.tasks.forEach((task)=>{
+        switch (task.status) {
+          case 'Idle':
+            idleCount++;
+            break;
+          case 'On progress':
+            onProgressCount++;
+            break;
+          case 'Finished':
+            finishedCount++;
+            break;
+          default:
+            // Do nothing for other statuses
+            break;
+        }
+      })
+      setTask(
+        {idle:idleCount,
+        onProgress:onProgressCount,
+        finished:finishedCount}
+      )  
+    }
+
+  }
+
+  
+
+  useEffect(() => {
+    getTask()
+  },[])
+  //   axios({
+  //     method: "GET",
+  //     url: "https://jobcard-api.pins.co.id/api/task/by-user?user_id="+profil.id,
+  //     // url: "https://jobcard-api.pins.co.id/api/task/by-user?user_id=" + profil.id,
+  //     headers: {
+  //       Authorization: 'Bearer ' + localStorage.getItem('access_token')
+  //     },
+  //   })
+  //     .then((response) => {
+  //       const res = response.data.data;
+  //       setData(res)
+  //       let idleCount = 0;
+  //       let onProgressCount = 0;
+  //       let finishedCount = 0;
+  //       res.tasks.forEach((task)=>{
+  //         switch (task.status) {
+  //           case 'Idle':
+  //             idleCount++;
+  //             break;
+  //           case 'On progress':
+  //             onProgressCount++;
+  //             break;
+  //           case 'Finished':
+  //             finishedCount++;
+  //             break;
+  //           default:
+  //             // Do nothing for other statuses
+  //             break;
+  //         }
+  //       })
+  //       setTask(
+  //         {idle:idleCount,
+  //         onProgress:onProgressCount,
+  //         finished:finishedCount}
+  //       )
+  //     })
+  //     .catch((error) => {
+  //       if (error.response) {
+  //         console.log(error.response.data);
+  //         console.log(error.response.status);
+  //         console.log(error.response.headers);
+  //       } else if (error.request) {
+  //         console.log(error.request);
+  //       } else {
+  //         console.log(error.message);
+  //       }
+  //     });
+  // }, []);
+
+
 
     return(
         <Container className='justify-content-center d-flex align-items-start flex-column p-3 pt-5'>
@@ -84,7 +121,7 @@ const CardUser = ({profil}) =>{
             <Row >
               <Col md={4}>
                 <StyledCard className='my-3 shadow  text-center' style={{height:'30vh'}} 
-                onClick={()=>history.push("/list-pekerjaan", {status:'idle', user_id:data.id})}>
+                onClick={()=>history.push("/list-pekerjaan", {status:'idle', user_id:profil.id})}>
                   <Card.Body>
                     <Card.Title>
                       Pekerjaan Idle
@@ -95,7 +132,7 @@ const CardUser = ({profil}) =>{
               </Col>
               <Col md={4}>
                 <StyledCard className='my-3 shadow  text-center' style={{height:'30vh'}}
-                onClick={()=>history.push("/list-pekerjaan", {status:'On progress', user_id:data.id})}>
+                onClick={()=>history.push("/list-pekerjaan", {status:'On progress', user_id:profil.id})}>
                   <Card.Body>
                     <Card.Title>Pekerjaan Berjalan</Card.Title>
                     <Card.Text style={{fontSize:'5rem'}}>{task.onProgress}</Card.Text>
@@ -104,7 +141,7 @@ const CardUser = ({profil}) =>{
               </Col>
               <Col md={4}>
                 <StyledCard className='my-3 shadow text-center' style={{height:'30vh'}}
-                onClick={()=>history.push("/list-pekerjaan", {status:'finished', user_id:data.id})}>
+                onClick={()=>history.push("/list-pekerjaan", {status:'finished', user_id:profil.id})}>
                   <Card.Body>
                     <Card.Title>Pekerjaan Selesai</Card.Title>
                     <Card.Text style={{fontSize:'5rem'}}>{task.finished}</Card.Text>

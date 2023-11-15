@@ -14,7 +14,6 @@ import BuatTask from './components/pages/BuatTask';
 function App() {
   const isAuthorized = localStorage.getItem('access_token') !== null;
   const userRole = localStorage.getItem('role');
-  console.log(isAuthorized,userRole)
   return (
     <Switch>
       <Route exact path="/login" component={Login}></Route>

@@ -7,8 +7,7 @@ import { FloatingLabel } from 'react-bootstrap';
 import axios from 'axios';
 import { useState} from 'react';
 import Cookies from 'js-cookie';
-
-// Untuk menyimpan access token dalam cookie
+import { useHistory } from 'react-router-dom';
 
 
 
@@ -16,6 +15,7 @@ export default function Login() {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [role, setRole] = useState('')
+  const history = useHistory()
 
   function LogMeIn(event){
     axios({
@@ -44,6 +44,7 @@ export default function Login() {
         )
         localStorage.setItem('role', role)
         if (role === 'user') {
+          // history.push({pathname: '/user-dashboard', state:{}})
           window.location.replace("/user-dashboard");
           
         } 
@@ -67,24 +68,25 @@ export default function Login() {
 
   return (
     <Container className='vh-100 justify-content-center d-flex align-items-center justify-content-center'>
-      <Card style={{width:'60vh'}} className='justify-content-center d-flex align-items-center justify-content-center text-center p-5 shadow'>
-           <Card.Img variant="top" src="/assets/images/PINS-Logo-IoT2.png" style={{ width: '50%' }}
+      <Card style={{width:'65vh'}} className='justify-content-center d-flex align-items-center justify-content-center text-center p-5 shadow'>
+           <Card.Img variant="top" src="/assets/images/PINS-Logo-IoT2.png" style={{ width: '30%' }}
          />
-         <Card.Subtitle className='mt-5 fw-normal mb-2'>Selamat datang di Aplikasi</Card.Subtitle>
+         <Card.Subtitle className='mt-3 fw-normal mb-2'>Selamat datang di Aplikasi</Card.Subtitle>
          <Card.Title className='fw-normal mb-2'>
           Distributed Electronic Assignment System (DESY)
          </Card.Title>
          <Card.Body>Silahkan login untuk melanjutkan</Card.Body>
         
          <Form className='w-100' onSubmit={LogMeIn}>
-            <FloatingLabel controlId="username" label="Username" className='mb-3'>
+            <FloatingLabel  controlId="username" label="Username" className='mb-3'
+            >
               <Form.Control
               type="text"
                 placeholder='Username' name="username" onChange={e => setUsername(e.target.value)} value={username}
             />
             </FloatingLabel>
             
-           <FloatingLabel controlId="password" label="Password" className='mb-3'>
+           <FloatingLabel  controlId="password" label="Password" className='mb-3'>
             <Form.Control
               type="password"
                 placeholder='Password' name="password" onChange={e => setPassword(e.target.value)} value={password}
@@ -119,7 +121,7 @@ export default function Login() {
             type="radio"
             value="admin"
           /> */}
-           <Button variant="danger" type="submit" name="asuser" className=' my-2 mt-3 w-100' 
+           <Button variant="danger" type="submit" name="asuser" className=' mt-3 w-100' size="sm" 
            >LOGIN</Button>
            {/* <p className='text-center m-0'>or</p> */}
            {/* <Button variant="danger" type="submit" name="asadmin" className='my-2 mt-3 w-100' 
