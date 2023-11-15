@@ -2,7 +2,6 @@ import MyBurgerMenu from '../includes/MyBurgerMenu';
 import {Card,Container,Row,Col,Button} from 'react-bootstrap';
 import styled from 'styled-components';
 import { useState, useEffect } from 'react';
-import ModalPekerjaan from '../includes/Atom/ModalPekerjaan';
 import axios from 'axios';
 import { useHistory, useLocation  } from 'react-router-dom';
 
@@ -18,8 +17,6 @@ function DaftarPekerjaan() {
   const [modalShow, setModalShow] =useState(false)
   const history = useHistory();
   const user_id = localStorage.getItem('user_id')
-  // const statusNama = location.state.status;
-  // const user_id = location.state.user_id;
   const [dataAll, setDataAll] = useState([])
   // const [userRole, setUserRole] = useState([]);
 
@@ -71,7 +68,9 @@ function DaftarPekerjaan() {
                       <Card.Body >
                         <Card.Title ><a href='/timeline'>{data.name}</a></Card.Title>
                         <Card.Text >{data.unit.name}</Card.Text>
-                        <Button onClick={() => setModalShow(true)}>Update Cepat</Button>
+                        {/* history.push({pathname: '/user-dashboard', state:{}}) */}
+                        <Button onClick={()=>history.push({pathname:'/update-task', state:{data:data}})}
+                        className='btn-danger'>Update Cepat</Button>
                         
                       </Card.Body>
                     </StyledCard>
@@ -128,10 +127,6 @@ function DaftarPekerjaan() {
           </Col>
         </Row>
         </Container>
-           <ModalPekerjaan
-           show={modalShow}
-        onHide={() => setModalShow(false)}
-           />
            
       </Container>
     </div>

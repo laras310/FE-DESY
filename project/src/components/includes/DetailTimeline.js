@@ -16,6 +16,7 @@ export default function DetailTimeline(){
     const location = useLocation();
     const [userRole, setUserRole] = useState([]);
     const data = location.state.data
+    console.log(data)
 // setData()
     const history = useHistory()
     useEffect(() => {
@@ -60,6 +61,10 @@ export default function DetailTimeline(){
                                 <Form.Control value={format(parseISO(data.created_at), 'dd MMMM yyyy HH:mm:ss')
                                     } disabled></Form.Control>
                             </Form.Group>
+                            <Form.Group>
+                                <Form.Label>Nama PIC</Form.Label>
+                                <Form.Control value={data.pic.name} disabled></Form.Control>
+                            </Form.Group>
                             {
                                 data.users != null ?
                                 <Form.Group>
@@ -73,6 +78,14 @@ export default function DetailTimeline(){
                                 :
                                 null
                             }
+                            <Form.Group>
+                                <Form.Label>Status</Form.Label>
+                                <Form.Control value={data.status} disabled></Form.Control>
+                            </Form.Group>
+                            <Form.Group>
+                                <Form.Label>Progress</Form.Label>
+                                <Form.Control value={data.progress + '%'} disabled></Form.Control>
+                            </Form.Group>
 
                         </Form>
                         </Card.Body>

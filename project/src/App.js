@@ -10,6 +10,7 @@ import { Redirect } from 'react-router-dom';
 import AllTask from './components/pages/AllTask';
 import DetailTimeline from './components/includes/DetailTimeline';
 import BuatTask from './components/pages/BuatTask';
+import UpdateTask from './components/pages/UpdateTask';
 
 function App() {
   const isAuthorized = localStorage.getItem('access_token') !== null;
@@ -51,6 +52,11 @@ function App() {
         exact path="/buat-task"
         component={BuatTask}
         isAuthorized={isAuthorized && userRole === 'admin'}
+      />
+      <ProtectedRoute
+        exact path="/update-task"
+        component={UpdateTask}
+        isAuthorized={isAuthorized && userRole === 'user'}
       />
       <Redirect to="/login" />
     </Switch>
