@@ -1,77 +1,8 @@
-// import MyBurgerMenu from '../includes/MyBurgerMenu';
-// import CardUser from '../includes/CardUser';
-// import { useEffect, useState } from 'react';
-// import axios from 'axios';
-
-// function DashboardUser() {
-//   const [profil, setProfil] = useState([]);
-
-// useEffect(() => {
-//   axios({
-//     method: "GET",
-//     url: "https://api.pins.co.id/api/auth/token/detail",
-//     headers: {
-//       Authorization: 'Bearer ' + localStorage.getItem('access_token')
-//     }
-//   })
-//     .then((response) => {
-//       const res = response.data.data;
-
-//       getProfil(res.id)
-//     })
-//     .catch((error) => {
-//       if (error.response) {
-//         console.log(error.response.data);
-//         console.log(error.response.status);
-//         console.log(error.response.headers);
-//       } else if (error.request) {
-//         console.log(error.request);
-//       } else {
-//         console.log(error.message);
-//       }
-//     });
-// }, []);
-
-// function getProfil(user_id){
-//   axios({
-//     method: "GET",
-//     url: "https://jobcard-api.pins.co.id/api/task/by-user?user_id="+user_id,
-//     headers: {
-//       Authorization: 'Bearer ' + localStorage.getItem('access_token')
-//     }
-//   })
-//     .then((response) => {
-//       const res = response.data.data;
-//       setProfil(res)
-//     })
-//     .catch((error) => {
-//       if (error.response) {
-//         console.log(error.response.data);
-//         console.log(error.response.status);
-//         console.log(error.response.headers);
-//       } else if (error.request) {
-//         console.log(error.request);
-//       } else {
-//         console.log(error.message);
-//       }
-//     });
-// }
-
-//   return (
-//     <div>
-      
-//       <MyBurgerMenu/>
-//       <CardUser profil={profil}/>
-//     </div>
-//   );
-// }
-
-// export default DashboardUser;
-
 import MyBurgerMenu from '../includes/MyBurgerMenu';
 import CardUser from '../includes/CardUser';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import { Spinner, Container } from 'react-bootstrap';
 
 function DashboardUser() {
   const [profil, setProfil] = useState([]);
@@ -90,6 +21,10 @@ function DashboardUser() {
 
         const userId = responseToken.data.data.id;
         await getProfil(userId);
+        localStorage.setItem(
+          'user_id',
+          userId
+        )
 
         setLoading(false);
       } catch (error) {
@@ -119,7 +54,13 @@ function DashboardUser() {
   }
 
   if (loading) {
-    return <div>Loading...</div>;
+    return     <div >
+      <MyBurgerMenu />
+      <Container className='justify-content-center d-flex align-items-center flex-column p-3 pt-5'>
+      <Spinner animation="border" role="status">
+    <span className="visually-hidden">Loading...</span>
+  </Spinner></Container>
+  </div>
   }
 
   return (

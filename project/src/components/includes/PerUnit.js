@@ -97,7 +97,7 @@ const ProjectCard = () => {
 
         return (
           <Col md={4} key={item.id}>
-            <Card className='my-3 shadow' style={{ height: '30vh' }}>
+            <Card className='my-3 shadow' style={{ minHeight: '30vh' }}>
               <Card.Body className='text-center'>
                 <Card.Subtitle>Unit</Card.Subtitle>
                 <Card.Title className='text-truncate'>{item.name}</Card.Title>

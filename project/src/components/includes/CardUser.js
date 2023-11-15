@@ -62,57 +62,6 @@ const CardUser = ({profil}) =>{
   useEffect(() => {
     getTask()
   },[])
-  //   axios({
-  //     method: "GET",
-  //     url: "https://jobcard-api.pins.co.id/api/task/by-user?user_id="+profil.id,
-  //     // url: "https://jobcard-api.pins.co.id/api/task/by-user?user_id=" + profil.id,
-  //     headers: {
-  //       Authorization: 'Bearer ' + localStorage.getItem('access_token')
-  //     },
-  //   })
-  //     .then((response) => {
-  //       const res = response.data.data;
-  //       setData(res)
-  //       let idleCount = 0;
-  //       let onProgressCount = 0;
-  //       let finishedCount = 0;
-  //       res.tasks.forEach((task)=>{
-  //         switch (task.status) {
-  //           case 'Idle':
-  //             idleCount++;
-  //             break;
-  //           case 'On progress':
-  //             onProgressCount++;
-  //             break;
-  //           case 'Finished':
-  //             finishedCount++;
-  //             break;
-  //           default:
-  //             // Do nothing for other statuses
-  //             break;
-  //         }
-  //       })
-  //       setTask(
-  //         {idle:idleCount,
-  //         onProgress:onProgressCount,
-  //         finished:finishedCount}
-  //       )
-  //     })
-  //     .catch((error) => {
-  //       if (error.response) {
-  //         console.log(error.response.data);
-  //         console.log(error.response.status);
-  //         console.log(error.response.headers);
-  //       } else if (error.request) {
-  //         console.log(error.request);
-  //       } else {
-  //         console.log(error.message);
-  //       }
-  //     });
-  // }, []);
-
-
-
     return(
         <Container className='justify-content-center d-flex align-items-start flex-column p-3 pt-5'>
           <h1 className='m-0 light pt-5'>Selamat Pagi,</h1>

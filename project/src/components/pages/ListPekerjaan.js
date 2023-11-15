@@ -1,5 +1,5 @@
 import MyBurgerMenu from "../includes/MyBurgerMenu";
-import { Card, Container, Table} from "react-bootstrap";
+import { Card, Container, Table, Button} from "react-bootstrap";
 import { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import { Star, StarFill, ArrowLeftShort} from "react-bootstrap-icons";
@@ -58,7 +58,7 @@ export default function ListPekerjaan(){
     .then((response) => {
       // const res = response.data.data;
       console.log(response);
-      // window.location.reload()
+      window.location.reload()
     })
     .catch((error) => {
       console.error(error);
@@ -118,6 +118,10 @@ function handleClick() {
                   <th>Progress (%)</th>
                   <th>Last Update</th>
                   <th>Dibuat tanggal</th>
+                  {
+                    userRole === "user" ? <th>Aktivitas</th> : null
+                  }
+                  
                 </tr>
               </thead>
               <tbody style={{cursor:"pointer"}}>
@@ -150,6 +154,12 @@ function handleClick() {
                         state:{data:item}})}
                         >{format(parseISO(item.created_at), 'dd MMMM yyyy HH:mm:ss')}
                         </td>
+                        {
+                    userRole === "user" ? <td>
+                    <Button>Update</Button>
+                  </td> : null
+                  }
+                    
                     {/* <td className="d-flex flex-row justify-content-evenly"><h4><Paperclip/> 1</h4>
                     <h4><ChatDots/> 2</h4></td> */}
                   </tr>): null
