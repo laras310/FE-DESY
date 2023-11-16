@@ -14,7 +14,6 @@ const StyledCard = styled(Card)`
 `;
 
 function DaftarPekerjaan() {
-  const [modalShow, setModalShow] =useState(false)
   const history = useHistory();
   const user_id = localStorage.getItem('user_id')
   const [dataAll, setDataAll] = useState([])
@@ -66,7 +65,9 @@ function DaftarPekerjaan() {
                     <StyledCard className='my-3 '
                     >
                       <Card.Body >
-                        <Card.Title ><a href='/timeline'>{data.name}</a></Card.Title>
+                        <Card.Title onClick={()=>history.push({pathname:'/timeline', state:{data:data}})}>
+                        
+                          {data.name}</Card.Title>
                         <Card.Text >{data.unit.name}</Card.Text>
                         {/* history.push({pathname: '/user-dashboard', state:{}}) */}
                         <Button onClick={()=>history.push({pathname:'/update-task', state:{data:data}})}
@@ -115,7 +116,7 @@ function DaftarPekerjaan() {
             </Card>
           </Col>
           <Col>
-            <Card>
+            {/* <Card>
               <Card.Body>
                 <h3>Project Berjalan</h3>
                 <StyledCard className="mt-3 p-2">
@@ -123,7 +124,7 @@ function DaftarPekerjaan() {
                         <Card.Subtitle>Abhiyoga - Enterpirise</Card.Subtitle>
                     </StyledCard>
               </Card.Body>
-            </Card>
+            </Card> */}
           </Col>
         </Row>
         </Container>

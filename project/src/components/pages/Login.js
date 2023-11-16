@@ -121,7 +121,7 @@ export default function Login() {
             type="radio"
             value="admin"
           /> */}
-           <Button variant="danger" type="submit" name="asuser" className=' mt-3 w-100' size="sm" 
+           <Button variant="danger" type="submit" name="submit" className=' mt-3 w-100' size="sm" 
            >LOGIN</Button>
            {/* <p className='text-center m-0'>or</p> */}
            {/* <Button variant="danger" type="submit" name="asadmin" className='my-2 mt-3 w-100' 

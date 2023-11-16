@@ -11,6 +11,7 @@ import AllTask from './components/pages/AllTask';
 import DetailTimeline from './components/includes/DetailTimeline';
 import BuatTask from './components/pages/BuatTask';
 import UpdateTask from './components/pages/UpdateTask';
+import ListPekerjaanUnit from './components/pages/ListPekerjaanUnit';
 
 function App() {
   const isAuthorized = localStorage.getItem('access_token') !== null;
@@ -57,6 +58,11 @@ function App() {
         exact path="/update-task"
         component={UpdateTask}
         isAuthorized={isAuthorized && userRole === 'user'}
+      />
+      <ProtectedRoute
+        exact path="/listperunit"
+        component={ListPekerjaanUnit}
+        isAuthorized={isAuthorized && userRole === 'admin'}
       />
       <Redirect to="/login" />
     </Switch>

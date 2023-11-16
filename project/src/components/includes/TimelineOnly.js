@@ -18,7 +18,7 @@ export default function TimelineOnly({task_id}){
         .then((response)=>{
             const res= response.data.data
             setActivity(res.activities)
-            console.log(res.activities[0].files[0].name)
+            console.log(res)
         })
         .catch((error) => {
             if (error.response) {
@@ -33,6 +33,30 @@ export default function TimelineOnly({task_id}){
           });
     },[])
 
+    function axiosDownloadFile(url, fileName) {
+      return axios({
+        url,
+        method: 'GET',
+        responseType: 'blob',
+      })
+        .then(response => {
+          const href = window.URL.createObjectURL(response.data);
+    
+          const anchorElement = document.createElement('a');
+    
+          anchorElement.href = href;
+          anchorElement.download = fileName;
+    
+          document.body.appendChild(anchorElement);
+          anchorElement.click();
+    
+          document.body.removeChild(anchorElement);
+          window.URL.revokeObjectURL(href);
+        })
+        .catch(error => {
+          console.log('error: ', error);
+        });
+    }
     return(
         <Timeline align="left">
             <Timeline.Item>
@@ -45,7 +69,9 @@ export default function TimelineOnly({task_id}){
 
                   {task.files != null ? (
                     task.files.map((file, index) => (
-                      <p key={index}><FileArrowDown className='fs-4'/>  {file.name}</p>
+                      
+                        <p key={index} onClick={()=>axiosDownloadFile('https://jobcard-api.pins.co.id/api/evidence/CxDU9vyadbKpvJXZ8P9l3h0i69lVmkYDLAerT9lB.png', 'CxDU9vyadbKpvJXZ8P9l3h0i69lVmkYDLAerT9lB.png')}
+                        ><FileArrowDown className='fs-4'/>  Download file</p>
                     ))
                   ) : (
                     null

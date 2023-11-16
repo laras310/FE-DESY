@@ -1,17 +1,9 @@
 import AdminMenu from "../includes/MenuAdmin";
-import { Form, Button, Card, Container,  } from "react-bootstrap";
+import { Form, Button, Card, Container, Row  } from "react-bootstrap";
 import { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
-import { WithContext as ReactTags } from 'react-tag-input';
 import axios from "axios";
-import './BuatTask.css'
-
-const KeyCodes = {
-  comma: 188,
-  enter: 13
-};
-
-const delimiters = [KeyCodes.comma, KeyCodes.enter];
+import {CheckPicker, SelectPicker } from 'rsuite';
 
 export default function BuatTask(){
   const history = useHistory()  
@@ -26,27 +18,35 @@ export default function BuatTask(){
     pic:'',
     unit:''
   });
-  const [data, setData] = useState({
-    name:'',
-    pic:'',
-    unit:''
-  });
-  console.log(selectedValue)
+
   const handleSwitchChange = () => {
     setIsProject(!isProject); // Toggle the state when the switch changes
   };
   const handleInputChange = (e) =>{
     const {value, name} = e.target
-    setData(prevNote=> ({
-    ...prevNote, [name]:value
-    }))
+    // setData(prevNote=> ({
+    // ...prevNote, [name]:value
+    // }))
     setSelectedValue(prevNote=> ({
       ...prevNote, [name]:value
       }))
       
   }
 
+  const handleChange = (values) => {
+    setUserTags(values);
+    console.log(userTags)
+  };
+
+  const handleChangePic = (values) => {
+    const name='pic'
+    setSelectedValue(prevNote=> ({
+      ...prevNote, [name]:values
+      }))
+  };
+
   useEffect(()=>{
+    
     const fetchPic = async ()=>{
       try{
         const [request1, request2] = await Promise.all([
@@ -79,13 +79,9 @@ export default function BuatTask(){
     
   }, []);
 
-  const userSuggestions = namaUser.map(user => {
-    return {
-      id: user.id,
-      text: user.name,
-    };
-  });
-
+const userSuggestions= namaUser.map(user=>{
+  return{ label: user.name, value: user.id }
+})
   const unitsuggestions = namaUnit.map(unit => {
     return {
       id: unit.id,
@@ -93,32 +89,7 @@ export default function BuatTask(){
     };
   });
 
-  const handleDeleteUser = i => {
-    setUserTags(userTags.filter((tag, index) => index !== i));
-  };
-
-  const handleAdditionUser = tag => {
-    setUserTags([...userTags, tag]);
-    
-  };
-
-
-  const handleDragUser = (tag, currPos, newPos) => {
-    const newTags = userTags.slice();
-
-    newTags.splice(currPos, 1);
-    newTags.splice(newPos, 0, tag);
-
-    // re-render
-    setUserTags(newTags);
-  };
-
-  const handleTagClick = index => {
-    console.log('The tag at index ' + index + ' was clicked');
-  };
-
   const sendForm = (e) =>{
-    const idArrayAsNumbers = userTags.map(item => parseInt(item.id, 10));
     axios({
       method: 'POST',
       headers: {
@@ -129,7 +100,7 @@ export default function BuatTask(){
         name:selectedValue.name,
         pic_id:selectedValue.pic,
         unit_id:selectedValue.unit,
-        users:idArrayAsNumbers,
+        users:userTags,
         type:isProject,
         status: "awal"
       },
@@ -169,15 +140,15 @@ export default function BuatTask(){
                             value={selectedValue.name}/>
                         </Form.Group>
                         <Form.Group>
+                          <Row>
                             <Form.Label>Nama PIC</Form.Label>
-                            <Form.Select aria-label="Default select example"
-                            onChange= {handleInputChange}
-                            name="pic">
-                              <option hidden default>Pilih PIC</option>
-                              {userSuggestions.map((user) => (
-                              <option value={user.id} >{user.text}</option>
-                            ))}
-                            </Form.Select>
+                            <SelectPicker
+                            data={userSuggestions}
+                            onChange={handleChangePic}
+                            value={selectedValue.pic}
+                            name="pic"
+                            />
+                            </Row>
                         </Form.Group>
                         <Form.Group>
                             <Form.Label>Nama Unit</Form.Label>
@@ -191,26 +162,21 @@ export default function BuatTask(){
                             </Form.Select>
                         </Form.Group>
                         <Form.Group>
+                          <Row>
                             <Form.Label>Assign ke</Form.Label>
-                            <div id="tags">
-                            <ReactTags
-                              tags={userTags}
-                              suggestions={userSuggestions}
-                              delimiters={delimiters}
-                              handleDelete={handleDeleteUser}
-                              handleAddition={handleAdditionUser}
-                              handleDrag={handleDragUser}
-                              handleTagClick={handleTagClick}
-                              inputFieldPosition="bottom"
-                              autocomplete
-                              inline
-                            /></div>
+                            <CheckPicker
+                            data={userSuggestions}
+                            value={userTags}
+                            onChange={handleChange}
+                            />
+                            </Row>
                         </Form.Group>
                         <Form.Group>
                           <Form.Switch
                           label="Project?"
                           checked={isProject} // Controlled component, using the state variable
                           onChange={handleSwitchChange} // Event handler for switch change
+                          className="my-3"
                           />
                         </Form.Group>
 

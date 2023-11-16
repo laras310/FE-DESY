@@ -31,6 +31,7 @@ const ProjectCard = () => {
               const res = response.data.data;
               setData(res);
               setFilteredData(res)
+              console.log(res)
             })
             .catch((error) => {
               if (error.response) {
@@ -110,7 +111,7 @@ const ProjectCard = () => {
                     <p className='fs-1'>{idleCount}</p>
                   </Container>
                   <Container className='d-flex justify-content-center flex-column'
-                  onClick={()=>history.push("/list-pekerjaan", {status:'On progress', user_id:item.id})}>
+                  onClick={()=>history.push("/listperunit", {status:'On progress', data:item.tasks})}>
                     <h5>Berjalan</h5>
                     <p className='fs-1'>{onProgressCount}</p>
                   </Container>

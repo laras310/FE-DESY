@@ -1,49 +1,68 @@
-import { Container, Button, Card, Form} from "react-bootstrap";
+import { Container, Button, Card, Form, Row, Col} from "react-bootstrap";
 import MyBurgerMenu from "../includes/MyBurgerMenu";
 import { useLocation, useHistory } from "react-router-dom";
 import { useState } from "react";
 import axios from "axios";
+import {Slider, InputNumber, Uploader} from 'rsuite';
+import { useRef } from "react";
+import { ArrowLeftShort } from "react-bootstrap-icons";
 
 export default function UpdateTask(){
     const location = useLocation()
-    const [task, setTask] = useState([])
-    const data = location.state.data
     const history = useHistory()
+    const [description, setDescription] = useState('')
+    const data = location.state.data
+    const [value, setValue] = useState(data.progress);
+    const [fileList, setFileList] = useState([]);
+    const uploader = useRef();
+    const user_id=localStorage.getItem('user_id')
 
-    const sendForm = (e) =>{
-        // const idArrayAsNumbers = userTags.map(item => parseInt(item.id, 10));
-        axios({
-          method: 'POST',
+    function handleClick() {
+      history.goBack();
+  }
+
+    const handleUpload = async (event) => {
+      event.preventDefault();
+      if (data) {
+      try {
+        
+        const formData = new FormData();
+    
+        // Append each file to FormData
+        for (let i = 0; i < 3; i++) {
+          const file = fileList[i];
+        
+          if (file) {
+            formData.append(`evidence[${i}]`, file.blobFile, file.name);
+          } else {
+            // Handle the case where fileList[i] is undefined
+            console.error(`File at index ${i} is undefined`);
+          }
+        }
+    
+        // Append other form data to FormData
+        formData.append('user_id', user_id);
+        formData.append('task_id', data.id);
+        formData.append('progress', value);
+        formData.append('description', description);
+    
+        const response = await axios.post('https://jobcard-api.pins.co.id/api/activity', formData, {
           headers: {
-            Authorization: 'Bearer ' + localStorage.getItem('access_token')
+            Authorization: 'Bearer ' + localStorage.getItem('access_token'),
+            'Content-Type': 'multipart/form-data',
           },
-          url: 'https://jobcard-api.pins.co.id/api/activity',
-          data: {
-            // user_id:,
-            // task_id,
-            // evidence,
-            // progress:,
-            // description:,
-
-          },
-        })
-          .then(response => {
-            alert('berhasil')
-            history.goBack()
-          })
-          .catch(error => {
-            if (error.response) {
-              // The request was made, but the server responded with a non-2xx status code
-              console.error("Error status:", error.response.status);
-              console.error("Error data:", error.response.data);
-            } else {
-              // Something happened in setting up the request that triggered an error
-              console.error("Error message:", error.message);
-            }
-          });
-          e.preventDefault();
+        });
+        window.location.replace("/user-dashboard");
+      } 
+      catch (error) {
+        console.error('Error uploading files:', error);
+      }}
+      else {
+        // Handle the case where data is undefined or null
+        console.error("Data is undefined or null");
       }
-
+    };
+    
     return(
         <>
         <MyBurgerMenu/>
@@ -51,26 +70,72 @@ export default function UpdateTask(){
         <Container>
             <Card>
                 <Card.Body>
-                <h1>Update Task</h1>
-                <h3>{data.name}</h3>
-                <h5>{data.unit.name}</h5>
-                <Form>
+                <a onClick={()=>handleClick()} style={{ cursor: 'pointer' }}><ArrowLeftShort/> Back</a>
+                <h1>Update Project</h1>
+                {/* <h3>Nama Project : {data.name}</h3>
+                <h5>Nama Unit : {data.unit.name}</h5> */}
+                <Form 
+                onSubmit={(e) => handleUpload(e)}
+                >
                     <Form.Group>
-                        <Form.Label>Range</Form.Label>
-                        <Form.Range value='20'/>
+                        <Form.Label>Range Progress</Form.Label>
+                        <Row>
+                          <Col >
+                            <Slider
+                              progress
+                              style={{ marginTop: 16 }}
+                              value={value}
+                              constraint={(start)=>start<=value}
+                              onChange={value => {
+                                setValue(value);
+                              }}
+                            />
+                          </Col>
+                          <Col >
+                            <InputNumber
+                              min={0}
+                              max={100}
+                              value={value}
+                              onChange={value => {
+                                setValue(value);
+                              }}
+                            />
+                          </Col>
+                        </Row>
                     </Form.Group>
                     <Form.Group>
                         <Form.Label>Deskripsi</Form.Label>
                         <Form.Control
                         as="textarea" placeholder="add new progress"
+                        value={description}
+                        onChange={e => setDescription(e.target.value)}
                         ></Form.Control>
                     </Form.Group>
                     <Form.Group>
-                    <Form.Label></Form.Label>
-                    <Form.Control type="file" className='mt-3'></Form.Control>
+                      <Form.Label>Evidence</Form.Label>
+                    <Uploader
+                      fileList={fileList}
+                      autoUpload={false}
+                      onChange={setFileList}
+                      ref={uploader}
+                      draggable
+                      onUpload={() => {
+                        // Menggunakan ref untuk mendapatkan status unggahan
+                        if (uploader.current) {
+                          uploader.current.start();
+                        }
+                      }}
+                    >
+                            <div style={{ height: 200, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <span>Click or Drag files to this area to upload</span>
+      </div>
+                    </Uploader>
                     </Form.Group>
-                    <Button>add more file</Button>
-                    <Button>Submit</Button>
+                    
+                    <Button variant="danger" 
+                    type="submit" name="submit"
+                    // onClick={handleUpload}
+                    >Submit</Button>
                 </Form>
                 </Card.Body>
             </Card>

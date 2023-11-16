@@ -25,73 +25,74 @@ const StyledStarFill = styled(StarFill)`
   }
 `
 ;
-export default function ListPekerjaan(){
+export default function ListPekerjaanUnit(){
   const history = useHistory()
   const location = useLocation();
   const statusNama = location.state.status;
-  const user_id = location.state.user_id;
+  const data = location.state.data;
   const [dataAll, setDataAll] = useState([])
   const [userRole, setUserRole] = useState([]);
+  console.log(data)
 
-  const toggleStar = (task_id, is_favorite) => {
-    let favorite = "";
+//   const toggleStar = (task_id, is_favorite) => {
+//     let favorite = "";
   
-    if (is_favorite === 1) {
-      favorite = 0;
-    } else {
-      favorite = 1;
-    }
+//     if (is_favorite === 1) {
+//       favorite = 0;
+//     } else {
+//       favorite = 1;
+//     }
   
-    axios({
-      method: "PATCH",
-      // url:"https://http://jobcard-api.pins.co.id/api/task/favorite?user_id="+ user_id+"&task_id="+task_id+"&is_favorite="+favorite,
-      url: "https://jobcard-api.pins.co.id/api/task/favorite",
-      headers: {
-        Authorization: 'Bearer ' + localStorage.getItem('access_token')
-      },
-      data: {
-        user_id: user_id,
-        task_id: task_id,
-        is_favorite: favorite
-      }
-    })
-    .then((response) => {
-      // const res = response.data.data;
-      console.log(response);
-      window.location.reload()
-    })
-    .catch((error) => {
-      console.error(error);
-    });
-  };
+//     axios({
+//       method: "PATCH",
+//       // url:"https://http://jobcard-api.pins.co.id/api/task/favorite?user_id="+ user_id+"&task_id="+task_id+"&is_favorite="+favorite,
+//       url: "https://jobcard-api.pins.co.id/api/task/favorite",
+//       headers: {
+//         Authorization: 'Bearer ' + localStorage.getItem('access_token')
+//       },
+//       data: {
+//         user_id: user_id,
+//         task_id: task_id,
+//         is_favorite: favorite
+//       }
+//     })
+//     .then((response) => {
+//       // const res = response.data.data;
+//       console.log(response);
+//       window.location.reload()
+//     })
+//     .catch((error) => {
+//       console.error(error);
+//     });
+//   };
 
-useEffect(() => {
-  setUserRole(localStorage.getItem('role')) ;
-  axios({
-    method: "GET",
-    url: "https://jobcard-api.pins.co.id/api/task/by-user?user_id="+ user_id,
-    // url: "https://jobcard-api.pins.co.id/api/task/by-user?user_id=" ,
-    headers: {
-      Authorization: 'Bearer ' + localStorage.getItem('access_token')
-    },
-  })
-    .then((response) => {
-      const res = response.data.data;
-      setDataAll(res.tasks)
-      console.log(res)
-    })
-    .catch((error) => {
-      if (error.response) {
-        console.log(error.response.data);
-        console.log(error.response.status);
-        console.log(error.response.headers);
-      } else if (error.request) {
-        console.log(error.request);
-      } else {
-        console.log(error.message);
-      }
-    });
-}, []);
+// useEffect(() => {
+//   setUserRole(localStorage.getItem('role')) ;
+//   axios({
+//     method: "GET",
+//     url: "https://jobcard-api.pins.co.id/api/task/by-user?user_id="+ user_id,
+//     // url: "https://jobcard-api.pins.co.id/api/task/by-user?user_id=" ,
+//     headers: {
+//       Authorization: 'Bearer ' + localStorage.getItem('access_token')
+//     },
+//   })
+//     .then((response) => {
+//       const res = response.data.data;
+//       setDataAll(res.tasks)
+//       console.log(res)
+//     })
+//     .catch((error) => {
+//       if (error.response) {
+//         console.log(error.response.data);
+//         console.log(error.response.status);
+//         console.log(error.response.headers);
+//       } else if (error.request) {
+//         console.log(error.request);
+//       } else {
+//         console.log(error.message);
+//       }
+//     });
+// }, []);
 
 function handleClick() {
   history.goBack();
@@ -113,7 +114,7 @@ function handleClick() {
             <Table hover className="rounded text-center" responsive="sm" >
               <thead>
                 <tr>
-                  <th>#</th>
+                  {/* <th>#</th> */}
                   <th>Project Name</th>
                   <th>Status</th>
                   <th>Progress (%)</th>
@@ -127,12 +128,12 @@ function handleClick() {
               </thead>
               <tbody style={{cursor:"pointer"}}>
                 
-                {dataAll.map((item) => (
+                {data.map((item) => (
                  item.status === statusNama ? (
                   <tr key={item.id} >
-                    <td onClick={() => toggleStar(item.id,item.pivot.is_favorite)}>
+                    {/* <td onClick={() => toggleStar(item.id,item.pivot.is_favorite)}>
                       {item.pivot.is_favorite === 0 ? <StyledStar className="align-middle" /> : <StyledStarFill className="text-warning" />}
-                    </td>
+                    </td> */}
                     <td 
                     onClick={() => history.push({pathname:'/timeline',
                         state:{data:item}})}
@@ -163,8 +164,6 @@ function handleClick() {
                   </td> : null
                   }
                     
-                    {/* <td className="d-flex flex-row justify-content-evenly"><h4><Paperclip/> 1</h4>
-                    <h4><ChatDots/> 2</h4></td> */}
                   </tr>): null
                 ))}
               </tbody>
