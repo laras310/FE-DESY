@@ -5,8 +5,6 @@ import Col from 'react-bootstrap/Col';
 import { useHistory } from 'react-router-dom';
 import styled from 'styled-components';
 import { useEffect, useState } from 'react';
-import axios from 'axios';
-import { useLocation } from 'react-router-dom';
 
 const StyledCard = styled(Card)`
   cursor: pointer; 

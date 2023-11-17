@@ -11,12 +11,15 @@ import { useEffect, useState } from 'react';
 import { useLocation } from "react-router-dom";
 import { format, parseISO } from 'date-fns';
 import TimelineOnly from './TimelineOnly';
+import axios from 'axios';
 
 export default function DetailTimeline(){
     const location = useLocation();
     const [userRole, setUserRole] = useState([]);
     const data = location.state.data
-// setData()
+    const task_id= data.id
+    const [detail, setDetail]= useState([]);
+
     const history = useHistory()
     useEffect(() => {
         
@@ -25,6 +28,32 @@ export default function DetailTimeline(){
     function handleClick() {
         history.goBack();
     }
+
+    useEffect(() => {
+        axios({
+            method: "GET",
+            url: "https://jobcard-api.pins.co.id/api/task?task_id="+task_id,
+            // url: "https://jobcard-api.pins.co.id/api/task/by-user?user_id=" + profil.id,
+            headers: {
+              Authorization: 'Bearer ' + localStorage.getItem('access_token')
+            },
+          })
+        .then((response)=>{
+            const res= response.data.data
+            setDetail(res)
+        })
+        .catch((error) => {
+            if (error.response) {
+              console.log(error.response.data);
+              console.log(error.response.status);
+              console.log(error.response.headers);
+            } else if (error.request) {
+              console.log(error.request);
+            } else {
+              console.log(error.message);
+            }
+          });
+    },[])
 
     return(
         <>
@@ -43,33 +72,48 @@ export default function DetailTimeline(){
                             <Form>
                             <Form.Group>
                                 <Form.Label>Nama Proyek</Form.Label>
-                                <Form.Control value={data.name} disabled></Form.Control>
+                                <Form.Control value={detail.name} disabled></Form.Control>
                             </Form.Group>
                             {
-                                data.unit != null ? 
+                                detail.unit != null ? 
                                 <Form.Group>
                                 <Form.Label>Nama Unit</Form.Label>
-                                <Form.Control value={data.unit['name']}disabled></Form.Control>
+                                <Form.Control value={detail.unit['name']}disabled></Form.Control>
+                            </Form.Group>
+                            :
+                            null
+                            }
+                            {
+                                detail.created_at != null ?
+                                <Form.Group>
+                                <Form.Label>Tanggal Mulai</Form.Label>
+                                <Form.Control value={format(parseISO(detail.created_at), 'dd MMMM yyyy HH:mm:ss')
+                                    } disabled></Form.Control>
                             </Form.Group>
                             :
                             null
                             }
 
-                            <Form.Group>
-                                <Form.Label>Tanggal Mulai</Form.Label>
-                                <Form.Control value={format(parseISO(data.created_at), 'dd MMMM yyyy HH:mm:ss')
-                                    } disabled></Form.Control>
-                            </Form.Group>
-                            {/* <Form.Group>
-                                <Form.Label>Nama PIC</Form.Label>
-                                <Form.Control value={data.pic.name} disabled></Form.Control>
-                            </Form.Group> */}
+
                             {
-                                data.users != null ?
+                                detail.pic != null ?
+                                // <p>tes</p>
+                                <Form.Group>
+                                    <Form.Label>Nama PIC</Form.Label>
+                                    <Form.Control value={detail.pic.name} disabled></Form.Control>
+                                </Form.Group>
+                                :
+                                null
+                                // console.log(data)
+                            }
+                            
+                            {
+                                detail.users != null ?
                                 <Form.Group>
                                 <Form.Label>Users</Form.Label>
                                 {
-                                    data.users.map((user)=>(
+                                    detail.users.map((user)=>(
+                                        // <p>user</p>
                                         <Form.Control value={user['name']} disabled></Form.Control>
                                     ))
                                 }
@@ -79,11 +123,11 @@ export default function DetailTimeline(){
                             }
                             <Form.Group>
                                 <Form.Label>Status</Form.Label>
-                                <Form.Control value={data.status} disabled></Form.Control>
+                                <Form.Control value={detail.status} disabled></Form.Control>
                             </Form.Group>
                             <Form.Group>
                                 <Form.Label>Progress</Form.Label>
-                                <Form.Control value={data.progress + '%'} disabled></Form.Control>
+                                <Form.Control value={detail.progress + '%'} disabled></Form.Control>
                             </Form.Group>
 
                         </Form>
@@ -93,7 +137,7 @@ export default function DetailTimeline(){
                     </Col>
                     <Col md={6} className='mb-3'>
                     <h1>Timeline</h1>
-                    <TimelineOnly task_id={data.id}/>
+                    <TimelineOnly data={detail}/>
                     </Col>
                 </Row>
             </Container>

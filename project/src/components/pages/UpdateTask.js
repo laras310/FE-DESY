@@ -85,10 +85,11 @@ export default function UpdateTask(){
                               progress
                               style={{ marginTop: 16 }}
                               value={value}
-                              constraint={(start)=>start<=value}
+                              constraint={([start])=>start<=value}
                               onChange={value => {
                                 setValue(value);
                               }}
+                              tooltip
                             />
                           </Col>
                           <Col >

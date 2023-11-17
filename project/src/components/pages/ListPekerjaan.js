@@ -113,7 +113,12 @@ function handleClick() {
             <Table hover className="rounded text-center" responsive="sm" >
               <thead>
                 <tr>
-                  <th>#</th>
+                  {
+                    localStorage.getItem(userRole) === 'admin' ?
+                    <th>#</th>:
+                    null
+                  }
+                  
                   <th>Project Name</th>
                   <th>Status</th>
                   <th>Progress (%)</th>
@@ -130,9 +135,14 @@ function handleClick() {
                 {dataAll.map((item) => (
                  item.status === statusNama ? (
                   <tr key={item.id} >
-                    <td onClick={() => toggleStar(item.id,item.pivot.is_favorite)}>
+                    {
+                      localStorage.getItem(userRole) === 'admin' ?
+                      <td onClick={() => toggleStar(item.id,item.pivot.is_favorite)}>
                       {item.pivot.is_favorite === 0 ? <StyledStar className="align-middle" /> : <StyledStarFill className="text-warning" />}
                     </td>
+                    : null
+                    }
+                    
                     <td 
                     onClick={() => history.push({pathname:'/timeline',
                         state:{data:item}})}

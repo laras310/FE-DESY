@@ -3,6 +3,27 @@ import { Card, Col, Container, Form, Row, InputGroup, FormControl } from 'react-
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom/cjs/react-router-dom.min';
+import styled from 'styled-components';
+
+const StyledCard = styled(Card)`
+  // cursor: pointer; 
+  transition: transform 0.2s;
+
+  &:hover {
+    transform: scale(1.05);
+  }
+`;
+
+const StyledContainer = styled(Container)`
+  cursor: pointer; 
+  transition: transform 0.2s;
+
+  &:hover {
+    // transform: scale(1.05);
+    color: #007BFF;
+  }
+`;
+
 
 const PersonCard = () => {
     const [data, setData]=useState([])
@@ -94,31 +115,31 @@ const PersonCard = () => {
 
         return (
           <Col md={4} key={item.id}>
-            <Card className='my-3 shadow' style={{ minHeight: '30vh' }}>
+            <StyledCard className='my-3 shadow' style={{ minHeight: '30vh' }}>
               <Card.Body className='text-center'>
                 <Card.Title className='text-truncate'>{item.name}</Card.Title>
                 <Card.Subtitle className='text-truncate'>{item.role[0].position.name}</Card.Subtitle>
                 <hr></hr>
 
                 <Card.Text className='d-flex justify-content-center flex-row'>
-                  <Container className='d-flex justify-content-center flex-column'
+                  <StyledContainer className='d-flex justify-content-center flex-column'
                   onClick={()=>history.push("/list-pekerjaan", {status:'idle', user_id:item.id})}>
                     <h5>Idle</h5>
                     <p className='fs-1'>{idleCount}</p>
-                  </Container>
-                  <Container className='d-flex justify-content-center flex-column'
+                  </StyledContainer>
+                  <StyledContainer className='d-flex justify-content-center flex-column'
                   onClick={()=>history.push("/list-pekerjaan", {status:'On progress', user_id:item.id})}>
                     <h5>Berjalan</h5>
                     <p className='fs-1'>{onProgressCount}</p>
-                  </Container>
-                  <Container className='d-flex justify-content-center flex-column'
+                  </StyledContainer>
+                  <StyledContainer className='d-flex justify-content-center flex-column'
                   onClick={()=>history.push("/list-pekerjaan", {status:'finished', user_id:item.id})}>
                     <h5>Selesai</h5>
                     <p className='fs-1'>{finishedCount}</p>
-                  </Container>
+                  </StyledContainer>
                 </Card.Text>
               </Card.Body>
-            </Card>
+            </StyledCard>
           </Col>
         );
       })}
