@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import axios from "axios";
 import {CheckPicker, SelectPicker } from 'rsuite';
+import { ArrowLeftShort} from "react-bootstrap-icons";
 
 export default function BuatTask(){
   const history = useHistory()  
@@ -22,11 +23,8 @@ export default function BuatTask(){
   const handleSwitchChange = () => {
     setIsProject(!isProject); // Toggle the state when the switch changes
   };
-  const handleInputChange = (e) =>{
-    const {value, name} = e.target
-    // setData(prevNote=> ({
-    // ...prevNote, [name]:value
-    // }))
+  const handleInputChange = (value) =>{
+    const name="unit"
     setSelectedValue(prevNote=> ({
       ...prevNote, [name]:value
       }))
@@ -35,7 +33,6 @@ export default function BuatTask(){
 
   const handleChange = (values) => {
     setUserTags(values);
-    console.log(userTags)
   };
 
   const handleChangePic = (values) => {
@@ -84,8 +81,8 @@ const userSuggestions= namaUser.map(user=>{
 })
   const unitsuggestions = namaUnit.map(unit => {
     return {
-      id: unit.id,
-      name: unit.name
+      value: unit.id,
+      label: unit.name
     };
   });
 
@@ -122,6 +119,9 @@ const userSuggestions= namaUser.map(user=>{
       e.preventDefault();
   }
 
+  function handleClick() {
+    history.goBack();
+  }
     return(
         
       <>
@@ -130,7 +130,8 @@ const userSuggestions= namaUser.map(user=>{
           
           <Card style={{  marginBottom:'4rem' }}> 
                 <Card.Body>
-                  <h2>Buat Task</h2>
+                <a onClick={()=>handleClick()} style={{ cursor: 'pointer' }}><ArrowLeftShort/> Back</a>
+                  <h4>Buat Task</h4>
                     <Form onSubmit={sendForm}>
                         <Form.Group>
                             <Form.Label>Nama Proyek</Form.Label>
@@ -147,24 +148,37 @@ const userSuggestions= namaUser.map(user=>{
                             onChange={handleChangePic}
                             value={selectedValue.pic}
                             name="pic"
+                            virtualized
                             />
                             </Row>
                         </Form.Group>
                         <Form.Group>
+                          <Row>
                             <Form.Label>Nama Unit</Form.Label>
-                            <Form.Select aria-label="Default select example"
+                            <SelectPicker
+                            data={unitsuggestions}
+                            onChange={handleInputChange}
+                            value={selectedValue.unit}
+                            name="unit"
+                            virtualized
+                            />
+                            {/* <Form.Select aria-label="Default select example"
                             onChange= {handleInputChange}
                             name="unit">
                               <option hidden>Pilih Unit</option>
                               {unitsuggestions.map((unit) => (
                               <option value={unit.id} >{unit.name}</option>
                             ))}
-                            </Form.Select>
+                            </Form.Select> */}
+                          </Row>
+                            
                         </Form.Group>
                         <Form.Group>
                           <Row>
                             <Form.Label>Assign ke</Form.Label>
                             <CheckPicker
+                            virtualized
+                            placement="auto"
                             data={userSuggestions}
                             value={userTags}
                             onChange={handleChange}
@@ -179,9 +193,9 @@ const userSuggestions= namaUser.map(user=>{
                           className="my-3"
                           />
                         </Form.Group>
-
-                        <Button onClick={()=>history.goBack()} className="btn-danger" size="small">Back</Button>
-                        <Button type="submit">Submit</Button>
+                                
+                        <Button onClick={()=>history.goBack()} className="btn-danger" size="small">Batal</Button>
+                        <Button type="submit" className="mx-4">Submit</Button>
                     </Form>
                 </Card.Body>
             

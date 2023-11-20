@@ -29,7 +29,7 @@ function MyBurgerMenu() {
   ];
 
   return (
-    <Navbar className="bg-body-tertiary shadow" expand={'lg'}>
+    <Navbar className="shadow" expand={'lg'}>
       <Container fluid>
         <div className='justify-content-start'>
           <Navbar.Toggle />

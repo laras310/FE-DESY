@@ -30,9 +30,7 @@ export default function ListPekerjaanUnit(){
   const location = useLocation();
   const statusNama = location.state.status;
   const data = location.state.data;
-  const [dataAll, setDataAll] = useState([])
-  const [userRole, setUserRole] = useState([]);
-  console.log(data)
+  const userRole= localStorage.getItem('role')
 
 //   const toggleStar = (task_id, is_favorite) => {
 //     let favorite = "";
@@ -97,6 +95,7 @@ export default function ListPekerjaanUnit(){
 function handleClick() {
   history.goBack();
 }
+const isAny = data.some(data => data.status === statusNama);
   
     return(
         <div>
@@ -109,13 +108,14 @@ function handleClick() {
           className="w-100 p-3"
           >
             <a onClick={()=>handleClick()} style={{ cursor: 'pointer' }}><ArrowLeftShort/> Back</a>
-            <h1>Pekerjaan {statusNama}</h1>
+            <h4>Pekerjaan {statusNama}</h4>
             
             <Table hover className="rounded text-center" responsive="sm" >
               <thead>
                 <tr>
                   {/* <th>#</th> */}
                   <th>Project Name</th>
+                  <th>Tipe</th>
                   <th>Status</th>
                   <th>Progress (%)</th>
                   <th>Last Update</th>
@@ -128,7 +128,8 @@ function handleClick() {
               </thead>
               <tbody style={{cursor:"pointer"}}>
                 
-                {data.map((item) => (
+                {isAny? 
+                (data.map((item) => (
                  item.status === statusNama ? (
                   <tr key={item.id} >
                     {/* <td onClick={() => toggleStar(item.id,item.pivot.is_favorite)}>
@@ -138,6 +139,10 @@ function handleClick() {
                     onClick={() => history.push({pathname:'/timeline',
                         state:{data:item}})}
                         >{item.name}</td>
+                  <td 
+                    onClick={() => history.push({pathname:'/timeline',
+                        state:{data:item}})}
+                        >{item.type === "1" ? "Project":"Task "}</td>
                     <td 
                     onClick={() => history.push({pathname:'/timeline',
                         state:{data:item}})}
@@ -165,9 +170,19 @@ function handleClick() {
                   }
                     
                   </tr>): null
-                ))}
+                )))
+                :
+                null
+              }
               </tbody>
             </Table>
+
+            {
+              isAny? null:
+              (
+                <p>tidak ada project {statusNama}</p>
+              )
+            }
           </Card>
         </Container>
     </div>

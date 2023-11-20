@@ -66,7 +66,9 @@ function DashboardUser() {
   return (
     <div>
       <MyBurgerMenu />
+      <Container>
       <CardUser profil={profil} />
+      </Container>
     </div>
   );
 }

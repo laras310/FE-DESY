@@ -72,9 +72,14 @@ export default function UpdateTask(){
                 <Card.Body>
                 <a onClick={()=>handleClick()} style={{ cursor: 'pointer' }}><ArrowLeftShort/> Back</a>
                 <h1>Update Project</h1>
-                {/* <h3>Nama Project : {data.name}</h3>
-                <h5>Nama Unit : {data.unit.name}</h5> */}
-                <Form 
+
+                {/* <Row>
+                  <Col md={6}>
+                    <p>Nama Project : {data.name}</p>
+                    <p>Nama Unit : {data.unit.name}</p>
+                  </Col>
+                  <Col md={6}> */}
+                  <Form 
                 onSubmit={(e) => handleUpload(e)}
                 >
                     <Form.Group>
@@ -102,6 +107,8 @@ export default function UpdateTask(){
                               }}
                             />
                           </Col>
+                          <Col>
+                          <p>%</p></Col>
                         </Row>
                     </Form.Group>
                     <Form.Group>
@@ -138,6 +145,9 @@ export default function UpdateTask(){
                     // onClick={handleUpload}
                     >Submit</Button>
                 </Form>
+                  {/* </Col>
+                </Row> */}
+                
                 </Card.Body>
             </Card>
         </Container>

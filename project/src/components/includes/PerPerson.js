@@ -4,6 +4,7 @@ import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom/cjs/react-router-dom.min';
 import styled from 'styled-components';
+import { Pagination } from 'rsuite';
 
 const StyledCard = styled(Card)`
   // cursor: pointer; 
@@ -29,6 +30,8 @@ const PersonCard = () => {
     const [data, setData]=useState([])
     const [searchTerm, setSearchTerm] =useState('')
     const history=useHistory()
+    const [page, setPage] = useState(1)
+    const [loading, setLoading] = useState(false);
     
     const [filteredData, setFilteredData] = useState([]);
     const handleSearch = (e) => {
@@ -40,32 +43,6 @@ const PersonCard = () => {
       );
       setFilteredData(filteredData);
       };
-    useEffect(() => {
-        axios({
-          method: "GET",
-          url:"https://jobcard-api.pins.co.id/api/task/each-user",
-          headers: {
-            Authorization: 'Bearer ' + localStorage.getItem('access_token')
-          },
-          'Access-Control-Allow-Origin':'*'
-        })
-          .then((response) => {
-            const res = response.data.data;
-            setData(res);
-            setFilteredData(res)
-          })
-          .catch((error) => {
-            if (error.response) {
-              console.log(error.response.data);
-              console.log(error.response.status);
-              console.log(error.response.headers);
-            } else if (error.request) {
-              console.log(error.request);
-            } else {
-              console.log(error.message);
-            }
-          });
-      }, []);
 
   const calculateProjectCounts = (tasks) => {
     let idleCount = 0;
@@ -92,6 +69,31 @@ const PersonCard = () => {
     return { idleCount, onProgressCount, finishedCount };
   };
 
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true)
+      try{
+        const response = await axios.get('https://jobcard-api.pins.co.id/api/task/each-user', {
+          headers:{
+            Authorization: 'Bearer' + localStorage.getItem('access_token'),
+          },
+          params:{
+            page,
+          },
+          'Access-Control-Allow-Origin':'*',
+        });
+        const newData=response.data.data;
+        setData(newData);
+        setFilteredData(newData);
+      } catch(error){
+        console.error('error fetching data:', error);
+      }finally{
+        setLoading(false);
+      }
+    };
+    fetchData()
+  }, [page]);
+  const dataPaginated = filteredData.slice((page - 1) * 9, page * 9);
   return (
     <>
     <Container fluid className="mt-3">
@@ -110,7 +112,7 @@ const PersonCard = () => {
           </Col>
         </Row>
       </Container>
-      {filteredData.map((item) => {
+      {dataPaginated.map((item) => {
         const { idleCount, onProgressCount, finishedCount } = calculateProjectCounts(item.tasks);
 
         return (
@@ -143,6 +145,20 @@ const PersonCard = () => {
           </Col>
         );
       })}
+      <div style={{padding:20}}>
+      <Pagination 
+      prev
+      next
+      last
+      first
+      maxButtons={5}
+      size='xs'
+      layout={['total', '-',  '|', 'pager']}
+      total={filteredData.length} 
+      limit={9} 
+      activePage={page} 
+      onChangePage={setPage} />
+      </div>
     </>
   );
 };

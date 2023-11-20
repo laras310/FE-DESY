@@ -5,7 +5,7 @@ import { useHistory } from "react-router-dom";
 import { Star, StarFill, ArrowLeftShort} from "react-bootstrap-icons";
 import styled from 'styled-components';
 import { useLocation } from "react-router-dom";
-import { format, parseISO } from 'date-fns';
+import { format, parseISO, startOfYear } from 'date-fns';
 import axios from "axios";
 import AdminMenu from "../includes/MenuAdmin";
 
@@ -78,7 +78,6 @@ useEffect(() => {
     .then((response) => {
       const res = response.data.data;
       setDataAll(res.tasks)
-      console.log(res)
     })
     .catch((error) => {
       if (error.response) {
@@ -96,6 +95,7 @@ useEffect(() => {
 function handleClick() {
   history.goBack();
 }
+const isAny = dataAll.some(data => data.status === statusNama);
   
     return(
         <div>
@@ -108,18 +108,19 @@ function handleClick() {
           className="w-100 p-3"
           >
             <a onClick={()=>handleClick()} style={{ cursor: 'pointer' }}><ArrowLeftShort/> Back</a>
-            <h1>Pekerjaan {statusNama}</h1>
+            <h4>Pekerjaan {statusNama}</h4>
             
             <Table hover className="rounded text-center" responsive="sm" >
               <thead>
                 <tr>
                   {
-                    localStorage.getItem(userRole) === 'admin' ?
+                    localStorage.getItem('role') === 'user' ?
                     <th>#</th>:
                     null
                   }
                   
                   <th>Project Name</th>
+                  <th>Tipe</th>
                   <th>Status</th>
                   <th>Progress (%)</th>
                   <th>Last Update</th>
@@ -132,11 +133,12 @@ function handleClick() {
               </thead>
               <tbody style={{cursor:"pointer"}}>
                 
-                {dataAll.map((item) => (
+                {isAny ?
+                (dataAll.map((item) => (
                  item.status === statusNama ? (
                   <tr key={item.id} >
                     {
-                      localStorage.getItem(userRole) === 'admin' ?
+                      localStorage.getItem('role') === 'user' ?
                       <td onClick={() => toggleStar(item.id,item.pivot.is_favorite)}>
                       {item.pivot.is_favorite === 0 ? <StyledStar className="align-middle" /> : <StyledStarFill className="text-warning" />}
                     </td>
@@ -147,6 +149,10 @@ function handleClick() {
                     onClick={() => history.push({pathname:'/timeline',
                         state:{data:item}})}
                         >{item.name}</td>
+                  <td 
+                    onClick={() => history.push({pathname:'/timeline',
+                        state:{data:item}})}
+                        >{item.type === "1" ? "Project":"Task "}</td>
                     <td 
                     onClick={() => history.push({pathname:'/timeline',
                         state:{data:item}})}
@@ -172,13 +178,19 @@ function handleClick() {
                       Update</Button>
                   </td> : null
                   }
-                    
-                    {/* <td className="d-flex flex-row justify-content-evenly"><h4><Paperclip/> 1</h4>
-                    <h4><ChatDots/> 2</h4></td> */}
                   </tr>): null
-                ))}
+                )))
+                :
+                null
+              }
               </tbody>
             </Table>
+            {
+              isAny? null:
+              (
+                <p>tidak ada project {statusNama}</p>
+              )
+            }
           </Card>
         </Container>
     </div>

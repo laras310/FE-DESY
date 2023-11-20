@@ -48,7 +48,7 @@ export default function TimelineOnly({data}){
                       <a href={'https://jobcard-api.pins.co.id/evidence/'+ file.name}>
                         <p key={index} 
                         // onClick={()=>axiosDownloadFile('https://jobcard-api.pins.co.id/evidence/CxDU9vyadbKpvJXZ8P9l3h0i69lVmkYDLAerT9lB.png', 'CxDU9vyadbKpvJXZ8P9l3h0i69lVmkYDLAerT9lB.png')}
-                        ><FileArrowDown className='fs-4'/>  {file.name}</p></a>
+                        ><FileArrowDown className='fs-4'/>  Download Evidence</p></a>
                     ))
                   ) : (
                     null

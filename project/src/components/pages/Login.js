@@ -16,8 +16,16 @@ export default function Login() {
   const [password, setPassword] = useState('')
   const [role, setRole] = useState('')
   const history = useHistory()
+  const [validated, setValidated]= useState(false)
 
   function LogMeIn(event){
+    const form = event.currentTarget;
+    if (form.checkValidity() === false) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
+
+    setValidated(true);
     axios({
       method: 'POST',
       headers: {
@@ -65,6 +73,7 @@ export default function Login() {
     
     event.preventDefault();    
   }
+  
 
   return (
     <Container className='vh-100 justify-content-center d-flex align-items-center justify-content-center'>
@@ -81,14 +90,14 @@ export default function Login() {
             <FloatingLabel  controlId="username" label="Username" className='mb-3'
             >
               <Form.Control
-              type="text"
+              type="text" required
                 placeholder='Username' name="username" onChange={e => setUsername(e.target.value)} value={username}
             />
             </FloatingLabel>
             
            <FloatingLabel  controlId="password" label="Password" className='mb-3'>
             <Form.Control
-              type="password"
+              type="password" required
                 placeholder='Password' name="password" onChange={e => setPassword(e.target.value)} value={password}
             />
            </FloatingLabel>
@@ -96,36 +105,15 @@ export default function Login() {
               <Form.Select aria-label="Floating label select example"
               value={role}
               onChange={e => setRole(e.target.value)}
+              required
               >
                 <option  disabled value=""> -- select an option -- </option>
                 <option value="user">User</option>
                 <option value="admin">Admin</option>
               </Form.Select>
             </FloatingLabel>
-
-            {/* <Form.Label>Login as</Form.Label>
-            <Form.Check
-            inline
-            label="User"
-            name="option"
-            type="radio"
-            value="user"
-            checked={role === 'user'}
-            onChange={e => setRole(e.target.value)}
-          />
-          
-          <Form.Check
-            inline
-            label="Admin"
-            name="option"
-            type="radio"
-            value="admin"
-          /> */}
            <Button variant="danger" type="submit" name="submit" className=' mt-3 w-100' size="sm" 
            >LOGIN</Button>
-           {/* <p className='text-center m-0'>or</p> */}
-           {/* <Button variant="danger" type="submit" name="asadmin" className='my-2 mt-3 w-100' 
-           >LOGIN AS ADMIN</Button> */}
          </Form>
       </Card>
 
