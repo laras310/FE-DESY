@@ -3,8 +3,10 @@ import { Form, Button, Card, Container, Row  } from "react-bootstrap";
 import { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import axios from "axios";
-import {CheckPicker, SelectPicker } from 'rsuite';
+// import {CheckPicker, SelectPicker } from 'rsuite';
 import { ArrowLeftShort} from "react-bootstrap-icons";
+import Select from 'react-select';
+import swal from 'sweetalert';
 
 export default function BuatTask(){
   const history = useHistory()  
@@ -19,26 +21,33 @@ export default function BuatTask(){
     pic:'',
     unit:''
   });
-
   const handleSwitchChange = () => {
     setIsProject(!isProject); // Toggle the state when the switch changes
   };
-  const handleInputChange = (value) =>{
-    const name="unit"
+  const handleInputChange = (event) =>{
     setSelectedValue(prevNote=> ({
-      ...prevNote, [name]:value
+      ...prevNote, [event.target.name]:event.target.value
       }))
       
   }
 
   const handleChange = (values) => {
-    setUserTags(values);
+    const value = values.map(option => option.value);
+    setUserTags(value);
   };
+  
 
   const handleChangePic = (values) => {
     const name='pic'
     setSelectedValue(prevNote=> ({
-      ...prevNote, [name]:values
+      ...prevNote, [name]:values.value
+      }))
+  };
+
+  const handleChangeUnit = (values) => {
+    const name='unit'
+    setSelectedValue(prevNote=> ({
+      ...prevNote, [name]:values.value
       }))
   };
 
@@ -79,6 +88,7 @@ export default function BuatTask(){
 const userSuggestions= namaUser.map(user=>{
   return{ label: user.name, value: user.id }
 })
+
   const unitsuggestions = namaUnit.map(unit => {
     return {
       value: unit.id,
@@ -103,7 +113,7 @@ const userSuggestions= namaUser.map(user=>{
       },
     })
       .then(response => {
-        alert('berhasil')
+        swal("Berhasil", "Project ditambahkan", "success");
         history.goBack()
       })
       .catch(error => {
@@ -143,46 +153,48 @@ const userSuggestions= namaUser.map(user=>{
                         <Form.Group>
                           <Row>
                             <Form.Label>Nama PIC</Form.Label>
-                            <SelectPicker
-                            data={userSuggestions}
-                            onChange={handleChangePic}
-                            value={selectedValue.pic}
+                            <Select
+                            className="basic-single"
+                            classNamePrefix="select"
+                            isSearchable="true"
+                            options={userSuggestions}
                             name="pic"
-                            virtualized
+                            onChange={handleChangePic}
                             />
                             </Row>
                         </Form.Group>
                         <Form.Group>
                           <Row>
                             <Form.Label>Nama Unit</Form.Label>
-                            <SelectPicker
-                            data={unitsuggestions}
-                            onChange={handleInputChange}
-                            value={selectedValue.unit}
+                            <Select
+                            className="basic-single"
+                            classNamePrefix="select"
+                            isSearchable="true"
+                            options={unitsuggestions}
+                            onChange={handleChangeUnit}
                             name="unit"
-                            virtualized
                             />
-                            {/* <Form.Select aria-label="Default select example"
-                            onChange= {handleInputChange}
-                            name="unit">
-                              <option hidden>Pilih Unit</option>
-                              {unitsuggestions.map((unit) => (
-                              <option value={unit.id} >{unit.name}</option>
-                            ))}
-                            </Form.Select> */}
                           </Row>
                             
                         </Form.Group>
                         <Form.Group>
                           <Row>
                             <Form.Label>Assign ke</Form.Label>
-                            <CheckPicker
+                            <Select
+                            className="basic-single"
+                            classNamePrefix="select"
+                            isSearchable="true"
+                            options={userSuggestions}
+                            isMulti
+                            onChange={handleChange}
+                            />
+                            {/* <CheckPicker
                             virtualized
                             placement="auto"
                             data={userSuggestions}
                             value={userTags}
                             onChange={handleChange}
-                            />
+                            /> */}
                             </Row>
                         </Form.Group>
                         <Form.Group>

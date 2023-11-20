@@ -6,6 +6,7 @@ import axios from "axios";
 import {Slider, InputNumber, Uploader} from 'rsuite';
 import { useRef } from "react";
 import { ArrowLeftShort } from "react-bootstrap-icons";
+import swal from "sweetalert";
 
 export default function UpdateTask(){
     const location = useLocation()
@@ -20,6 +21,7 @@ export default function UpdateTask(){
     function handleClick() {
       history.goBack();
   }
+  
 
     const handleUpload = async (event) => {
       event.preventDefault();
@@ -29,7 +31,7 @@ export default function UpdateTask(){
         const formData = new FormData();
     
         // Append each file to FormData
-        for (let i = 0; i < 3; i++) {
+        for (let i = 0; i < fileList.length; i++) {
           const file = fileList[i];
         
           if (file) {
@@ -52,6 +54,7 @@ export default function UpdateTask(){
             'Content-Type': 'multipart/form-data',
           },
         });
+        swal('Berhasil', 'Update berhasil ditambahkan', "success");
         window.location.replace("/user-dashboard");
       } 
       catch (error) {
@@ -120,9 +123,10 @@ export default function UpdateTask(){
                         ></Form.Control>
                     </Form.Group>
                     <Form.Group>
-                      <Form.Label>Evidence</Form.Label>
+                      <Form.Label>Evidence (maks. 3)</Form.Label>
                     <Uploader
                       fileList={fileList}
+                      accept="image/*,.pdf"
                       autoUpload={false}
                       onChange={setFileList}
                       ref={uploader}
@@ -142,7 +146,7 @@ export default function UpdateTask(){
                     
                     <Button variant="danger" 
                     type="submit" name="submit"
-                    // onClick={handleUpload}
+                    // onClick={cekupload}
                     >Submit</Button>
                 </Form>
                   {/* </Col>

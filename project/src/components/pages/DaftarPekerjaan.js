@@ -17,7 +17,6 @@ function DaftarPekerjaan() {
   const history = useHistory();
   const user_id = localStorage.getItem('user_id')
   const [dataAll, setDataAll] = useState([])
-  // const [userRole, setUserRole] = useState([]);
 
   // const [modalDetailShow, setModalDetailShow]= useState(false)
   
@@ -57,7 +56,7 @@ function DaftarPekerjaan() {
         <Container fluid>
         <Row className='mb-3'>
           <Col>
-          <Card>
+          <Card className='shadow'>
             <Card.Body>
               <h3>Project Berbintang</h3>
               <Row>
@@ -90,13 +89,13 @@ function DaftarPekerjaan() {
         </Row>
         <Row>
           <Col md={6} className='mb-3'>
-            <Card>
+            <Card className='shadow'>
               <Card.Body>
                 <h3>Project Berjalan</h3>
                 {
-                  dataAll.map((data)=>(
-                    data.type === "1" ?
-                    <StyledCard className="mt-3 p-2" key={data.id}>
+                  dataAll.slice(0,3).map((data)=>(
+                    data.type === "1" && data.status==="On progress"?
+                    <StyledCard className="my-3 p-2" key={data.id}>
                         <Card.Title
                         onClick={()=>history.push({pathname:'/timeline', state:{data:data}})}
                         >{data.name}</Card.Title>
@@ -106,18 +105,21 @@ function DaftarPekerjaan() {
                     null
                   ))
                 }
+                <Button className='btn-danger'
+                onClick={()=>history.push("/list-pekerjaan", {status:'On progress', user_id:user_id})}
+                >Lihat Semua Project</Button>
                 
               </Card.Body>
             </Card>
           </Col>
           <Col md={6} className='mb-3'>
-            <Card>
+            <Card className='shadow'>
               <Card.Body>
                 <h3>Task Berjalan</h3>
                 {
-                  dataAll.map((data)=>(
-                    data.type === "0" ?
-                    <StyledCard className="mt-3 p-2" key={data.id}>
+                  dataAll.slice(0,3).map((data)=>(
+                    data.type === "0" && data.status==="On progress"?
+                    <StyledCard className="my-3 p-2" key={data.id}>
                         <Card.Title
                         onClick={()=>history.push({pathname:'/timeline', state:{data:data}})}
                         >{data.name}</Card.Title>
@@ -127,6 +129,10 @@ function DaftarPekerjaan() {
                     null
                   ))
                 }
+                <Button className='btn-danger'
+                onClick={()=>history.push("/list-pekerjaan", {status:'On progress', user_id:user_id})}
+                >Lihat Semua Project</Button>
+                
               </Card.Body>
             </Card>
           </Col>

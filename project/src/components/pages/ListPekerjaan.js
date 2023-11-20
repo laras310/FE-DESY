@@ -32,7 +32,6 @@ export default function ListPekerjaan(){
   const user_id = location.state.user_id;
   const [dataAll, setDataAll] = useState([])
   const [userRole, setUserRole] = useState([]);
-
   const toggleStar = (task_id, is_favorite) => {
     let favorite = "";
   
