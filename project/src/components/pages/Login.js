@@ -8,7 +8,7 @@ import axios from 'axios';
 import { useState} from 'react';
 import Cookies from 'js-cookie';
 import { useHistory } from 'react-router-dom';
-
+import swal from 'sweetalert';
 
 
 export default function Login() {
@@ -41,7 +41,7 @@ export default function Login() {
         password: password
       },
     })
-      .then(response => {
+      .then(response => {swal('Berhasil Login','', 'success')
         Cookies.set('access_token', response.data.data.access_token);
         localStorage.setItem(
           'access_token',
@@ -51,6 +51,7 @@ export default function Login() {
           'token_type', response.data.data.token_type
         )
         localStorage.setItem('role', role)
+        
         if (role === 'user') {
           // history.push({pathname: '/user-dashboard', state:{}})
           window.location.replace("/user-dashboard");
