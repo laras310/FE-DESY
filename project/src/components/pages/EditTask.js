@@ -12,7 +12,6 @@ export default function EditTask(){
   const location = useLocation()
   const task = location.state.detail
   const [loading, setLoading] = useState(true)
-  console.log(task)
 
   const [namaUser, setNamaUser] = useState([])
   const [namaUnit, setNamaUnit] = useState([])
@@ -81,11 +80,7 @@ const userSuggestions= namaUser.map(user=>{
     const foundUser = userSuggestions.find(user => user.value === String(value.id));
     return foundUser || null; // Gunakan null atau nilai default lain jika tidak ditemukan
   });
-  console.log(defaultValueUser)
 
-  // const dynamicDefaultOptions = dynamicDefaultValues.map(value => {
-  //   return options.find(option => option.value === value);
-  // });
   const handleSwitchChange = () => {
     setIsProject(!isProject); // Toggle the state when the switch changes
   };
@@ -97,7 +92,6 @@ const userSuggestions= namaUser.map(user=>{
   }
 
   const handleChange = (values) => {
-    console.log(values)
     const value = values.map(option => option.value);
     setUserTags(value);
   };
@@ -122,18 +116,17 @@ const userSuggestions= namaUser.map(user=>{
 
   const sendForm = (e) =>{
     axios({
-      method: 'POST',
+      method: 'PATCH',
       headers: {
         Authorization: 'Bearer ' + localStorage.getItem('access_token')
       },
-      url: 'https://jobcard-api.pins.co.id/api/task',
+      url: 'https://jobcard-api.pins.co.id/api/task/'+task.id,
       data: {
         name:selectedValue.name,
         pic_id:selectedValue.pic,
         unit_id:selectedValue.unit,
         users:userTags,
-        type:isProject,
-        status: "awal"
+        type:isProject
       },
     })
       .then(response => {
