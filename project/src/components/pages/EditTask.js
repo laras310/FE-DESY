@@ -18,11 +18,6 @@ export default function EditTask(){
   const [userTags, setUserTags] = useState([]);
   const [isProject, setIsProject] = useState(task.type);
 
-  const [selectedValue, setSelectedValue] = useState({
-    name:task.name,
-    pic:'',
-    unit:''
-  });
 
   
   useEffect(()=>{
@@ -80,6 +75,12 @@ const userSuggestions= namaUser.map(user=>{
     const foundUser = userSuggestions.find(user => user.value === String(value.id));
     return foundUser || null; // Gunakan null atau nilai default lain jika tidak ditemukan
   });
+  const [selectedValue, setSelectedValue] = useState({
+    name:task.name,
+    pic:defaultValuePic,
+    unit:defaultValueUnit
+  });
+
 
   const handleSwitchChange = () => {
     setIsProject(!isProject); // Toggle the state when the switch changes
@@ -115,6 +116,7 @@ const userSuggestions= namaUser.map(user=>{
   
 
   const sendForm = (e) =>{
+    console.log(selectedValue.unit)
     axios({
       method: 'PATCH',
       headers: {
