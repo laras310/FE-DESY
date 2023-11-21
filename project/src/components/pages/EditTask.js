@@ -1,56 +1,31 @@
 import AdminMenu from "../includes/MenuAdmin";
-import { Form, Button, Card, Container, Row  } from "react-bootstrap";
+import { Form, Button, Card, Container, Row, Spinner} from "react-bootstrap";
 import { useEffect, useState } from "react";
-import { useHistory } from "react-router-dom";
+import { useHistory, useLocation } from "react-router-dom";
 import axios from "axios";
-// import {CheckPicker, SelectPicker } from 'rsuite';
 import { ArrowLeftShort} from "react-bootstrap-icons";
 import Select from 'react-select';
 import swal from 'sweetalert';
 
-export default function BuatTask(){
+export default function EditTask(){
   const history = useHistory()  
+  const location = useLocation()
+  const task = location.state.detail
+  const [loading, setLoading] = useState(true)
+  console.log(task)
+
   const [namaUser, setNamaUser] = useState([])
   const [namaUnit, setNamaUnit] = useState([])
+  const [userTags, setUserTags] = useState([]);
+  const [isProject, setIsProject] = useState(task.type);
 
-  const [userTags, setUserTags] = useState([
-  ]);
-  const [isProject, setIsProject] = useState(0);
   const [selectedValue, setSelectedValue] = useState({
-    name:'',
+    name:task.name,
     pic:'',
     unit:''
   });
-  const handleSwitchChange = () => {
-    setIsProject(!isProject); // Toggle the state when the switch changes
-  };
-  const handleInputChange = (event) =>{
-    setSelectedValue(prevNote=> ({
-      ...prevNote, [event.target.name]:event.target.value
-      }))
-      
-  }
 
-  const handleChange = (values) => {
-    const value = values.map(option => option.value);
-    setUserTags(value);
-  };
   
-
-  const handleChangePic = (values) => {
-    const name='pic'
-    setSelectedValue(prevNote=> ({
-      ...prevNote, [name]:values.value
-      }))
-  };
-
-  const handleChangeUnit = (values) => {
-    const name='unit'
-    setSelectedValue(prevNote=> ({
-      ...prevNote, [name]:values.value
-      }))
-  };
-
   useEffect(()=>{
     
     const fetchPic = async ()=>{
@@ -63,19 +38,22 @@ export default function BuatTask(){
             Authorization: 'Bearer ' + localStorage.getItem('access_token')
           }}),
         ]);
-        // const response= await axios.get('https://jobcard-api.pins.co.id/api/task/each-user');
+
         const users = request1.data.data;
         const units = request2.data.data
         const usersSuggestions = users.map(user => ({
-          id: String(user.id),
-          name: user.name
+          value: String(user.id),
+          label: user.name
           }));
         const unitSuggestions = units.map(unit => ({
-          id: String(unit.id),
-          name: unit.name
+          value: String(unit.id),
+          label: unit.name
           }));
         setNamaUser(usersSuggestions);
         setNamaUnit(unitSuggestions);
+
+        setLoading(false);
+
       }
       catch(error){
         console.error('error fetching pic data: ', error);
@@ -83,18 +61,64 @@ export default function BuatTask(){
     };
     fetchPic()
     
-  }, []);
+  }, [task]);
 
 const userSuggestions= namaUser.map(user=>{
-  return{ label: user.name, value: user.id }
+  return{ label: user.label, value: user.value }
 })
 
   const unitsuggestions = namaUnit.map(unit => {
     return {
-      value: unit.id,
-      label: unit.name
+      value: unit.value,
+      label: unit.label
     };
   });
+
+  let defaultValuePic = userSuggestions.find(user => user.value === String(task.pic.id))
+  let defaultValueUnit = unitsuggestions.find(unit => unit.value === String(task.unit_id))
+  // let defaultValueUser= "yes"
+  let defaultValueUser = task.users.map(value => {
+    const foundUser = userSuggestions.find(user => user.value === String(value.id));
+    return foundUser || null; // Gunakan null atau nilai default lain jika tidak ditemukan
+  });
+  console.log(defaultValueUser)
+
+  // const dynamicDefaultOptions = dynamicDefaultValues.map(value => {
+  //   return options.find(option => option.value === value);
+  // });
+  const handleSwitchChange = () => {
+    setIsProject(!isProject); // Toggle the state when the switch changes
+  };
+  const handleInputChange = (event) =>{
+    setSelectedValue(prevNote=> ({
+      ...prevNote, [event.target.name]:event.target.value
+      }))
+      
+  }
+
+  const handleChange = (values) => {
+    console.log(values)
+    const value = values.map(option => option.value);
+    setUserTags(value);
+  };
+  
+
+  const handleChangePic = (values) => {
+    const name='pic'
+    setSelectedValue(prevNote=> ({
+      ...prevNote, [name]:values.value
+      }))
+      defaultValuePic=values;
+  };
+
+  const handleChangeUnit = (values) => {
+    const name='unit'
+    setSelectedValue(prevNote=> ({
+      ...prevNote, [name]:values.value
+      }))
+    defaultValueUnit= values
+  };
+  
 
   const sendForm = (e) =>{
     axios({
@@ -132,6 +156,18 @@ const userSuggestions= namaUser.map(user=>{
   function handleClick() {
     history.goBack();
   }
+
+  if (loading) {
+    return     <div >
+      <AdminMenu></AdminMenu>
+      <Container className='justify-content-center d-flex align-items-center flex-column p-3 pt-5'>
+      <Spinner animation="border" role="status">
+    <span className="visually-hidden">Loading...</span>
+  </Spinner></Container>
+  </div>
+  }
+
+
     return(
         
       <>
@@ -141,8 +177,9 @@ const userSuggestions= namaUser.map(user=>{
           <Card style={{  marginBottom:'4rem' }}> 
                 <Card.Body>
                 <a onClick={()=>handleClick()} style={{ cursor: 'pointer' }}><ArrowLeftShort/> Back</a>
-                  <h4>Buat Task</h4>
-                    <Form onSubmit={sendForm}  autocomplete="off">
+                  <h4>Edit {task.type === "1" ?
+                  "Project" : "Task"} {task.name}</h4>
+                    <Form onSubmit={sendForm}  autoComplete="off">
                         <Form.Group>
                             <Form.Label>Nama Proyek</Form.Label>
                             <Form.Control 
@@ -160,6 +197,7 @@ const userSuggestions= namaUser.map(user=>{
                             options={userSuggestions}
                             name="pic"
                             onChange={handleChangePic}
+                            defaultValue={defaultValuePic}
                             />
                             </Row>
                         </Form.Group>
@@ -173,6 +211,7 @@ const userSuggestions= namaUser.map(user=>{
                             options={unitsuggestions}
                             onChange={handleChangeUnit}
                             name="unit"
+                            defaultValue={defaultValueUnit}
                             />
                           </Row>
                             
@@ -187,14 +226,8 @@ const userSuggestions= namaUser.map(user=>{
                             options={userSuggestions}
                             isMulti
                             onChange={handleChange}
+                            defaultValue={defaultValueUser}
                             />
-                            {/* <CheckPicker
-                            virtualized
-                            placement="auto"
-                            data={userSuggestions}
-                            value={userTags}
-                            onChange={handleChange}
-                            /> */}
                             </Row>
                         </Form.Group>
                         <Form.Group>

@@ -84,6 +84,7 @@ export default function UpdateTask(){
                   <Col md={6}> */}
                   <Form 
                 onSubmit={(e) => handleUpload(e)}
+                autocomplete="off" 
                 >
                     <Form.Group>
                         <Form.Label>Range Progress</Form.Label>

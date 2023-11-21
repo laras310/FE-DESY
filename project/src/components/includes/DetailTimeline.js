@@ -1,10 +1,9 @@
 import MyBurgerMenu from './MyBurgerMenu';
-import {Card,Container,Row,Col,Form} from 'react-bootstrap';
-import { useHistory } from 'react-router-dom';
+import {Card,Container,Row,Col,Form, Button} from 'react-bootstrap';
 import { ArrowLeftShort} from 'react-bootstrap-icons';
 import AdminMenu from './MenuAdmin';
 import { useEffect, useState } from 'react';
-import { useLocation } from "react-router-dom";
+import { useLocation, useHistory } from "react-router-dom";
 import { format, parseISO } from 'date-fns';
 import TimelineOnly from './TimelineOnly';
 import axios from 'axios';
@@ -65,11 +64,20 @@ export default function DetailTimeline(){
                     <h1>Detail</h1>
                     <Card>
                         <Card.Body>
+                            {userRole === "admin" ?
+                            <Container className='d-flex justify-content-end'>
+                            <Button className='btn-danger px-3' size="sm"
+                            onClick={()=>history.push({pathname:"/edit-task", state:{detail:detail}})}
+                            >Edit</Button>
+                            </Container>
+                            :
+                            null
+                            }
                             <Form>
                             <Form.Group as={Row} className="m-2">
                                 <Form.Label column>Nama Proyek</Form.Label>
                                 
-                                <Col xs={6}>
+                                <Col xs={8}>
                                 <Form.Control value={detail.name}
                                 className='text-break' plaintext readOnly></Form.Control>
                                 </Col>
@@ -79,7 +87,7 @@ export default function DetailTimeline(){
                                 <Form.Group as={Row} className="m-2">
                                 <Form.Label column>Nama Unit</Form.Label>
                                 
-                                <Col xs={6}>
+                                <Col xs={8}>
                                 <Form.Control value={detail.unit['name']}
                                 className='text-break' plaintext readOnly></Form.Control>
                                 </Col>
@@ -92,7 +100,7 @@ export default function DetailTimeline(){
                                 <Form.Group as={Row} className="m-2">
                                 <Form.Label column>Tanggal Mulai</Form.Label>
                                 
-                                <Col xs={6}>
+                                <Col xs={8}>
                                 <Form.Control value={format(parseISO(detail.created_at), 'dd MMMM yyyy HH:mm:ss')
                                     }
                                     className='text-break' plaintext readOnly></Form.Control>
@@ -109,7 +117,7 @@ export default function DetailTimeline(){
                                 <Form.Group as={Row} className="m-2">
                                     <Form.Label column>Nama PIC</Form.Label>
                                     
-                                    <Col xs={6}>
+                                    <Col xs={8}>
                                     <Form.Control value={detail.pic.name}
                                     className='text-break' plaintext readOnly></Form.Control>
                                     </Col>
@@ -119,31 +127,10 @@ export default function DetailTimeline(){
                                 // console.log(data)
                             }
                             
-                            {
-                                detail.users != null ?
-                                <Form.Group as={Row} className="m-2">
-                                <Form.Label column>Users</Form.Label>
-                                
-                                <Col xs={6}>
-                                {
-                                    detail.users.map((user)=>(
-                                        <>
-                                        
-                                        
-                                        <Form.Control value={user['name']}
-                                        className='text-break' plaintext readOnly></Form.Control>
-                                    </>
-                                    ))
-                                }</Col>
-                                    
-                                </Form.Group>
-                                :
-                                null
-                            }
                             <Form.Group as={Row} className="m-2">
                                 <Form.Label column>Status</Form.Label>
                                 
-                                <Col xs={6}>
+                                <Col xs={8}>
                                 <Form.Control value={detail.status}
                                 className='text-break' plaintext readOnly></Form.Control>
                                 </Col>
@@ -151,11 +138,28 @@ export default function DetailTimeline(){
                             <Form.Group as={Row} className="m-2">
                                 <Form.Label column>Progress</Form.Label>
                                 
-                                <Col xs={6}>
+                                <Col xs={8}>
                                 <Form.Control value={detail.progress + '%'}
                                 className='text-break' plaintext readOnly></Form.Control>
                                 </Col>
                             </Form.Group>
+                            {
+                                detail.users != null ?
+                                <Form.Group as={Row} className="m-2">
+                                <Form.Label column>Users</Form.Label>
+                                
+                                <Col xs={8}>
+                                {
+                                    detail.users.map((user)=>(
+                                        <Form.Control value={user['name']} key={user['id']}
+                                        className='text-break' plaintext readOnly></Form.Control>
+                                    ))
+                                }</Col>
+                                    
+                                </Form.Group>
+                                :
+                                null
+                            }
 
                         </Form>
                         </Card.Body>

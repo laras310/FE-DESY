@@ -29,6 +29,12 @@ export default function TableAdmin({ data }) {
     setPage(1);
     setLimit(dataKey);
   };
+  const handleRowClick = (rowData) => {
+    history.push({
+      pathname: '/timeline',
+      state: { data: rowData },
+    });
+  };
 
   const dataPaginated = filteredData.slice((page - 1) * limit, page * limit);
 
@@ -57,8 +63,8 @@ export default function TableAdmin({ data }) {
             virtualized 
             autoHeight="true"
             bordered
-            // fillHeight="true"
             data={dataPaginated}
+            onRowClick={(rowData) => handleRowClick(rowData)}
             >
                 <Column align="center" width={80}>
                     <HeaderCell>No</HeaderCell>
@@ -67,6 +73,19 @@ export default function TableAdmin({ data }) {
                 <Column align="center" flexGrow={3} minWidth={200}>
                     <HeaderCell>Nama Proyek</HeaderCell>
                     <Cell dataKey="name" />
+                </Column>
+                <Column align="center" >
+                    <HeaderCell>Tipe</HeaderCell>
+                    <Cell dataKey="type">
+                    {(rowData) => {
+                      if (rowData.type ==="1"){
+                          return ("Project") 
+                      }
+                      else{
+                        return "Task"
+                      }
+                    }}
+                    </Cell>
                 </Column>
 
                 <Column align="center" >
@@ -89,18 +108,6 @@ export default function TableAdmin({ data }) {
                 </Cell>
                 </Column>
 
-                <Column align="center" width={80} >
-                    <HeaderCell>...</HeaderCell>
-
-                    <Cell style={{ padding: '6px' }} dataKey='id'>
-                    {rowData => (
-                        <Button appearance="link" onClick={() => history.push({pathname:'/timeline',
-                        state:{data:rowData}})}>
-                        Detail
-                        </Button>
-                    )}
-                    </Cell>
-                </Column>
             </Table>
           <div style={{ padding: 20 }}>
             <Pagination

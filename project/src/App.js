@@ -12,6 +12,7 @@ import DetailTimeline from './components/includes/DetailTimeline';
 import BuatTask from './components/pages/BuatTask';
 import UpdateTask from './components/pages/UpdateTask';
 import ListPekerjaanUnit from './components/pages/ListPekerjaanUnit';
+import EditTask from './components/pages/EditTask';
 
 function App() {
   const isAuthorized = localStorage.getItem('access_token') !== null;
@@ -60,11 +61,24 @@ function App() {
         isAuthorized={isAuthorized && userRole === 'user'}
       />
       <ProtectedRoute
+        exact path="/edit-task"
+        component={EditTask}
+        isAuthorized={isAuthorized && userRole === 'admin'}
+      />
+      <ProtectedRoute
         exact path="/listperunit"
         component={ListPekerjaanUnit}
         isAuthorized={isAuthorized && userRole === 'admin'}
       />
-      <Redirect to="/login" />
+      <ProtectedRoute
+        exact path="/"
+        component={isAuthorized && userRole === 'admin' ?
+      DashboardAdmin : DashboardUser}
+        isAuthorized={isAuthorized && userRole === 'admin'}
+      />
+      <Route exact path="/" component={Login}></Route>
+      <Redirect to="/" />
+
     </Switch>
     
   

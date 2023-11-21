@@ -1,5 +1,5 @@
 import MyBurgerMenu from "../includes/MyBurgerMenu";
-import { Card, Container, Table, Button, PageItem} from "react-bootstrap";
+import { Card, Container, Table, Button} from "react-bootstrap";
 import { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import { Star, StarFill, ArrowLeftShort} from "react-bootstrap-icons";
@@ -302,7 +302,7 @@ const dataTaskPaginated = dataTask.slice((pageTask - 1) * 10, pageTask * 5);
             {
               isAnyTask? null:
               (
-                <p>tidak ada non-project {statusNama}</p>
+                <p>tidak ada task {statusNama}</p>
               )
             }
                   <div style={{padding:20}}>
