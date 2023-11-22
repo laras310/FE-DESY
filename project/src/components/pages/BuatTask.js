@@ -101,7 +101,7 @@ const userSuggestions= namaUser.map(user=>{
       headers: {
         Authorization: 'Bearer ' + localStorage.getItem('access_token')
       },
-      url: `${process.env.REACT_APP_API_HOST}task`,
+      url: `${process.env.REACT_APP_API_JOBCARD}/task`,
       data: {
         name:selectedValue.name,
         pic_id:selectedValue.pic,
