@@ -42,7 +42,7 @@ const ProjectCard = () => {
       useEffect(() => {
           axios({
             method: "GET",
-            url:"https://jobcard-api.pins.co.id/api/task/each-unit",
+            url:`${process.env.REACT_APP_API_JOBCARD}/task/each-unit`,
             headers: {
               Authorization: 'Bearer ' + localStorage.getItem('access_token')
             }

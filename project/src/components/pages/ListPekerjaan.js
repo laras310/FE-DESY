@@ -47,8 +47,7 @@ export default function ListPekerjaan(){
   
     axios({
       method: "PATCH",
-      // url:"https://http://jobcard-api.pins.co.id/api/task/favorite?user_id="+ user_id+"&task_id="+task_id+"&is_favorite="+favorite,
-      url: "https://jobcard-api.pins.co.id/api/task/favorite",
+      url: `${process.env.REACT_APP_API_JOBCARD}/task/favorite`,
       headers: {
         Authorization: 'Bearer ' + localStorage.getItem('access_token')
       },
@@ -72,7 +71,7 @@ useEffect(() => {
   setUserRole(localStorage.getItem('role')) ;
   axios({
     method: "GET",
-    url: "https://jobcard-api.pins.co.id/api/task/by-user?user_id="+ user_id,
+    url: `${process.env.REACT_APP_API_JOBCARD}/task/by-user?user_id=`+ user_id,
     headers: {
       Authorization: 'Bearer ' + localStorage.getItem('access_token')
     },

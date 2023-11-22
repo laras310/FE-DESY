@@ -10,7 +10,7 @@ function DashboardAdmin() {
   useEffect(() => {
     axios({
       method: "GET",
-      url: "https://api.pins.co.id/api/auth/token/detail",
+      url: `${process.env.REACT_APP_API_HOST}auth/token/detail`,
       headers: {
         Authorization: 'Bearer ' + localStorage.getItem('access_token'),
       }

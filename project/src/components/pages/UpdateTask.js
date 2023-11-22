@@ -48,7 +48,7 @@ export default function UpdateTask(){
         formData.append('progress', value);
         formData.append('description', description);
     
-        const response = await axios.post('https://jobcard-api.pins.co.id/api/activity', formData, {
+        const response = await axios.post(`${process.env.REACT_APP_API_JOBCARD}/activity`, formData, {
           headers: {
             Authorization: 'Bearer ' + localStorage.getItem('access_token'),
             'Content-Type': 'multipart/form-data',

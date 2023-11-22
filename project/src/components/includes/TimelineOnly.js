@@ -3,32 +3,6 @@ import { format, parseISO } from 'date-fns';
 import { FileArrowDown } from 'react-bootstrap-icons';
 
 export default function TimelineOnly({data}){
-    // function axiosDownloadFile(url, fileName) {
-    //   return axios({
-    //     url,
-    //     headers:{         'Access-Control-Allow-Origin': '*',
-    //     'Access-Control-Allow-Headers': '*',},
-    //     method: 'GET',
-    //     responseType: 'blob',
-    //   })
-    //     .then(response => {
-    //       const href = window.URL.createObjectURL(response.data);
-    
-    //       const anchorElement = document.createElement('a');
-    
-    //       anchorElement.href = href;
-    //       anchorElement.download = fileName;
-    
-    //       document.body.appendChild(anchorElement);
-    //       anchorElement.click();
-    
-    //       document.body.removeChild(anchorElement);
-    //       window.URL.revokeObjectURL(href);
-    //     })
-    //     .catch(error => {
-    //       console.log('error: ', error);
-    //     });
-    // }
     return(
         <Timeline align="left">
             <Timeline.Item>
@@ -45,7 +19,6 @@ export default function TimelineOnly({data}){
                     task.files.map((file, index) => (
                       <a href={'https://jobcard-api.pins.co.id/evidence/'+ file.name}>
                         <p key={index} 
-                        // onClick={()=>axiosDownloadFile('https://jobcard-api.pins.co.id/evidence/CxDU9vyadbKpvJXZ8P9l3h0i69lVmkYDLAerT9lB.png', 'CxDU9vyadbKpvJXZ8P9l3h0i69lVmkYDLAerT9lB.png')}
                         ><FileArrowDown className='fs-4'/>  Download Evidence </p></a>
                     ))
                   ) : (

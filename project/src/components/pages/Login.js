@@ -35,7 +35,7 @@ export default function Login() {
         // 'Access-Control-Allow-Credentials':'true'
       },
       // withCredentials: true,
-      url: 'https://api.pins.co.id/api/auth/token/request',
+      url: `${process.env.REACT_APP_API_HOST}auth/token/request`,
       data: {
         username: username,
         password: password

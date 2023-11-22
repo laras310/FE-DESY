@@ -24,8 +24,7 @@ function DaftarPekerjaan() {
 
     axios({
       method: "GET",
-      url: "https://jobcard-api.pins.co.id/api/task/by-user?user_id="+ user_id,
-      // url: "https://jobcard-api.pins.co.id/api/task/by-user?user_id=" ,
+      url: `${process.env.REACT_APP_API_JOBCARD}/task/by-user?user_id=`+ user_id,
       headers: {
         Authorization: 'Bearer ' + localStorage.getItem('access_token')
       },

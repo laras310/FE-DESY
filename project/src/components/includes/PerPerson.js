@@ -73,7 +73,7 @@ const PersonCard = () => {
     const fetchData = async () => {
       setLoading(true)
       try{
-        const response = await axios.get('https://jobcard-api.pins.co.id/api/task/each-user', {
+        const response = await axios.get(`${process.env.REACT_APP_API_JOBCARD}/task/each-user`, {
           headers:{
             Authorization: 'Bearer' + localStorage.getItem('access_token'),
           },

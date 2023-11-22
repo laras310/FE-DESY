@@ -27,8 +27,7 @@ export default function DetailTimeline(){
     useEffect(() => {
         axios({
             method: "GET",
-            url: "https://jobcard-api.pins.co.id/api/task?task_id="+task_id,
-            // url: "https://jobcard-api.pins.co.id/api/task/by-user?user_id=" + profil.id,
+            url: `${process.env.REACT_APP_API_JOBCARD}/task?task_id=`+task_id,
             headers: {
               Authorization: 'Bearer ' + localStorage.getItem('access_token')
             },

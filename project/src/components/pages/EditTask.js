@@ -25,10 +25,10 @@ export default function EditTask(){
     const fetchPic = async ()=>{
       try{
         const [request1, request2] = await Promise.all([
-          axios.get('https://api.pins.co.id/api/cms/user/get', {headers: {
+          axios.get(`${process.env.REACT_APP_API_HOST}cms/user/get`, {headers: {
             Authorization: 'Bearer ' + localStorage.getItem('access_token')
           }}),
-          axios.get('https://jobcard-api.pins.co.id/api/task/each-unit', {headers: {
+          axios.get(`${process.env.REACT_APP_API_JOBCARD}/task/each-unit`, {headers: {
             Authorization: 'Bearer ' + localStorage.getItem('access_token')
           }}),
         ]);
@@ -122,7 +122,7 @@ const userSuggestions= namaUser.map(user=>{
       headers: {
         Authorization: 'Bearer ' + localStorage.getItem('access_token')
       },
-      url: 'https://jobcard-api.pins.co.id/api/task/'+task.id,
+      url: `${process.env.REACT_APP_API_JOBCARD}/task/`+task.id,
       data: {
         name:selectedValue.name,
         pic_id:selectedValue.pic,

@@ -10,7 +10,7 @@ export default function AllTask(){
     useEffect(() => {
       axios({
         method: "GET",
-        url: "https://jobcard-api.pins.co.id/api/task/all",
+        url: `${process.env.REACT_APP_API_HOST}task/all`,
         headers: {
           Authorization: 'Bearer ' + localStorage.getItem('access_token')
         }
