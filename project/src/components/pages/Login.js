@@ -42,7 +42,7 @@ export default function Login() {
       },
     })
       .then(response => {swal('Berhasil Login','', 'success')
-        Cookies.set('access_token', response.data.data.access_token);
+        Cookies.set('access_token', response.data.data.access_token, {expires:0.5});
         localStorage.setItem(
           'access_token',
           response.data.data.access_token
@@ -51,15 +51,16 @@ export default function Login() {
           'token_type', response.data.data.token_type
         )
         localStorage.setItem('role', role)
+        window.location.replace("/");
         
-        if (role === 'user') {
-          // history.push({pathname: '/user-dashboard', state:{}})
-          window.location.replace("/user-dashboard");
+        // if (role === 'user') {
+        //   // history.push({pathname: '/user-dashboard', state:{}})
+        //   window.location.replace("/user-dashboard");
           
-        } 
-        else if (role === 'admin') {
-          window.location.replace("/admin-dashboard");
-        }
+        // } 
+        // else if (role === 'admin') {
+        //   window.location.replace("/admin-dashboard");
+        // }
       })
       .catch(error => {
         if (error.response) {

@@ -17,49 +17,6 @@ const StyledCard = styled(Card)`
 
 const CardUser = ({profil}) =>{
   const history = useHistory();
-  const [data, setData]=useState({
-    idle:"",
-    onProgress:"",
-    finished:""
-  })
-  const [task, setTask]=useState([])
-
-  function getTask(){
-    let idleCount = 0;
-    let onProgressCount = 0;
-    let finishedCount = 0;
-
-    if (profil){
-      profil.tasks.forEach((task)=>{
-        switch (task.status) {
-          case 'Idle':
-            idleCount++;
-            break;
-          case 'On progress':
-            onProgressCount++;
-            break;
-          case 'Finished':
-            finishedCount++;
-            break;
-          default:
-            // Do nothing for other statuses
-            break;
-        }
-      })
-      setTask(
-        {idle:idleCount,
-        onProgress:onProgressCount,
-        finished:finishedCount}
-      )  
-    }
-
-  }
-
-  
-
-  useEffect(() => {
-    getTask()
-  },[])
     return(
         <Container className='justify-content-center d-flex align-items-start flex-column p-3 pt-5'>
           <h1 className='m-0 light pt-5'>Selamat Pagi,</h1>
@@ -68,30 +25,30 @@ const CardUser = ({profil}) =>{
             <Row >
               <Col md={4}>
                 <StyledCard className='my-3 shadow  text-center' style={{height:'30vh'}} 
-                onClick={()=>history.push("/list-pekerjaan", {status:'idle', user_id:profil.id})}>
+                onClick={()=>history.push("/list-pekerjaan", {status:'idle', data:profil.tasks.idle})}>
                   <Card.Body>
                     <Card.Title>
                       Pekerjaan Idle
                         </Card.Title>
-                    <Card.Text style={{fontSize:'5rem'}}>{task.idle}</Card.Text>
+                    <Card.Text style={{fontSize:'5rem'}}>{profil.tasks.idle.length}</Card.Text>
                   </Card.Body>
                 </StyledCard>
               </Col>
               <Col md={4}>
                 <StyledCard className='my-3 shadow  text-center' style={{height:'30vh'}}
-                onClick={()=>history.push("/list-pekerjaan", {status:'On progress', user_id:profil.id})}>
+                onClick={()=>history.push("/list-pekerjaan", {status:'progress', data:profil.tasks.progress})}>
                   <Card.Body>
                     <Card.Title>Pekerjaan Berjalan</Card.Title>
-                    <Card.Text style={{fontSize:'5rem'}}>{task.onProgress}</Card.Text>
+                    <Card.Text style={{fontSize:'5rem'}}>{profil.tasks.progress.length}</Card.Text>
                   </Card.Body>
                 </StyledCard>
               </Col>
               <Col md={4}>
                 <StyledCard className='my-3 shadow text-center' style={{height:'30vh'}}
-                onClick={()=>history.push("/list-pekerjaan", {status:'finished', user_id:profil.id})}>
+                onClick={()=>history.push("/list-pekerjaan", {status:'done', data:profil.tasks.done})}>
                   <Card.Body>
                     <Card.Title>Pekerjaan Selesai</Card.Title>
-                    <Card.Text style={{fontSize:'5rem'}}>{task.finished}</Card.Text>
+                    <Card.Text style={{fontSize:'5rem'}}>{profil.tasks.done.length}</Card.Text>
                   </Card.Body>
                 </StyledCard>
               </Col>

@@ -28,8 +28,9 @@ export default function AdminMenu(){
     localStorage.clear()
   }
   const menuItems = [
-    { path: '/admin-dashboard', label: 'Home' },
+    { path: '/', label: 'Home' },
     { path: '/all-task', label: 'Proyek' },
+    { path: '/dokumen', label: 'Dokumen' },
     // Tambahkan menu lain jika ada
   ];
   return(

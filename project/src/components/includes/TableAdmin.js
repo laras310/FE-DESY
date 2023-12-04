@@ -4,10 +4,12 @@ import Button from 'react-bootstrap/Button';
 import { Container, Card, Row, Col, Form, InputGroup, FormControl } from 'react-bootstrap';
 import { format, parseISO } from 'date-fns';
 import { useHistory } from 'react-router-dom';
+import Spinner from 'react-bootstrap/Spinner';
 
 const { Column, HeaderCell, Cell } = Table;
 
 export default function TableAdmin({ data }) {
+  const [loading, setLoading]= useState(false)
   const [limit, setLimit] = useState(10);
   const [page, setPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState('');
@@ -59,10 +61,13 @@ export default function TableAdmin({ data }) {
               </Form>
             </Col>
           </Row>
-          <Table
+{       !dataPaginated ?    <Spinner animation="border" /> :
+  <>
+            <Table
             virtualized 
             autoHeight="true"
             bordered
+            loading={loading}
             data={dataPaginated}
             onRowClick={(rowData) => handleRowClick(rowData)}
             >
@@ -127,7 +132,10 @@ export default function TableAdmin({ data }) {
               onChangePage={setPage}
               onChangeLimit={handleChangeLimit}
             />
+            
           </div>
+          </>
+            }
         </Card.Body>
       </Card>
     </Container>

@@ -30,9 +30,15 @@ export default function ListPekerjaan(){
   const history = useHistory()
   const location = useLocation();
   const statusNama = location.state.status;
-  const user_id = location.state.user_id;
-  const [dataProject, setDataProject] = useState([])
-  const [dataTask, setDataTask] = useState([])
+  const data = location.state.data;
+  
+  const [dataProject, setDataProject] = useState(
+    data.filter(item => item.type === "1")
+  );
+  console.log(localStorage.getItem('user_id'))
+  const [dataTask, setDataTask] = useState(
+    data.filter(item => item.type === "0")
+  );
   const [userRole, setUserRole] = useState([]);
   const [page, setPage] = useState(1);
   const [pageTask, setPageTask] = useState(1);
@@ -52,14 +58,14 @@ export default function ListPekerjaan(){
         Authorization: 'Bearer ' + localStorage.getItem('access_token')
       },
       data: {
-        user_id: user_id,
+        user_id: localStorage.getItem('user_id'),
         task_id: task_id,
         is_favorite: favorite
       }
     })
     .then((response) => {
       // const res = response.data.data;
-      console.log(response);
+      // console.log(response);
       window.location.reload()
     })
     .catch((error) => {
@@ -69,29 +75,29 @@ export default function ListPekerjaan(){
 
 useEffect(() => {
   setUserRole(localStorage.getItem('role')) ;
-  axios({
-    method: "GET",
-    url: `${process.env.REACT_APP_API_JOBCARD}/task/by-user?user_id=`+ user_id,
-    headers: {
-      Authorization: 'Bearer ' + localStorage.getItem('access_token')
-    },
-  })
-    .then((response) => {
-      const res = response.data.data;
-      setDataProject(res.tasks.filter(item => item.type === "1")) ;
-      setDataTask(res.tasks.filter(item => item.type === "0"));
-    })
-    .catch((error) => {
-      if (error.response) {
-        console.log(error.response.data);
-        console.log(error.response.status);
-        console.log(error.response.headers);
-      } else if (error.request) {
-        console.log(error.request);
-      } else {
-        console.log(error.message);
-      }
-    });
+//   axios({
+//     method: "GET",
+//     url: `${process.env.REACT_APP_API_JOBCARD}/task/by-user?user_id=`+ user_id,
+//     headers: {
+//       Authorization: 'Bearer ' + localStorage.getItem('access_token')
+//     },
+//   })
+//     .then((response) => {
+//       const res = response.data.data;
+//       setDataProject(res.tasks.filter(item => item.type === "1")) ;
+//       setDataTask(res.tasks.filter(item => item.type === "0"));
+//     })
+//     .catch((error) => {
+//       if (error.response) {
+//         console.log(error.response.data);
+//         console.log(error.response.status);
+//         console.log(error.response.headers);
+//       } else if (error.request) {
+//         console.log(error.request);
+//       } else {
+//         console.log(error.message);
+//       }
+//     });
 }, []);
 
 function handleClick() {

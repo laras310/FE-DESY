@@ -163,6 +163,18 @@ export default function DetailTimeline(){
                         </Form>
                         </Card.Body>
                     </Card>
+                    {
+                        userRole === "admin" ?
+                        <Card className='mt-3'>
+                        <Card.Body>
+                            <Card.Title>Update Task Frequency</Card.Title>
+                            
+                        </Card.Body>
+                    </Card>
+                        :
+                        null
+                    }
+                    
                         
                     </Col>
                     <Col md={6} className='mb-3'>

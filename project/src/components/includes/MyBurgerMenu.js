@@ -4,7 +4,9 @@ import { Navbar, Image, Button } from 'react-bootstrap';
 import { Offcanvas, Nav, Container, Dropdown } from 'react-bootstrap';
 import ProfilToggle from './Atom/ProfilToggle';
 import NotifToggle from './Atom/NotifToggle';
-import { Link, useLocation } from 'react-router-dom';
+import {  useLocation } from 'react-router-dom';
+import axios from 'axios';
+import Cookies from 'js-cookie';
 
 function MyBurgerMenu() {
   const [showProfilDropdown, setShowProfilDropdown] = useState(false);
@@ -20,11 +22,14 @@ function MyBurgerMenu() {
   };
 
   function logout(event){
+    Cookies.remove('access_token');
+    axios.get(`${process.env.REACT_APP_API_HOST}auth/token/revoke`)
     localStorage.clear()
   }
   const menuItems = [
-    { path: '/user-dashboard', label: 'Home' },
+    { path: '/', label: 'Home' },
     { path: '/daftar-pekerjaan', label: 'Daftar Pekerjaan' },
+    { path: '/dokumen', label: 'Dokumen' },
     // Tambahkan menu lain jika ada
   ];
 
