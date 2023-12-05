@@ -44,38 +44,13 @@ const PersonCard = () => {
       setFilteredData(filteredData);
       };
 
-  const calculateProjectCounts = (tasks) => {
-    let idleCount = 0;
-    let onProgressCount = 0;
-    let finishedCount = 0;
-
-    tasks.forEach((task) => {
-      switch (task.status) {
-        case 'Idle':
-          idleCount++;
-          break;
-        case 'On progress':
-          onProgressCount++;
-          break;
-        case 'Finished':
-          finishedCount++;
-          break;
-        default:
-          // Do nothing for other statuses
-          break;
-      }
-    });
-
-    return { idleCount, onProgressCount, finishedCount };
-  };
-
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true)
       try{
         const response = await axios.get(`${process.env.REACT_APP_API_JOBCARD}/task/each-user`, {
           headers:{
-            Authorization: 'Bearer' + localStorage.getItem('access_token'),
+            Authorization: 'Bearer' + sessionStorage.getItem('access_token'),
           },
           params:{
             page,
@@ -112,10 +87,7 @@ const PersonCard = () => {
           </Col>
         </Row>
       </Container>
-      {dataPaginated.map((item) => {
-        const { idleCount, onProgressCount, finishedCount } = calculateProjectCounts(item.tasks);
-
-        return (
+      {dataPaginated.map((item) => 
           <Col md={4} key={item.id}>
             <StyledCard className='my-3 shadow' style={{ minHeight: '30vh' }}>
               <Card.Body className='text-center'>
@@ -125,26 +97,27 @@ const PersonCard = () => {
 
                 <Card.Text className='d-flex justify-content-center flex-row'>
                   <StyledContainer className='d-flex justify-content-center flex-column'
-                  onClick={()=>history.push("/list-pekerjaan", {status:'idle', user_id:item.id})}>
+                  onClick={()=>history.push("/list-pekerjaan", {status:'idle', data:item.tasks.idle})}>
                     <h5>Idle</h5>
-                    <p className='fs-1'>{idleCount}</p>
+                    <p className='fs-1'>
+                      {item.tasks.idle.length}
+                      </p>
                   </StyledContainer>
                   <StyledContainer className='d-flex justify-content-center flex-column'
-                  onClick={()=>history.push("/list-pekerjaan", {status:'On progress', user_id:item.id})}>
+                  onClick={()=>history.push("/list-pekerjaan", {status:'progress', data:item.tasks.progress})}>
                     <h5>Berjalan</h5>
-                    <p className='fs-1'>{onProgressCount}</p>
+                    <p className='fs-1'>{item.tasks.progress.length}</p>
                   </StyledContainer>
                   <StyledContainer className='d-flex justify-content-center flex-column'
-                  onClick={()=>history.push("/list-pekerjaan", {status:'finished', user_id:item.id})}>
+                  onClick={()=>history.push("/list-pekerjaan", {status:'done', data:item.tasks.done})}>
                     <h5>Selesai</h5>
-                    <p className='fs-1'>{finishedCount}</p>
+                    <p className='fs-1'>{item.tasks.done.length}</p>
                   </StyledContainer>
                 </Card.Text>
               </Card.Body>
             </StyledCard>
           </Col>
-        );
-      })}
+      )}
       <div style={{padding:20}}>
       <Pagination 
       prev

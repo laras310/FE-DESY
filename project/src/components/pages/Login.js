@@ -43,14 +43,15 @@ export default function Login() {
     })
       .then(response => {swal('Berhasil Login','', 'success')
         Cookies.set('access_token', response.data.data.access_token, {expires:0.5});
-        localStorage.setItem(
+        
+        sessionStorage.setItem(
           'access_token',
           response.data.data.access_token
         )
-        localStorage.setItem(
+        sessionStorage.setItem(
           'token_type', response.data.data.token_type
         )
-        localStorage.setItem('role', role)
+        sessionStorage.setItem('role', role)
         window.location.replace("/");
         
         // if (role === 'user') {

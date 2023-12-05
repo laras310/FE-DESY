@@ -13,17 +13,60 @@ export default function TableAdmin({ data }) {
   const [limit, setLimit] = useState(10);
   const [page, setPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState('');
+  const [sortColumn, setSortColumn] = React.useState();
+  const [sortType, setSortType] = React.useState();
   const history = useHistory();
-  const [filteredData, setFilteredData] = useState(data); // Define filteredData state
+  
+  const allData =[...data.idle,...data.progress, ...data.done]; // Define filteredData state
+
+  const filteredData = allData.filter(item=>{
+    return (
+      item.name.toLowerCase().includes(searchTerm.toLowerCase()) 
+      // || item.gender.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      // item.email.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+  })
+  const getData = () => {
+    let sortedData = filteredData;
+    if (sortColumn && sortType) {
+      sortedData = filteredData.sort((a, b) => {
+        let x = a[sortColumn];
+        let y = b[sortColumn];
+        if (typeof x === 'string') {
+          x = new Date(x);
+        }
+        if (typeof y === 'string') {
+          y = new Date(y);
+        }
+        if (sortType === 'asc') {
+          return x - y;
+        } else {
+          return y - x;
+        }
+      });
+    }
+    return sortedData.slice((page - 1) * limit, page * limit);
+  };
+
+  const handleSortColumn = (sortColumn, sortType) => {
+    setLoading(true);
+    setTimeout(() => {
+      setLoading(false);
+      setSortColumn(sortColumn);
+      setSortType(sortType);
+      setPage(1); // Reset page to 1 when sorting
+    }, 500);
+  };
+
 
   const handleSearch = (e) => {
     const searchTerm = e.target.value;
     setSearchTerm(searchTerm);
     // Lakukan sesuatu dengan nilai pencarian, misalnya filter data
-    const filteredData = data.filter((item) =>
-      item.name.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-    setFilteredData(filteredData);
+    // const filteredData = filteredData.filter((item) =>
+    //   item.name.toLowerCase().includes(searchTerm.toLowerCase())
+    // );
+    // setFilteredData(filteredData);
     setPage(1); // Reset halaman ketika melakukan pencarian
   };
 
@@ -37,8 +80,6 @@ export default function TableAdmin({ data }) {
       state: { data: rowData },
     });
   };
-
-  const dataPaginated = filteredData.slice((page - 1) * limit, page * limit);
 
   return (
     <Container className='mt-5'>
@@ -61,15 +102,18 @@ export default function TableAdmin({ data }) {
               </Form>
             </Col>
           </Row>
-{       !dataPaginated ?    <Spinner animation="border" /> :
+{       !filteredData ?    <Spinner animation="border" /> :
   <>
             <Table
             virtualized 
             autoHeight="true"
             bordered
             loading={loading}
-            data={dataPaginated}
+            data={getData()}
             onRowClick={(rowData) => handleRowClick(rowData)}
+            sortColumn={sortColumn}
+            sortType={sortType}
+            onSortColumn={handleSortColumn}
             >
                 <Column align="center" width={80}>
                     <HeaderCell>No</HeaderCell>
@@ -103,8 +147,8 @@ export default function TableAdmin({ data }) {
                     <Cell dataKey="status" />
                 </Column>
 
-                <Column align="center" flexGrow={2} minWidth={100}>
-                    <HeaderCell>Dibuat Tanggal</HeaderCell>
+                <Column align="center" flexGrow={2} minWidth={100} sortable>
+                    <HeaderCell >Dibuat Tanggal</HeaderCell>
                     <Cell dataKey="created_at">
                     {(rowData) => {
                     const createdAt = parseISO(rowData.created_at);

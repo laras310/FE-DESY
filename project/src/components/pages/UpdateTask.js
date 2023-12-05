@@ -16,7 +16,7 @@ export default function UpdateTask(){
     const [value, setValue] = useState(data.progress);
     const [fileList, setFileList] = useState([]);
     const uploader = useRef();
-    const user_id=localStorage.getItem('user_id')
+    const user_id=sessionStorage.getItem('user_id')
 
     function handleClick() {
       history.goBack();
@@ -50,7 +50,7 @@ export default function UpdateTask(){
     
         const response = await axios.post(`${process.env.REACT_APP_API_JOBCARD}/activity`, formData, {
           headers: {
-            Authorization: 'Bearer ' + localStorage.getItem('access_token'),
+            Authorization: 'Bearer ' + sessionStorage.getItem('access_token'),
             'Content-Type': 'multipart/form-data',
           },
         });

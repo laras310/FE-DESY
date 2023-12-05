@@ -13,7 +13,7 @@ export default function ListPekerjaanUnit(){
   const location = useLocation();
   const statusNama = location.state.status;
   const data = location.state.data;
-  const userRole= localStorage.getItem('role')
+  const userRole= sessionStorage.getItem('role')
   const [dataProject, setDataProject] = useState([])
   const [dataTask, setDataTask] = useState([])
   const [page, setPage] = useState(1);

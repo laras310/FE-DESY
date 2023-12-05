@@ -7,6 +7,8 @@ import { Image, Dropdown} from 'react-bootstrap';
 import ProfilToggle from './Atom/ProfilToggle';
 import NotifToggle from './Atom/NotifToggle';
 import { useLocation } from 'react-router-dom';
+import Cookies from 'js-cookie';
+import axios from 'axios';
 // import ModalBuatProject from './Atom/ModalBuatProject';
 
 import { useState } from 'react';
@@ -25,7 +27,9 @@ export default function AdminMenu(){
   };
 
   function logout(event){
-    localStorage.clear()
+    Cookies.remove('access_token');
+    axios.get(`${process.env.REACT_APP_API_HOST}auth/token/revoke`)
+    sessionStorage.clear()
   }
   const menuItems = [
     { path: '/', label: 'Home' },

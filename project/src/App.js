@@ -16,8 +16,8 @@ import NotFound from './components/pages/NotFound';
 import Dokumen from './components/pages/Dokumen';
 
 function App() {
-  const isAuthorized = localStorage.getItem('access_token') !== null;
-  const userRole = localStorage.getItem('role');
+  const isAuthorized = sessionStorage.getItem('access_token') !== null;
+  const userRole = sessionStorage.getItem('role');
   return (
     <Switch>
 

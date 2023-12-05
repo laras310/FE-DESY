@@ -15,13 +15,13 @@ function DashboardUser() {
           method: "GET",
           url: `${process.env.REACT_APP_API_HOST}auth/token/detail`,
           headers: {
-            Authorization: 'Bearer ' + localStorage.getItem('access_token')
+            Authorization: 'Bearer ' + sessionStorage.getItem('access_token')
           }
         });
 
         const userId = responseToken.data.data.id;
         await getProfil(userId);
-        localStorage.setItem(
+        sessionStorage.setItem(
           'user_id',
           userId
         )
@@ -42,7 +42,7 @@ function DashboardUser() {
         method: "GET",
         url: `${process.env.REACT_APP_API_JOBCARD}/task/by-user?user_id=` + user_id,
         headers: {
-          Authorization: 'Bearer ' + localStorage.getItem('access_token')
+          Authorization: 'Bearer ' + sessionStorage.getItem('access_token')
         }
       });
 

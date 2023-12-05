@@ -2,7 +2,7 @@ import DashboardAdmin from "./DashboardAdmin"
 import DashboardUser from "./DashboardUser"
 
 export default function Home(){
-    const role = localStorage.getItem('role')
+    const role = sessionStorage.getItem('role')
     return(
         <>
         {

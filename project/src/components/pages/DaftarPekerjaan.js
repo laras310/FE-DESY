@@ -15,7 +15,7 @@ const StyledCard = styled(Card)`
 
 function DaftarPekerjaan() {
   const history = useHistory();
-  const user_id = localStorage.getItem('user_id')
+  const user_id = sessionStorage.getItem('user_id')
   const [dataAll, setDataAll] = useState([])
 
   // const [modalDetailShow, setModalDetailShow]= useState(false)
@@ -26,12 +26,13 @@ function DaftarPekerjaan() {
       method: "GET",
       url: `${process.env.REACT_APP_API_JOBCARD}/task/by-user?user_id=`+ user_id,
       headers: {
-        Authorization: 'Bearer ' + localStorage.getItem('access_token')
+        Authorization: 'Bearer ' + sessionStorage.getItem('access_token')
       },
     })
       .then((response) => {
         const res = response.data.data;
-        setDataAll(res.tasks)
+        setDataAll(res.tasks.progress)
+        // console.log(res.tasks)
       })
       .catch((error) => {
         if (error.response) {
@@ -45,7 +46,14 @@ function DaftarPekerjaan() {
         }
       });
   }, []);
-  const isAnyFavorite = dataAll.some(data => data.pivot.is_favorite === 1 && data.type==="1");
+  
+  let isAnyFavorite = 0
+  // console.log(dataAll.length)
+  if (dataAll.length > 0){
+    isAnyFavorite = dataAll.progress.some(data => data.pivot.is_favorite === 1 && data.type==="1");
+  }
+  
+  // const isAnyFavorite =1
 
   return (
     <div>

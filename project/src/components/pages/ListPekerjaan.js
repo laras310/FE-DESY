@@ -31,14 +31,16 @@ export default function ListPekerjaan(){
   const location = useLocation();
   const statusNama = location.state.status;
   const data = location.state.data;
+  console.log(data)
   
   const [dataProject, setDataProject] = useState(
     data.filter(item => item.type === "1")
   );
-  console.log(localStorage.getItem('user_id'))
+  
   const [dataTask, setDataTask] = useState(
     data.filter(item => item.type === "0")
   );
+
   const [userRole, setUserRole] = useState([]);
   const [page, setPage] = useState(1);
   const [pageTask, setPageTask] = useState(1);
@@ -55,10 +57,10 @@ export default function ListPekerjaan(){
       method: "PATCH",
       url: `${process.env.REACT_APP_API_JOBCARD}/task/favorite`,
       headers: {
-        Authorization: 'Bearer ' + localStorage.getItem('access_token')
+        Authorization: 'Bearer ' + sessionStorage.getItem('access_token')
       },
       data: {
-        user_id: localStorage.getItem('user_id'),
+        user_id: sessionStorage.getItem('user_id'),
         task_id: task_id,
         is_favorite: favorite
       }
@@ -74,37 +76,22 @@ export default function ListPekerjaan(){
   };
 
 useEffect(() => {
-  setUserRole(localStorage.getItem('role')) ;
-//   axios({
-//     method: "GET",
-//     url: `${process.env.REACT_APP_API_JOBCARD}/task/by-user?user_id=`+ user_id,
-//     headers: {
-//       Authorization: 'Bearer ' + localStorage.getItem('access_token')
-//     },
-//   })
-//     .then((response) => {
-//       const res = response.data.data;
-//       setDataProject(res.tasks.filter(item => item.type === "1")) ;
-//       setDataTask(res.tasks.filter(item => item.type === "0"));
-//     })
-//     .catch((error) => {
-//       if (error.response) {
-//         console.log(error.response.data);
-//         console.log(error.response.status);
-//         console.log(error.response.headers);
-//       } else if (error.request) {
-//         console.log(error.request);
-//       } else {
-//         console.log(error.message);
-//       }
-//     });
+  setUserRole(sessionStorage.getItem('role')) ;
 }, []);
 
 function handleClick() {
   history.goBack();
 }
-const isAnyProject = dataProject.some(data => data.status === statusNama);
-const isAnyTask = dataTask.some(data=>data.status === statusNama)
+const isAnyProject = dataProject.some(data => 
+  data.status === statusNama || 
+  data.status === "selesai" || 
+  data.status === "On progress");
+
+const isAnyTask = dataTask.some(data=>
+  data.status === statusNama || 
+  data.status === "Selesai" ||
+  data.status === "On progress");
+
 const dataProjectPaginated = dataProject.slice((page - 1) * 5, page * 5);
 const dataTaskPaginated = dataTask.slice((pageTask - 1) * 10, pageTask * 5);  
     return(
@@ -124,7 +111,7 @@ const dataTaskPaginated = dataTask.slice((pageTask - 1) * 10, pageTask * 5);
               <thead>
                 <tr>
                   {
-                    localStorage.getItem('role') === 'user' ?
+                    sessionStorage.getItem('role') === 'user' ?
                     <th>#</th>:
                     null
                   }
@@ -143,12 +130,15 @@ const dataTaskPaginated = dataTask.slice((pageTask - 1) * 10, pageTask * 5);
               </thead>
               <tbody style={{cursor:"pointer"}}>
                 
+                
                 {isAnyProject ?
                 (dataProjectPaginated.map((item) => (
-                 item.status === statusNama ? (
+                  
+                 item.status === statusNama || item.status === "Selesai" || item.status === "On progress" ? (
                   <tr key={item.id} >
+                    {console.log(item.status)}
                     {
-                      localStorage.getItem('role') === 'user' ?
+                      sessionStorage.getItem('role') === 'user' ?
                       <td onClick={() => toggleStar(item.id,item.pivot.is_favorite)}>
                       {item.pivot.is_favorite === 0 ? <StyledStar className="align-middle" /> : <StyledStarFill className="text-warning" />}
                     </td>
@@ -183,7 +173,7 @@ const dataTaskPaginated = dataTask.slice((pageTask - 1) * 10, pageTask * 5);
                         </td>
                         {
                     userRole === "user" ? 
-                    (item.progress != "100" ? <td>
+                    (item.progress !== "100" ? <td>
                     <Button
                     onClick={()=>history.push({pathname:'/update-task', state:{data:item}})}>
                       Update</Button>
@@ -232,7 +222,7 @@ const dataTaskPaginated = dataTask.slice((pageTask - 1) * 10, pageTask * 5);
               <thead>
                 <tr>
                   {
-                    localStorage.getItem('role') === 'user' ?
+                    sessionStorage.getItem('role') === 'user' ?
                     <th>#</th>:
                     null
                   }
@@ -253,10 +243,10 @@ const dataTaskPaginated = dataTask.slice((pageTask - 1) * 10, pageTask * 5);
                 
                 {isAnyTask ?
                 (dataTaskPaginated.map((item) => (
-                 item.status === statusNama ? (
+                 item.status === statusNama || item.status === "Selesai" || item.status === "On progress"? (
                   <tr key={item.id} >
                     {
-                      localStorage.getItem('role') === 'user' ?
+                      sessionStorage.getItem('role') === 'user' ?
                       <td onClick={() => toggleStar(item.id,item.pivot.is_favorite)}>
                       {item.pivot.is_favorite === 0 ? <StyledStar className="align-middle" /> : <StyledStarFill className="text-warning" />}
                     </td>

@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import ZeroList from "../includes/ZeroList";
 import axios from "axios";
 import TableAdmin from "../includes/TableAdmin";
+import MyBurgerMenu from "../includes/MyBurgerMenu";
 
 export default function Dokumen(){
   const [profil, setProfil] = useState([]);
@@ -12,7 +13,7 @@ export default function Dokumen(){
         method: "GET",
         url: `${process.env.REACT_APP_API_JOBCARD}/task/all`,
         headers: {
-          Authorization: 'Bearer ' + localStorage.getItem('access_token')
+          Authorization: 'Bearer ' + sessionStorage.getItem('access_token')
         }
       })
         .then((response) => {
@@ -33,8 +34,13 @@ export default function Dokumen(){
     }, []);
     return(
         <div>
-      
-      <AdminMenu></AdminMenu>
+      {
+        localStorage.getItem("role") === "admin" ?
+        <AdminMenu></AdminMenu>:
+        <MyBurgerMenu/>
+
+      }
+      {/*  */}
 
       {profil <1 ? <ZeroList/>
       : 

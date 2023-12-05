@@ -12,7 +12,7 @@ function DashboardAdmin() {
       method: "GET",
       url: `${process.env.REACT_APP_API_HOST}auth/token/detail`,
       headers: {
-        Authorization: 'Bearer ' + localStorage.getItem('access_token'),
+        Authorization: 'Bearer ' + sessionStorage.getItem('access_token'),
       }
     })
       .then((response) => {

@@ -18,7 +18,7 @@ export default function DetailTimeline(){
     const history = useHistory()
     useEffect(() => {
         
-        setUserRole(localStorage.getItem('role')) ;
+        setUserRole(sessionStorage.getItem('role')) ;
         },[])
     function handleClick() {
         history.goBack();
@@ -29,7 +29,7 @@ export default function DetailTimeline(){
             method: "GET",
             url: `${process.env.REACT_APP_API_JOBCARD}/task?task_id=`+task_id,
             headers: {
-              Authorization: 'Bearer ' + localStorage.getItem('access_token')
+              Authorization: 'Bearer ' + sessionStorage.getItem('access_token')
             },
           })
         .then((response)=>{

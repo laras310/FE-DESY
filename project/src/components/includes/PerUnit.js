@@ -44,7 +44,7 @@ const ProjectCard = () => {
             method: "GET",
             url:`${process.env.REACT_APP_API_JOBCARD}/task/each-unit`,
             headers: {
-              Authorization: 'Bearer ' + localStorage.getItem('access_token')
+              Authorization: 'Bearer ' + sessionStorage.getItem('access_token')
             }
           })
             .then((response) => {
@@ -69,31 +69,6 @@ const ProjectCard = () => {
         useEffect(() => {
           // Memantau perubahan nilai profil
         }, [data]);
-    const calculateProjectCounts = (tasks) => {
-      let idleCount = 0;
-      let onProgressCount = 0;
-      let finishedCount = 0;
-
-      tasks.forEach((task) => {
-        switch (task.status) {
-          case 'Idle':
-            idleCount++;
-            break;
-          case 'On progress':
-            onProgressCount++;
-            break;
-          case 'Finished':
-            finishedCount++;
-            break;
-          default:
-            // Do nothing for other statuses
-            break;
-        }
-      });
-
-      return { idleCount, onProgressCount, finishedCount };
-    };
-
 
   return (
     <>
@@ -113,10 +88,7 @@ const ProjectCard = () => {
           </Col>
         </Row>
       </Container>
-      {filteredData.map((item) => {
-        const { idleCount, onProgressCount, finishedCount } = calculateProjectCounts(item.tasks);
-
-        return (
+      {filteredData.map((item) => 
           <Col md={4} key={item.id}>
             <StyledCard className='my-3 shadow' style={{ minHeight: '30vh' }}>
               <Card.Body className='text-center'>
@@ -128,24 +100,23 @@ const ProjectCard = () => {
                   <StyledContainer className='d-flex justify-content-center flex-column'
                   onClick={()=>history.push("/list-pekerjaan", {status:'idle', user_id:item.id})}>
                     <h5>Idle</h5>
-                    <p className='fs-1'>{idleCount}</p>
+                    <p className='fs-1'>{item.tasks.idle.length}</p>
                   </StyledContainer>
                   <StyledContainer className='d-flex justify-content-center flex-column'
-                  onClick={()=>history.push("/listperunit", {status:'On progress', data:item.tasks})}>
+                  onClick={()=>history.push("/listperunit", {status:'progress', data:item.tasks})}>
                     <h5>Berjalan</h5>
-                    <p className='fs-1'>{onProgressCount}</p>
+                    <p className='fs-1'>{item.tasks.progress.length}</p>
                   </StyledContainer>
                   <StyledContainer className='d-flex justify-content-center flex-column'
-                  onClick={()=>history.push("/list-pekerjaan", {status:'finished', user_id:item.id})}>
+                  onClick={()=>history.push("/list-pekerjaan", {status:'done', user_id:item.id})}>
                     <h5>Selesai</h5>
-                    <p className='fs-1'>{finishedCount}</p>
+                    <p className='fs-1'>{item.tasks.done.length}</p>
                   </StyledContainer>
                 </Card.Text>
               </Card.Body>
             </StyledCard>
           </Col>
-        );
-      })}
+        )}
     </>
   );
 };

@@ -5,19 +5,19 @@ import axios from "axios";
 import TableAdmin from "../includes/TableAdmin";
 
 export default function AllTask(){
-  const [profil, setProfil] = useState([]);
+  const [data, setData] = useState([]);
   
     useEffect(() => {
       axios({
         method: "GET",
         url: `${process.env.REACT_APP_API_JOBCARD}/task/all`,
         headers: {
-          Authorization: 'Bearer ' + localStorage.getItem('access_token')
+          Authorization: 'Bearer ' + sessionStorage.getItem('access_token')
         }
       })
         .then((response) => {
           const res = response.data.data;
-          setProfil(res);
+          setData(res);
         })
         .catch((error) => {
           if (error.response) {
@@ -36,9 +36,9 @@ export default function AllTask(){
       
       <AdminMenu></AdminMenu>
 
-      {profil <1 ? <ZeroList/>
+      {data <1 ? <ZeroList/>
       : 
-      <TableAdmin data={profil}/>
+      <TableAdmin data={data}/>
       }
  
     </div>

@@ -26,10 +26,10 @@ export default function EditTask(){
       try{
         const [request1, request2] = await Promise.all([
           axios.get(`${process.env.REACT_APP_API_HOST}cms/user/get`, {headers: {
-            Authorization: 'Bearer ' + localStorage.getItem('access_token')
+            Authorization: 'Bearer ' + sessionStorage.getItem('access_token')
           }}),
           axios.get(`${process.env.REACT_APP_API_JOBCARD}/task/each-unit`, {headers: {
-            Authorization: 'Bearer ' + localStorage.getItem('access_token')
+            Authorization: 'Bearer ' + sessionStorage.getItem('access_token')
           }}),
         ]);
 
@@ -120,7 +120,7 @@ const userSuggestions= namaUser.map(user=>{
     axios({
       method: 'PATCH',
       headers: {
-        Authorization: 'Bearer ' + localStorage.getItem('access_token')
+        Authorization: 'Bearer ' + sessionStorage.getItem('access_token')
       },
       url: `${process.env.REACT_APP_API_JOBCARD}/task/`+task.id,
       data: {
