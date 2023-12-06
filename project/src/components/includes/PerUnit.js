@@ -51,7 +51,7 @@ const ProjectCard = () => {
               const res = response.data.data;
               setData(res);
               setFilteredData(res)
-              console.log(res)
+              
             })
             .catch((error) => {
               if (error.response) {

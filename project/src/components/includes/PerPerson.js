@@ -52,9 +52,6 @@ const PersonCard = () => {
           headers:{
             Authorization: 'Bearer' + sessionStorage.getItem('access_token'),
           },
-          params:{
-            page,
-          },
           'Access-Control-Allow-Origin':'*',
         });
         const newData=response.data.data;

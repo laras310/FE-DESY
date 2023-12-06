@@ -46,12 +46,12 @@ export const userLogin = (data) => async (dispatch) => {
   dispatch(setLoading(true));
   try {
     const result = await axios.post(`${process.env.REACT_APP_API_HOST}auth/token/request`, data);
+
     if (result.status === 200) {
       // dispatch token to session
       dispatch(setSession(result.data.data.access_token));
-
       // insert token to localstorage with name session
-      localStorage.setItem(
+      sessionStorage.setItem(
         'session',
         JSON.stringify(result.data.data.access_token),
       );
@@ -68,6 +68,7 @@ export const userLogin = (data) => async (dispatch) => {
   } catch (error) {
     dispatch(setLoading(false));
     dispatch(setError(true));
+
     return {
       status: error.response.status,
       message: error.response.data.message,
@@ -78,13 +79,17 @@ export const userLogin = (data) => async (dispatch) => {
 
 export const userProfile = (data) => async (dispatch) => {
   dispatch(setLoading(true));
-
   try {
     // setHeader(data);
-    const result = await axios.get(`${process.env.REACT_APP_API_HOST}auth/token/detail`, 
-    Headers({Authorization: 'Bearer ' + localStorage.getItem('access_token')}));
+    const result = await axios.get(`${process.env.REACT_APP_API_HOST}auth/token/detail`, {
+      headers: {
+        Authorization: 'Bearer ' + data
+      }
+    });
+    
 
     if (result.status === 200) {
+      
       dispatch(setProfile(result.data.data));
     //   dispatch(
     //     setAvatar(
@@ -113,7 +118,7 @@ export const userProfile = (data) => async (dispatch) => {
 export const userLogout = async (data) => {
   try {
     // setHeader();
-    localStorage.clear()
+    sessionStorage.clear()
     // Cookies.remove('session');
     const result = await axios.get(`${process.env.REACT_APP_API_HOST}auth/token/revoke`);
     Cookies.remove('session');
