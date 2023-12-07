@@ -63,6 +63,8 @@ export const userLogin = (data) => async (dispatch) => {
       dispatch(setRefresh(result.data.data.refresh_token));
       dispatch(setRole(data.role))
       dispatch(setLoading(false));
+      // console.log(result.data.data.access_token)
+      dispatch(userProfile(result.data.data.access_token))
       return dispatch(userProfile(result.data.data.access_token));
     }
   } catch (error) {

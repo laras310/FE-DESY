@@ -1,10 +1,13 @@
 import React from 'react';
-import { Card, Col, Container, Form, Row, InputGroup, FormControl } from 'react-bootstrap';
+import { Card, Col, Container, Form, Row, InputGroup, 
+  FormControl, Spinner } from 'react-bootstrap';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom/cjs/react-router-dom.min';
 import styled from 'styled-components';
 import { Pagination } from 'rsuite';
+import { fetchPerPerson } from '../redux/actions/dashboardAdmin';
+import { useDispatch } from 'react-redux';
 
 const StyledCard = styled(Card)`
   // cursor: pointer; 
@@ -27,6 +30,7 @@ const StyledContainer = styled(Container)`
 
 
 const PersonCard = () => {
+    const dispatch = useDispatch()
     const [data, setData]=useState([])
     const [searchTerm, setSearchTerm] =useState('')
     const history=useHistory()
@@ -43,17 +47,74 @@ const PersonCard = () => {
       );
       setFilteredData(filteredData);
       };
+    
+  // const fetchPerPerson = async (event) => {
+  //   event.preventDefault();
+  //   setLoading(true)
+
+  //     try {
+  //       const result = await dispatch(fetchPerPerson());
+
+  //       if (result.status === 200) {
+  //         setLoading(false)
+  //         setData(result.data.data);
+  //         setFilteredData(result.data.data);
+  //       } else {
+  //         setLoading(false)
+
+  //         // swal('Something Happened!', result.message, 'error');
+  //       }
+  //     } catch (error) {
+  //       setLoading(false)
+  //       if (error.response) {
+  //         // The request was made, but the server responded with a non-2xx status code
+  //         console.error("Error status:", error.response.status);
+  //         console.error("Error data:", error.response.data);
+  //       } else {
+  //         // Something happened in setting up the request that triggered an error
+  //         console.error("Error message:", error.message);
+  //       }
+
+  //       // swal('Something Happened!', 'Login Gagal', 'error');
+  //     }
+  // };
 
   useEffect(() => {
+    // const fetchPerPerson = async () => {
+      
+    //   setLoading(true)
+  
+    //     try {
+    //       const result = await dispatch(fetchPerPerson());
+  
+    //       if (result.status === 200) {
+    //         setLoading(false)
+    //         setData(result.data.data);
+    //         setFilteredData(result.data.data);
+    //       } else {
+    //         setLoading(false)
+  
+    //         // swal('Something Happened!', result.message, 'error');
+    //       }
+    //     } catch (error) {
+    //       setLoading(false)
+    //       if (error.response) {
+    //         // The request was made, but the server responded with a non-2xx status code
+    //         console.error("Error status:", error.response.status);
+    //         console.error("Error data:", error.response.data);
+    //       } else {
+    //         // Something happened in setting up the request that triggered an error
+    //         console.error("Error message:", error.message);
+    //       }
+  
+    //       // swal('Something Happened!', 'Login Gagal', 'error');
+    //     }
+    // };
+    // fetchPerPerson()
     const fetchData = async () => {
       setLoading(true)
       try{
-        const response = await axios.get(`${process.env.REACT_APP_API_JOBCARD}/task/each-user`, {
-          headers:{
-            Authorization: 'Bearer' + sessionStorage.getItem('access_token'),
-          },
-          'Access-Control-Allow-Origin':'*',
-        });
+        const response = await dispatch(fetchPerPerson());
         const newData=response.data.data;
         setData(newData);
         setFilteredData(newData);
@@ -84,7 +145,9 @@ const PersonCard = () => {
           </Col>
         </Row>
       </Container>
-      {dataPaginated.map((item) => 
+      
+      {!loading ? 
+      (dataPaginated.map((item) => 
           <Col md={4} key={item.id}>
             <StyledCard className='my-3 shadow' style={{ minHeight: '30vh' }}>
               <Card.Body className='text-center'>
@@ -114,7 +177,12 @@ const PersonCard = () => {
               </Card.Body>
             </StyledCard>
           </Col>
-      )}
+      ))
+      :
+      <Container className='d-flex justify-content-center mt-4'>
+      <Spinner></Spinner>
+      </Container>
+    }
       <div style={{padding:20}}>
       <Pagination 
       prev

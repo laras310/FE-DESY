@@ -25,6 +25,7 @@ function MyBurgerMenu() {
     Cookies.remove('access_token');
     axios.get(`${process.env.REACT_APP_API_HOST}auth/token/revoke`)
     sessionStorage.clear()
+    localStorage.clear()
   }
   const menuItems = [
     { path: '/', label: 'Home' },

@@ -74,65 +74,6 @@ export default function Login() {
     }
   };
 
-  // function LogMeIn(event){
-  //   const form = event.currentTarget;
-  //   if (form.checkValidity() === false) {
-  //     event.preventDefault();
-  //     event.stopPropagation();
-  //   }
-
-  //   setValidated(true);
-  //   axios({
-  //     method: 'POST',
-  //     headers: {
-  //       "Content-Type": "application/json",
-  //       'Access-Control-Allow-Origin': '*',
-  //       'Access-Control-Allow-Headers': '*',
-  //       // 'Access-Control-Allow-Credentials':'true'
-  //     },
-  //     // withCredentials: true,
-  //     url: `${process.env.REACT_APP_API_HOST}auth/token/request`,
-  //     data: {
-  //       username: username,
-  //       password: password
-  //     },
-  //   })
-  //     .then(response => {swal('Berhasil Login','', 'success')
-  //       Cookies.set('access_token', response.data.data.access_token, {expires:0.5});
-        
-  //       sessionStorage.setItem(
-  //         'access_token',
-  //         response.data.data.access_token
-  //       )
-  //       sessionStorage.setItem(
-  //         'token_type', response.data.data.token_type
-  //       )
-  //       sessionStorage.setItem('role', role)
-  //       window.location.replace("/");
-        
-  //       // if (role === 'user') {
-  //       //   // history.push({pathname: '/user-dashboard', state:{}})
-  //       //   window.location.replace("/user-dashboard");
-          
-  //       // } 
-  //       // else if (role === 'admin') {
-  //       //   window.location.replace("/admin-dashboard");
-  //       // }
-  //     })
-  //     .catch(error => {
-  //       if (error.response) {
-  //         // The request was made, but the server responded with a non-2xx status code
-  //         console.error("Error status:", error.response.status);
-  //         console.error("Error data:", error.response.data);
-  //       } else {
-  //         // Something happened in setting up the request that triggered an error
-  //         console.error("Error message:", error.message);
-  //       }
-  //     });
-    
-  //   event.preventDefault();    
-  // }
-
   useEffect(() => {
     setDidMount(true);
 
