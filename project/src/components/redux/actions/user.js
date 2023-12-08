@@ -50,20 +50,39 @@ export const userLogin = (data) => async (dispatch) => {
     if (result.status === 200) {
       // dispatch token to session
       dispatch(setSession(result.data.data.access_token));
+      // var ttl = Date.now()
+      // localStorage.setItem(
+      //   'expired', ttl
+      // )
+      // console.log(ttl)
+
+      const now = new Date()
+      const expiry= now.getTime() + 5000
+      // (60*60*1000)
+
+      localStorage.setItem('expired', JSON.stringify(expiry))
+
+
       // insert token to localstorage with name session
-      sessionStorage.setItem(
-        'session',
-        JSON.stringify(result.data.data.access_token),
-      );
-      // set 1 minute
-      // var oneMinute = new Date(new Date().getTime() + 1 * 60 * 1000);
-      Cookies.set('session', result.data.data.access_token, {
-        expires: 0.5,
-      });
+      // sessionStorage.setItem(
+      //   'session',
+      //   JSON.stringify(result.data.data.access_token),
+      // );
+      // setTimeout(() => {
+      //   // Clear local storage
+      //   localStorage.clear();
+      //   Cookies.remove('session');
+      //   sessionStorage.clear();
+      //   window.location.reload()
+        
+      // }, 5000);
+      // 60 * 60 * 1000);
+
+      Cookies.set('session', result.data.data.access_token,);
       dispatch(setRefresh(result.data.data.refresh_token));
       dispatch(setRole(data.role))
       dispatch(setLoading(false));
-      // console.log(result.data.data.access_token)
+      
       dispatch(userProfile(result.data.data.access_token))
       return dispatch(userProfile(result.data.data.access_token));
     }

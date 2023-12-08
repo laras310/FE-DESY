@@ -20,7 +20,9 @@ const reducers = combineReducers({
 
 const persistConfig = {
   key: 'root',
+  storage: 
   storage,
+  version:1
 }
 
 const persistedReducer = persistReducer(persistConfig, reducers)
@@ -33,7 +35,7 @@ export const store = configureStore({
         ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
       },
     }),
-})
+});
   
   export const persistor = persistStore(store)
   /* eslint import/no-anonymous-default-export: [2, {"allowObject": true}] */

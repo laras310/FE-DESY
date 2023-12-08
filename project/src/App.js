@@ -15,13 +15,37 @@ import Home from './components/pages/Home';
 import NotFound from './components/pages/NotFound';
 import Dokumen from './components/pages/Dokumen';
 import { useSelector } from 'react-redux';
+import Cookies from 'js-cookie';
 
 function App() {
   const isAuthorized = useSelector(state=>state.user.session)
   const userRole = useSelector(state=>state.user.role)
-  // const isAuthorized = sessionStorage.getItem('access_token') !== null;
-  // const userRole = sessionStorage.getItem('role');
+  // const start = localStorage.getItem("expired")
+  // const millis = Date.now() - start
+  // const session = Math.floor(millis / 1000)
+
+  var itemStr = localStorage.getItem("expired")
+	// if the item doesn't exist, return null
+  if (!itemStr) {
+		itemStr = 0
+	}
+
+	const now = new Date()
+    
+	// compare the expiry time of the item with the current time
+	if (now.getTime() > itemStr) {
+        
+        Cookies.remove('session');
+        sessionStorage.clear()
+        localStorage.clear()
+        console.log("limit")
+        // window.location.reload()
+	}
+    
+
+
   return (
+
     <Switch>
 
     <ProtectedRoute
@@ -80,8 +104,7 @@ function App() {
 
     <Route component={NotFound}/>
     </Switch>
-    
-  
+
   );
 }
 

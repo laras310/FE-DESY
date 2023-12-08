@@ -1,15 +1,19 @@
 import DashboardAdmin from "./DashboardAdmin"
 import DashboardUser from "./DashboardUser"
+import { useSelector } from "react-redux"
+import Cookies from "js-cookie"
+import axios from "axios"
 
 export default function Home(){
-    const role = sessionStorage.getItem('role')
+    const role = useSelector(state=>state.user.role)
+
     return(
         <>
         {
-            role === "user" ?
-            <DashboardUser/>
-            :
+            role === "admin" ?
             <DashboardAdmin/>
+            :
+            <DashboardUser/>
 
         }</>
     )

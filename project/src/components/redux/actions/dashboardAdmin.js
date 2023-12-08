@@ -21,7 +21,7 @@ export const fetchPerPerson = () => async (dispatch) =>{
     try {
         const result = await axios.get(`${process.env.REACT_APP_API_JOBCARD}/task/each-user`, {
             headers:{
-              Authorization: 'Bearer' + sessionStorage.getItem('access_token'),
+              Authorization: 'Bearer' + sessionStorage.getItem('session'),
             },
             'Access-Control-Allow-Origin':'*',
           })

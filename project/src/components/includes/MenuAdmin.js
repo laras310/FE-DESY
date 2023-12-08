@@ -27,7 +27,7 @@ export default function AdminMenu(){
   };
 
   function logout(event){
-    Cookies.remove('access_token');
+    Cookies.remove('session');
     axios.get(`${process.env.REACT_APP_API_HOST}auth/token/revoke`)
     sessionStorage.clear()
     localStorage.clear()

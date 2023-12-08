@@ -2,8 +2,6 @@
 import MenuAdmin from '../includes/MenuAdmin';
 import Container from 'react-bootstrap/Container';
 import FilterBar from '../includes/FilterBar';
-import { useState, useEffect } from 'react';
-import axios from 'axios';
 import { useSelector } from 'react-redux';
 
 function DashboardAdmin() {
