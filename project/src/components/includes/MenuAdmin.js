@@ -9,14 +9,14 @@ import NotifToggle from './Atom/NotifToggle';
 import { useLocation } from 'react-router-dom';
 import Cookies from 'js-cookie';
 import axios from 'axios';
-// import ModalBuatProject from './Atom/ModalBuatProject';
-
+import { useSelector } from 'react-redux';
 import { useState } from 'react';
 
 export default function AdminMenu(){
   const [showProfilDropdown, setShowProfilDropdown] = useState(false);
   const [showNotifDropdown, setShowNotifDropdown] = useState(false);
   const location = useLocation();
+  const USER = useSelector((state) => state.user);
 
   const handleProfilDropdownToggle = () => {
     setShowProfilDropdown(!showProfilDropdown);
@@ -45,6 +45,7 @@ export default function AdminMenu(){
           <Navbar.Toggle />
           <Navbar.Brand href="/admin-dashboard">
             <Image
+            // src={USER.avatar}
               src="/assets/images/PINS-Logo-IoT2.png"
               height="40"
               className="d-inline-block align-top"
@@ -78,6 +79,8 @@ export default function AdminMenu(){
           <Dropdown show={showProfilDropdown} onToggle={handleProfilDropdownToggle} align={'end'}>
             <Dropdown.Toggle as={ProfilToggle} id="dropdown-custom-toggle" />
             <Dropdown.Menu>
+            <Dropdown.Item>{USER.profile.name}</Dropdown.Item>
+              <Dropdown.Item>Role : {USER.role}</Dropdown.Item>
               <Dropdown.Item href="/login"><Button onClick={(logout)} className='btn-danger w-100'
               >Logout</Button></Dropdown.Item>
             </Dropdown.Menu>

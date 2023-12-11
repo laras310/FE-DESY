@@ -16,32 +16,28 @@ import NotFound from './components/pages/NotFound';
 import Dokumen from './components/pages/Dokumen';
 import { useSelector } from 'react-redux';
 import Cookies from 'js-cookie';
+import { useEffect } from 'react';
 
 function App() {
+  const time = useSelector(state=>state.user.timestamp)
   const isAuthorized = useSelector(state=>state.user.session)
   const userRole = useSelector(state=>state.user.role)
-  // const start = localStorage.getItem("expired")
-  // const millis = Date.now() - start
-  // const session = Math.floor(millis / 1000)
+  
 
-  var itemStr = localStorage.getItem("expired")
-	// if the item doesn't exist, return null
-  if (!itemStr) {
-		itemStr = 0
-	}
-
-	const now = new Date()
-    
-	// compare the expiry time of the item with the current time
-	if (now.getTime() > itemStr) {
+  useEffect(() => {
+    const clearStorage = () => {
+      if (Date.now() - time >= 12*60*60*1000 && window.location.pathname!=='/login') {
         
+        localStorage.clear();
         Cookies.remove('session');
-        sessionStorage.clear()
-        localStorage.clear()
-        console.log("limit")
-        // window.location.reload()
-	}
-    
+        window.location.href = '/login';
+      }
+    };
+
+    const intervalId = setInterval(clearStorage, 1000);
+
+    return () => clearInterval(intervalId); // Cleanup the interval on component unmount
+  }, [time]);
 
 
   return (

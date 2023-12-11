@@ -9,7 +9,8 @@ const initialState = {
     isLoading: false,
     isError: false,
     message: '',
-    role:''
+    role:'',
+    timestamp: Date.now(),
   };
   
   // eslint-disable-next-line import/no-anonymous-default-export
@@ -57,6 +58,12 @@ const initialState = {
                 ...state,
                 role: action.payload,
             };
+        
+        case type.TIMESTAMP:
+          return {
+              ...state,
+              timestamp: action.payload,
+          };
   
       default:
         return state;

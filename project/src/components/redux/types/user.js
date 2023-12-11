@@ -5,4 +5,5 @@ export const REFRESH = 'REFRESH';
 export const ERROR = 'ERROR';
 export const LOADING = 'LOADING';
 export const MESSAGE = 'MESSAGE';
+export const TIMESTAMP = 'TIMESTAMP';
 export const ROLE = 'ROLE';

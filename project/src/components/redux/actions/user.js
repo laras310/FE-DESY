@@ -35,12 +35,19 @@ export const setLoading = (data) => ({
 export const setMessage = (data) => ({
   type: type.MESSAGE,
   payload: data,
+});  
+
+export const setTimestamp = (data) => ({
+  type: type.TIMESTAMP,
+  payload: data,
 });
 
 export const setRole = (data) => ({
     type: type.ROLE,
     payload: data,
   });
+
+
 
 export const userLogin = (data) => async (dispatch) => {
   dispatch(setLoading(true));
@@ -50,33 +57,7 @@ export const userLogin = (data) => async (dispatch) => {
     if (result.status === 200) {
       // dispatch token to session
       dispatch(setSession(result.data.data.access_token));
-      // var ttl = Date.now()
-      // localStorage.setItem(
-      //   'expired', ttl
-      // )
-      // console.log(ttl)
-
-      const now = new Date()
-      const expiry= now.getTime() + 5000
-      // (60*60*1000)
-
-      localStorage.setItem('expired', JSON.stringify(expiry))
-
-
-      // insert token to localstorage with name session
-      // sessionStorage.setItem(
-      //   'session',
-      //   JSON.stringify(result.data.data.access_token),
-      // );
-      // setTimeout(() => {
-      //   // Clear local storage
-      //   localStorage.clear();
-      //   Cookies.remove('session');
-      //   sessionStorage.clear();
-      //   window.location.reload()
-        
-      // }, 5000);
-      // 60 * 60 * 1000);
+      dispatch(setTimestamp(Date.now()))
 
       Cookies.set('session', result.data.data.access_token,);
       dispatch(setRefresh(result.data.data.refresh_token));
@@ -112,11 +93,13 @@ export const userProfile = (data) => async (dispatch) => {
     if (result.status === 200) {
       
       dispatch(setProfile(result.data.data));
-    //   dispatch(
-    //     setAvatar(
-    //       result.data.data.image_url ?? imageApi(result.data.data.name),
-    //     ),
-    //   );
+      dispatch(
+        setAvatar(
+          result.data.data.image_url 
+          ?? 'https://pluspng.com/img-png/user-png-icon-download-icons-logos-emojis-users-2240.png'
+          // ?? imageApi(result.data.data.name),
+        ),
+      );
     }
     dispatch(setLoading(false));
     return {
