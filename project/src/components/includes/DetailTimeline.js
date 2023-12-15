@@ -7,19 +7,18 @@ import { useLocation, useHistory } from "react-router-dom";
 import { format, parseISO } from 'date-fns';
 import TimelineOnly from './TimelineOnly';
 import axios from 'axios';
+import { useSelector } from 'react-redux';
 
 export default function DetailTimeline(){
     const location = useLocation();
-    const [userRole, setUserRole] = useState([]);
+    // const [userRole, setUserRole] = useState([]);
     const data = location.state.data
     const task_id= data.id
     const [detail, setDetail]= useState([]);
+    const userRole = useSelector(state=>state.user.role)
 
     const history = useHistory()
-    useEffect(() => {
-        
-        setUserRole(sessionStorage.getItem('role')) ;
-        },[])
+
     function handleClick() {
         history.goBack();
     }

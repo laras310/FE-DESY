@@ -79,8 +79,8 @@ export default function AdminMenu(){
           <Dropdown show={showProfilDropdown} onToggle={handleProfilDropdownToggle} align={'end'}>
             <Dropdown.Toggle as={ProfilToggle} id="dropdown-custom-toggle" />
             <Dropdown.Menu>
-            <Dropdown.Item>{USER.profile.name}</Dropdown.Item>
-              <Dropdown.Item>Role : {USER.role}</Dropdown.Item>
+            <Dropdown.Item>{USER?.profile?.name}</Dropdown.Item>
+              <Dropdown.Item>Role : {USER?.role}</Dropdown.Item>
               <Dropdown.Item href="/login"><Button onClick={(logout)} className='btn-danger w-100'
               >Logout</Button></Dropdown.Item>
             </Dropdown.Menu>

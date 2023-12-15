@@ -2,11 +2,10 @@ import DashboardAdmin from "./DashboardAdmin"
 import DashboardUser from "./DashboardUser"
 import { useSelector } from "react-redux"
 import { useEffect, useState } from "react"
-import {useIdleTimer} from 'react-idle-timer'
 import Cookies from "js-cookie"
 
 export default function Home(){
-    const role = useSelector(state=>state.user.role)
+    const role = useSelector(state=>state?.user?.role)
     // const [state, setState] = useState('Active')
     // const [count, setCount] = useState(0)
     // const [remaining, setRemaining] = useState(0)

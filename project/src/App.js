@@ -22,7 +22,6 @@ function App() {
   const time = useSelector(state=>state.user.timestamp)
   const isAuthorized = useSelector(state=>state.user.session)
   const userRole = useSelector(state=>state.user.role)
-  
 
   useEffect(() => {
     const clearStorage = () => {
