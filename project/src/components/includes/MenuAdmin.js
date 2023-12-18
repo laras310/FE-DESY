@@ -12,6 +12,8 @@ import axios from 'axios';
 import { useSelector } from 'react-redux';
 import { useState } from 'react';
 
+import StyledNavbar from './Atom/StyledComponents';
+
 export default function AdminMenu(){
   const [showProfilDropdown, setShowProfilDropdown] = useState(false);
   const [showNotifDropdown, setShowNotifDropdown] = useState(false);
@@ -65,11 +67,11 @@ export default function AdminMenu(){
             </Offcanvas.Title>
           </Offcanvas.Header>
           <Offcanvas.Body>
-          <Nav className="justify-content-end flex-grow-1 pe-3" variant="underline" activeKey={location.pathname}>
+          <Nav className="justify-content-end flex-grow-1 pe-3" activeKey={location.pathname}>
             {menuItems.map((item) => (
-              <Nav.Link key={item.path} href={item.path} className={location.pathname === item.path ? 'active' : ''}>
+              <StyledNavbar key={item.path} href={item.path} className={location.pathname === item.path ? 'active' : ''}>
                 {item.label}
-              </Nav.Link>
+              </StyledNavbar>
             ))}
             </Nav>
                 

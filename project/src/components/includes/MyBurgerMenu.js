@@ -8,7 +8,7 @@ import {  useLocation } from 'react-router-dom';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 import { useSelector } from 'react-redux';
-
+import StyledNavbar from './Atom/StyledComponents';
 
 function MyBurgerMenu() {
   const [showProfilDropdown, setShowProfilDropdown] = useState(false);
@@ -63,11 +63,12 @@ function MyBurgerMenu() {
             </Offcanvas.Title>
           </Offcanvas.Header>
           <Offcanvas.Body>
-          <Nav className="justify-content-end flex-grow-1 pe-3" variant="underline" activeKey={location.pathname}>
+          <Nav className="justify-content-end flex-grow-1 pe-3" activeKey={location.pathname}>
           {menuItems.map((item) => (
-            <Nav.Link key={item.path} href={item.path} className={location.pathname === item.path ? 'active' : ''}>
-              {item.label}
-            </Nav.Link>
+            <StyledNavbar key={item.path} href={item.path} className={location.pathname === item.path ? 'active' : ''}>
+              <p className="p-0 m-0">{item.label}</p>
+              {/* {item.label} */}
+            </StyledNavbar>
           ))}
           </Nav>
             {/* <Nav className="justify-content-end flex-grow-1 pe-3" variant="pills" activeKey={location.pathname === '/user-dashboard' ? '/user-dashboard' : '/daftar-pekerjaan'}>

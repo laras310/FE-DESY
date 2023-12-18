@@ -21,6 +21,28 @@ export default function UpdateTask(){
     function handleClick() {
       history.goBack();
   }
+
+  const handleChange = (fileList) => {
+    // Validasi jumlah file
+    if (fileList.length > 3) {
+      swal("Warning","Hanya dapat mengunggah maksimal 3 file.","warning");
+      setFileList(fileList.slice(0,3))
+      return;
+    }
+
+    // Validasi ukuran file
+    const invalidFiles = fileList.filter((file) => file.blobFile.size > 2 * 1024 * 1024);
+    if (invalidFiles.length > 0) {
+      swal("Warning","Ukuran total file melebihi batas 2 MB.","warning")
+      const validFiles = fileList.filter((file) => file.blobFile.size <= 2 * 1024 * 1024);
+      setFileList(validFiles);
+      return;
+    }
+
+    // Set file list jika validasi berhasil
+    setFileList(fileList);
+  };
+
   
 
     const handleUpload = async (event) => {
@@ -129,9 +151,10 @@ export default function UpdateTask(){
                       fileList={fileList}
                       accept="image/*,.pdf"
                       autoUpload={false}
-                      onChange={setFileList}
+                      onChange={handleChange}
                       ref={uploader}
                       draggable
+                      multiple
                       onUpload={() => {
                         // Menggunakan ref untuk mendapatkan status unggahan
                         if (uploader.current) {

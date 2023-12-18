@@ -1,37 +1,24 @@
 import MyBurgerMenu from "../includes/MyBurgerMenu";
 import { Card, Container, Table, Button} from "react-bootstrap";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useHistory } from "react-router-dom";
-import { Star, StarFill, ArrowLeftShort} from "react-bootstrap-icons";
-import styled from 'styled-components';
+import {  ArrowLeftShort} from "react-bootstrap-icons";
 import { useLocation } from "react-router-dom";
 import { format, parseISO } from 'date-fns';
 import axios from "axios";
 import AdminMenu from "../includes/MenuAdmin";
 import {Pagination} from "rsuite";
+import { useSelector } from "react-redux";
+import { StyledStar, StyledStarFill } from "../includes/Atom/StyledComponents";
 
-const StyledStar = styled(Star)`
-  transition: transform 0.2s;
-
-  &:hover {
-    transform: scale(1.5);
-  }
-`
-;
-const StyledStarFill = styled(StarFill)`
-  transition: transform 0.2s;
-
-  &:hover {
-    transform: scale(1.5);
-  }
-`
-;
 export default function ListPekerjaan(){
   const history = useHistory()
   const location = useLocation();
   const statusNama = location.state.status;
   const data = location.state.data;
-  console.log(data)
+  const userRole = useSelector(state=>state.user.role)
+  const user_id = useSelector(state=>state.user.profile.id)
+  const session = useSelector(state=>state.user.session)
   
   const [dataProject, setDataProject] = useState(
     data.filter(item => item.type === "1")
@@ -41,7 +28,6 @@ export default function ListPekerjaan(){
     data.filter(item => item.type === "0")
   );
 
-  const [userRole, setUserRole] = useState([]);
   const [page, setPage] = useState(1);
   const [pageTask, setPageTask] = useState(1);
   const toggleStar = (task_id, is_favorite) => {
@@ -57,27 +43,21 @@ export default function ListPekerjaan(){
       method: "PATCH",
       url: `${process.env.REACT_APP_API_JOBCARD}/task/favorite`,
       headers: {
-        Authorization: 'Bearer ' + sessionStorage.getItem('access_token')
+        Authorization: 'Bearer ' + session
       },
       data: {
-        user_id: sessionStorage.getItem('user_id'),
+        user_id: user_id,
         task_id: task_id,
         is_favorite: favorite
       }
     })
     .then((response) => {
-      // const res = response.data.data;
-      // console.log(response);
       window.location.reload()
     })
     .catch((error) => {
       console.error(error);
     });
   };
-
-useEffect(() => {
-  setUserRole(sessionStorage.getItem('role')) ;
-}, []);
 
 function handleClick() {
   history.goBack();
@@ -111,7 +91,7 @@ const dataTaskPaginated = dataTask.slice((pageTask - 1) * 10, pageTask * 5);
               <thead>
                 <tr>
                   {
-                    sessionStorage.getItem('role') === 'user' ?
+                    userRole === 'user' ?
                     <th>#</th>:
                     null
                   }
@@ -136,9 +116,8 @@ const dataTaskPaginated = dataTask.slice((pageTask - 1) * 10, pageTask * 5);
                   
                  item.status === statusNama || item.status === "Selesai" || item.status === "On progress" ? (
                   <tr key={item.id} >
-                    {console.log(item.status)}
                     {
-                      sessionStorage.getItem('role') === 'user' ?
+                      userRole === 'user' ?
                       <td onClick={() => toggleStar(item.id,item.pivot.is_favorite)}>
                       {item.pivot.is_favorite === 0 ? <StyledStar className="align-middle" /> : <StyledStarFill className="text-warning" />}
                     </td>
@@ -222,7 +201,7 @@ const dataTaskPaginated = dataTask.slice((pageTask - 1) * 10, pageTask * 5);
               <thead>
                 <tr>
                   {
-                    sessionStorage.getItem('role') === 'user' ?
+                    userRole === 'user' ?
                     <th>#</th>:
                     null
                   }
@@ -246,7 +225,7 @@ const dataTaskPaginated = dataTask.slice((pageTask - 1) * 10, pageTask * 5);
                  item.status === statusNama || item.status === "Selesai" || item.status === "On progress"? (
                   <tr key={item.id} >
                     {
-                      sessionStorage.getItem('role') === 'user' ?
+                      userRole === 'user' ?
                       <td onClick={() => toggleStar(item.id,item.pivot.is_favorite)}>
                       {item.pivot.is_favorite === 0 ? <StyledStar className="align-middle" /> : <StyledStarFill className="text-warning" />}
                     </td>

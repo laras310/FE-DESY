@@ -3,7 +3,7 @@ import { Form, Button, Card, Container, Row  } from "react-bootstrap";
 import { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import axios from "axios";
-// import {CheckPicker, SelectPicker } from 'rsuite';
+import { useSelector } from "react-redux";
 import { ArrowLeftShort} from "react-bootstrap-icons";
 import Select from 'react-select';
 import swal from 'sweetalert';
@@ -12,7 +12,7 @@ export default function BuatTask(){
   const history = useHistory()  
   const [namaUser, setNamaUser] = useState([])
   const [namaUnit, setNamaUnit] = useState([])
-
+  const session = useSelector(state=>state.user.session)
   const [userTags, setUserTags] = useState([
   ]);
   const [isProject, setIsProject] = useState(0);
@@ -57,10 +57,10 @@ export default function BuatTask(){
       try{
         const [request1, request2] = await Promise.all([
           axios.get(`${process.env.REACT_APP_API_HOST}cms/user/get`, {headers: {
-            Authorization: 'Bearer ' + sessionStorage.getItem('access_token')
+            Authorization: 'Bearer ' + session
           }}),
           axios.get(`${process.env.REACT_APP_API_JOBCARD}/task/each-unit`, {headers: {
-            Authorization: 'Bearer ' + sessionStorage.getItem('access_token')
+            Authorization: 'Bearer ' + session
           }}),
         ]);
         const users = request1.data.data;

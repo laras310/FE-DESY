@@ -3,26 +3,15 @@ import { useEffect, useState } from "react";
 import ZeroList from "../includes/ZeroList";
 import axios from "axios";
 import MyBurgerMenu from "../includes/MyBurgerMenu";
-import { Container, Card, Row, Col, Form, InputGroup, FormControl, Tab, Tabs, TabContent} from "react-bootstrap";
+import { Container, Button, Row, Col, Form, InputGroup, FormControl, Tab, Tabs, TabContent} from "react-bootstrap";
 import { Table, Pagination } from 'rsuite';
-import { FilePdf, FileWord,  FileImage, FileArrowDown} from "react-bootstrap-icons";
+import { FilePdf, FileWord,  FileImage, FileArrowDown,Plus, Trash, Pencil, CloudArrowDown, CloudArrowDownFill, PencilFill, TrashFill } from "react-bootstrap-icons";
 import Spinner from 'react-bootstrap/Spinner';
 import styled from 'styled-components';
 import { useSelector } from "react-redux";
-
-export const CustomTabs = styled(Tabs)`
-  .nav-link.active {
-    background-color: red;
-    color: white;
-  }
-
-  .nav-link {
-    background-color: #f0f0f0;
-    color: grey;
-    font-weight:bold;
-  }
-`;
-
+import { useHistory } from "react-router-dom";
+import { CustomTabs } from "../includes/Atom/StyledComponents";
+import swal from 'sweetalert';
 
 const { Column, HeaderCell, Cell } = Table;
 
@@ -38,6 +27,7 @@ export default function Dokumen(){
   const [activeTab, setActiveTab] = useState('dokumen_kms');
   const [contentLoading, setContentLoading] = useState(false);
   const userRole = useSelector(state=>state.user.role)
+  const history = useHistory()
 
   const handleTabChange = (key) => {
     setContentLoading(true);
@@ -47,15 +37,15 @@ export default function Dokumen(){
     }, 500); // 1 detik penundaan
   };
 
-  const filteredData = data.filter(item=>{
+  const filteredData = data?.filter(item=>{
     return (
       item.name.toLowerCase().includes(searchTerm.toLowerCase())
     );
   })
 
-  const filteredDataKms = dataKms.filter(item=>{
+  const filteredDataKms = dataKms?.filter(item=>{
     return (
-      item.name.toLowerCase().includes(searchTerm.toLowerCase())
+      item.file_name.toLowerCase().includes(searchTerm.toLowerCase())
     );
   })
   const getData = () => {
@@ -116,11 +106,6 @@ export default function Dokumen(){
   const handleSearch = (e) => {
     const searchTerm = e.target.value;
     setSearchTerm(searchTerm);
-    // Lakukan sesuatu dengan nilai pencarian, misalnya filter data
-    // const filteredData = filteredData.filter((item) =>
-    //   item.name.toLowerCase().includes(searchTerm.toLowerCase())
-    // );
-    // setFilteredData(filteredData);
     setPage(1); // Reset halaman ketika melakukan pencarian
   };
 
@@ -128,6 +113,29 @@ export default function Dokumen(){
     setPage(1);
     setLimit(dataKey);
   };
+
+  const handleDelete = (path) =>{
+    swal({
+      title:"Hapus Dokumen?",
+      text:"Dokumen yang terhapus tidak dapat dikembalikan.",
+      icon:"warning",
+      buttons:true,
+      dangerMode:true,
+    })
+    .then((willDelete)=>{
+      if(willDelete){
+        axios.delete(`${process.env.REACT_APP_API_JOBCARD}/kms/${path}` , {
+          })
+          .then(responses=>{
+            swal("Dokumen berhasil dihapus.", {
+              icon: "success",
+            }
+           ) ;history.go(0)
+          });
+      }
+    })
+    
+  }
   
     useEffect(() => {
       const apiAllData = `${process.env.REACT_APP_API_JOBCARD}/task/all-document`;
@@ -175,6 +183,18 @@ export default function Dokumen(){
               fill
             >
               <Tab eventKey="dokumen_kms" title="Dokumen KMS">
+              {
+                    userRole === "admin" ?
+                    
+                    <Button className=' mb-3 btn-sm'
+                      onClick={()=>history.push("/tambah-kms")}
+                      ><Plus/>
+                      Tambah KMS</Button>
+                    :
+                    null
+
+                  }
+
                 <Row>
                   <Col>
                     <Form className='d-flex'>
@@ -188,6 +208,7 @@ export default function Dokumen(){
                       </InputGroup>
                     </Form>
                   </Col>
+
                 </Row>
                 {
                   contentLoading ? 
@@ -217,32 +238,38 @@ export default function Dokumen(){
                           <HeaderCell>No</HeaderCell>
                           <Cell>{(rowData, rowIndex) => <div>{rowIndex + 1}</div>}</Cell>
                       </Column>
+                      
                       <Column align="center" width={80} >
                           <HeaderCell>Tipe</HeaderCell>
                           <Cell >
                           {rowData =>
                             {
-                                const fileExtension = rowData.name.match(/\.([a-zA-Z0-9]+)$/)[1].toLowerCase();
+                              const fileExtensionMatch = rowData.path && rowData.path.match(/\.([a-zA-Z0-9]+)$/);
 
-                                if (fileExtension === "pdf") {
+                              if (fileExtensionMatch && fileExtensionMatch[1]) {
+                                  const fileExtension = fileExtensionMatch[1].toLowerCase();
+                                  if (fileExtension === "pdf") {
                                     return <FilePdf size={30} color="red" />;
                                 } else if (fileExtension === "jpg" || fileExtension === "jpeg" || fileExtension === "png") {
                                     return <FileImage size={30}  />;
                                 } else {
                                     return <FileWord size={30} color="blue" />;
                                 }
+                              } else {
+                                  return null
+                              }
                             }
                         }
 
                           </Cell>
                       </Column>
                       <Column align="center" flexGrow={2} minWidth={200}>
-                          <HeaderCell>Nama Task/Project</HeaderCell>
-                          <Cell dataKey="name" />
+                          <HeaderCell>Nama Project</HeaderCell>
+                          <Cell dataKey="project_name" />
                       </Column>
                       <Column align="center" flexGrow={2} minWidth={200}>
                           <HeaderCell>Nama file</HeaderCell>
-                          <Cell dataKey="name" />
+                          <Cell dataKey="file_name" />
                       </Column>
 
                       <Column align="center" flexGrow={2} minWidth={200}>
@@ -251,10 +278,31 @@ export default function Dokumen(){
                           
                               {rowData =>
                             
-                                <a class="link-dark link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover"
-                                href={'https://jobcard-api.pins.co.id/evidence/'+ rowData.name} >
-                              <p 
-                              ><FileArrowDown className='fs-4'/> Download </p></a>
+                            <>
+                            <a class="link-dark link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover"
+                            href={`https://jobcard-api.pins.co.id/`+ rowData.path} download="tes.pdf"
+                            target="_blank" rel="noopener noreferrer"
+                            >
+                              
+                          <Button className="btn-success "
+                          ><CloudArrowDownFill className='fs-4'/> </Button></a>
+                          {
+                            userRole === "admin" ?
+                            <>
+                            <a class="link-dark link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover mx-2"
+                            href={'https://jobcard-api.pins.co.id/evidence/'+ rowData.name} 
+                            >
+                          <Button className="btn-warning"
+                          ><PencilFill className='fs-4'/> </Button></a>
+                          
+                          <Button className="btn-danger" onClick={()=>handleDelete(rowData.id)}
+                          ><TrashFill className='fs-4'/> </Button>
+                            </>
+                            :
+                            null
+                          }
+                          
+                          </>
                             
                         }
                           </Cell>
@@ -270,9 +318,9 @@ export default function Dokumen(){
                     ellipsis
                     boundaryLinks
                     maxButtons={5}
-                    size='xs'
+                    // size='xs'
                     // layout={['total', '-', 'limit', '|', 'pager', 'skip']}
-                    total={filteredData.length}
+                    total={filteredDataKms.length}
                     limitOptions={[10, 30, 50]}
                     limit={limit}
                     activePage={page}
@@ -287,7 +335,9 @@ export default function Dokumen(){
               
                 
               </Tab>
-              <Tab eventKey="seluruh_dokumen" title="Seluruh Dokumen">
+              {
+                userRole === "admin" ?
+<Tab eventKey="seluruh_dokumen" title="Seluruh Dokumen">
                 <Row>
                   <Col>
                     <Form className='d-flex'>
@@ -316,7 +366,7 @@ export default function Dokumen(){
                 <>
                   <Table
                   // virtualized 
-                  autoHeight="true"
+                  autoHeight
                   bordered
                   loading={loading}
                   data={getData()}
@@ -360,10 +410,13 @@ export default function Dokumen(){
                           
                               {rowData =>
                             
-                                <a class="link-dark link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover"
-                                href={'https://jobcard-api.pins.co.id/evidence/'+ rowData.name} >
-                              <p 
-                              ><FileArrowDown className='fs-4'/> Download </p></a>
+                              <a class="link-dark link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover"
+                              href={'https://jobcard-api.pins.co.id/evidence/'+ rowData.name}  
+                            target="_blank" rel="noopener noreferrer"
+                            >
+                              
+                          <Button className="btn-success "
+                          ><CloudArrowDownFill className='fs-4'/> </Button></a>
                             
                         }
                           </Cell>
@@ -379,7 +432,7 @@ export default function Dokumen(){
                     ellipsis
                     boundaryLinks
                     maxButtons={5}
-                    size='xs'
+                    // size='xs'
                     // layout={['total', '-', 'limit', '|', 'pager', 'skip']}
                     total={filteredData.length}
                     limitOptions={[10, 30, 50]}
@@ -396,6 +449,10 @@ export default function Dokumen(){
               
                 
               </Tab>
+              :
+              null
+              }
+              
             </CustomTabs>
 
 

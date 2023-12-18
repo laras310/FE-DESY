@@ -4,21 +4,15 @@ import styled from 'styled-components';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useHistory, useLocation  } from 'react-router-dom';
-
-const StyledCard = styled(Card)`
-  transition: transform 0.2s;
-
-  &:hover {
-    transform: scale(1.03);
-  }
-`;
+import { useSelector } from 'react-redux';
+import { StyledCard } from '../includes/Atom/StyledComponents';
 
 function DaftarPekerjaan() {
   const history = useHistory();
-  const user_id = sessionStorage.getItem('user_id')
+  const user_id = useSelector(state=>state.user.profile.id)
   const [dataAll, setDataAll] = useState([])
-
-  // const [modalDetailShow, setModalDetailShow]= useState(false)
+  const session = useSelector(state=>state.user.session)
+  let isAnyFavorite = 0
   
   useEffect(() => {
 
@@ -26,13 +20,16 @@ function DaftarPekerjaan() {
       method: "GET",
       url: `${process.env.REACT_APP_API_JOBCARD}/task/by-user?user_id=`+ user_id,
       headers: {
-        Authorization: 'Bearer ' + sessionStorage.getItem('access_token')
+        Authorization: 'Bearer ' + session
       },
     })
       .then((response) => {
         const res = response.data.data;
         setDataAll(res.tasks.progress)
-        // console.log(res.tasks)
+
+        if (dataAll?.length > 0){
+          isAnyFavorite = dataAll.progress.some(data => data.pivot.is_favorite === 1 && data.type==="1");
+        }
       })
       .catch((error) => {
         if (error.response) {
@@ -46,14 +43,7 @@ function DaftarPekerjaan() {
         }
       });
   }, []);
-  
-  let isAnyFavorite = 0
-  // console.log(dataAll.length)
-  if (dataAll.length > 0){
-    isAnyFavorite = dataAll.progress.some(data => data.pivot.is_favorite === 1 && data.type==="1");
-  }
-  
-  // const isAnyFavorite =1
+
 
   return (
     <div>
@@ -73,7 +63,8 @@ function DaftarPekerjaan() {
                     <Col md={4} key={data.id}>
                       <StyledCard className='my-3'>
                         <Card.Body>
-                          <Card.Title onClick={() => history.push({ pathname: '/timeline', state: { data: data } })}>
+                          <Card.Title onClick={() => history.push({ pathname: '/timeline', state: { data: data } })}
+                          style={{ cursor: 'pointer' }}>
                             {data.name}
                           </Card.Title>
                           <Card.Text>{data.unit.name}</Card.Text>
@@ -105,6 +96,7 @@ function DaftarPekerjaan() {
                     <StyledCard className="my-3 p-2" key={data.id}>
                         <Card.Title
                         onClick={()=>history.push({pathname:'/timeline', state:{data:data}})}
+                        style={{ cursor: 'pointer' }}
                         >{data.name}</Card.Title>
                         <p>{data.unit.name}</p>
                     </StyledCard>
@@ -113,7 +105,7 @@ function DaftarPekerjaan() {
                   ))
                 }
                 <Button className='btn-danger'
-                onClick={()=>history.push("/list-pekerjaan", {status:'On progress', user_id:user_id})}
+                onClick={()=>history.push("/list-pekerjaan", {status:'On progress', data:dataAll})}
                 >Lihat Semua Project</Button>
                 
               </Card.Body>
@@ -137,7 +129,7 @@ function DaftarPekerjaan() {
                   ))
                 }
                 <Button className='btn-danger'
-                onClick={()=>history.push("/list-pekerjaan", {status:'On progress', user_id:user_id})}
+                onClick={()=>history.push("/list-pekerjaan", {status:'On progress', data:dataAll})}
                 >Lihat Semua Project</Button>
                 
               </Card.Body>

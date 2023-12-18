@@ -17,6 +17,7 @@ import Dokumen from './components/pages/Dokumen';
 import { useSelector } from 'react-redux';
 import Cookies from 'js-cookie';
 import { useEffect } from 'react';
+import TambahKms from './components/pages/TambahKms';
 
 function App() {
   const time = useSelector(state=>state.user.timestamp)
@@ -74,6 +75,11 @@ function App() {
       isAuthorized={isAuthorized && userRole === 'admin'}
     />
     <ProtectedRoute
+      exact path="/tambah-kms"
+      component={TambahKms}
+      isAuthorized={isAuthorized && userRole === 'admin'}
+    />
+    <ProtectedRoute
       exact path="/update-task"
       component={UpdateTask}
       isAuthorized={isAuthorized && userRole === 'user'}
@@ -83,6 +89,7 @@ function App() {
       component={EditTask}
       isAuthorized={isAuthorized && userRole === 'admin'}
     />
+    
     <ProtectedRoute
       exact path="/listperunit"
       component={ListPekerjaanUnit}

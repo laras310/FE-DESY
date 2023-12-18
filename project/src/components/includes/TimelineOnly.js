@@ -1,10 +1,10 @@
 import { Timeline } from 'rsuite';
 import { format, parseISO } from 'date-fns'; 
 import { FileArrowDown } from 'react-bootstrap-icons';
-import { Row, Col, Container, Card } from 'react-bootstrap';
+import { Row, Col } from 'react-bootstrap';
 
 export default function TimelineOnly({data}){
-  console.log(data.created_at)
+
     return(
     <Row>
       <Col >

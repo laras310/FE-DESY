@@ -47,70 +47,7 @@ const PersonCard = () => {
       );
       setFilteredData(filteredData);
       };
-    
-  // const fetchPerPerson = async (event) => {
-  //   event.preventDefault();
-  //   setLoading(true)
-
-  //     try {
-  //       const result = await dispatch(fetchPerPerson());
-
-  //       if (result.status === 200) {
-  //         setLoading(false)
-  //         setData(result.data.data);
-  //         setFilteredData(result.data.data);
-  //       } else {
-  //         setLoading(false)
-
-  //         // swal('Something Happened!', result.message, 'error');
-  //       }
-  //     } catch (error) {
-  //       setLoading(false)
-  //       if (error.response) {
-  //         // The request was made, but the server responded with a non-2xx status code
-  //         console.error("Error status:", error.response.status);
-  //         console.error("Error data:", error.response.data);
-  //       } else {
-  //         // Something happened in setting up the request that triggered an error
-  //         console.error("Error message:", error.message);
-  //       }
-
-  //       // swal('Something Happened!', 'Login Gagal', 'error');
-  //     }
-  // };
-
   useEffect(() => {
-    // const fetchPerPerson = async () => {
-      
-    //   setLoading(true)
-  
-    //     try {
-    //       const result = await dispatch(fetchPerPerson());
-  
-    //       if (result.status === 200) {
-    //         setLoading(false)
-    //         setData(result.data.data);
-    //         setFilteredData(result.data.data);
-    //       } else {
-    //         setLoading(false)
-  
-    //         // swal('Something Happened!', result.message, 'error');
-    //       }
-    //     } catch (error) {
-    //       setLoading(false)
-    //       if (error.response) {
-    //         // The request was made, but the server responded with a non-2xx status code
-    //         console.error("Error status:", error.response.status);
-    //         console.error("Error data:", error.response.data);
-    //       } else {
-    //         // Something happened in setting up the request that triggered an error
-    //         console.error("Error message:", error.message);
-    //       }
-  
-    //       // swal('Something Happened!', 'Login Gagal', 'error');
-    //     }
-    // };
-    // fetchPerPerson()
     const fetchData = async () => {
       setLoading(true)
       try{

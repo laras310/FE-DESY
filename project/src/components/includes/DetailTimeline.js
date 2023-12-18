@@ -11,7 +11,6 @@ import { useSelector } from 'react-redux';
 
 export default function DetailTimeline(){
     const location = useLocation();
-    // const [userRole, setUserRole] = useState([]);
     const data = location.state.data
     const task_id= data.id
     const [detail, setDetail]= useState([]);
@@ -23,30 +22,32 @@ export default function DetailTimeline(){
         history.goBack();
     }
 
-    useEffect(() => {
-        axios({
-            method: "GET",
-            url: `${process.env.REACT_APP_API_JOBCARD}/task?task_id=`+task_id,
-            headers: {
-              Authorization: 'Bearer ' + sessionStorage.getItem('access_token')
-            },
-          })
-        .then((response)=>{
-            const res= response.data.data
-            setDetail(res)
-        })
-        .catch((error) => {
-            if (error.response) {
-              console.log(error.response.data);
-              console.log(error.response.status);
-              console.log(error.response.headers);
-            } else if (error.request) {
-              console.log(error.request);
-            } else {
-              console.log(error.message);
-            }
-          });
-    },[])
+    // useEffect(() => {
+    //     axios({
+    //         method: "GET",
+    //         url: `${process.env.REACT_APP_API_JOBCARD}/task?task_id=`+task_id,
+    //         headers: {
+    //           Authorization: 'Bearer ' + sessionStorage.getItem('access_token')
+    //         },
+    //       })
+    //     .then((response)=>{
+    //         const res= response.data.data
+    //         setDetail(res)
+            
+    // console.log(res)
+    //     })
+    //     .catch((error) => {
+    //         if (error.response) {
+    //           console.log(error.response.data);
+    //           console.log(error.response.status);
+    //           console.log(error.response.headers);
+    //         } else if (error.request) {
+    //           console.log(error.request);
+    //         } else {
+    //           console.log(error.message);
+    //         }
+    //       });
+    // },[])
 
     return(
         <>
@@ -65,7 +66,7 @@ export default function DetailTimeline(){
                             {userRole === "admin" ?
                             <Container className='d-flex justify-content-end'>
                             <Button className='btn-danger px-3' size="sm"
-                            onClick={()=>history.push({pathname:"/edit-task", state:{detail:detail}})}
+                            onClick={()=>history.push({pathname:"/edit-task", state:{detail:data}})}
                             >Edit</Button>
                             </Container>
                             :
@@ -76,17 +77,17 @@ export default function DetailTimeline(){
                                 <Form.Label column>Nama Proyek</Form.Label>
                                 
                                 <Col xs={8}>
-                                <Form.Control value={detail.name}
+                                <Form.Control value={data?.name}
                                 className='text-break' plaintext readOnly></Form.Control>
                                 </Col>
                             </Form.Group>
                             {
-                                detail.unit != null ? 
+                                data.unit != null ? 
                                 <Form.Group as={Row} className="m-2">
                                 <Form.Label column>Nama Unit</Form.Label>
                                 
                                 <Col xs={8}>
-                                <Form.Control value={detail.unit['name']}
+                                <Form.Control value={data?.unit['name']}
                                 className='text-break' plaintext readOnly></Form.Control>
                                 </Col>
                             </Form.Group>
@@ -94,12 +95,12 @@ export default function DetailTimeline(){
                             null
                             }
                             {
-                                detail.created_at != null ?
+                                data?.created_at != null ?
                                 <Form.Group as={Row} className="m-2">
                                 <Form.Label column>Tanggal Mulai</Form.Label>
                                 
                                 <Col xs={8}>
-                                <Form.Control value={format(parseISO(detail.created_at), 'dd MMMM yyyy HH:mm:ss')
+                                <Form.Control value={format(parseISO(data?.created_at), 'dd MMMM yyyy HH:mm:ss')
                                     }
                                     className='text-break' plaintext readOnly></Form.Control>
                                 </Col>
@@ -110,13 +111,13 @@ export default function DetailTimeline(){
 
 
                             {
-                                detail.pic != null ?
+                                data?.pic != null ?
                                 // <p>tes</p>
                                 <Form.Group as={Row} className="m-2">
                                     <Form.Label column>Nama PIC</Form.Label>
                                     
                                     <Col xs={8}>
-                                    <Form.Control value={detail.pic.name}
+                                    <Form.Control value={data?.pic.name}
                                     className='text-break' plaintext readOnly></Form.Control>
                                     </Col>
                                 </Form.Group>
@@ -129,7 +130,7 @@ export default function DetailTimeline(){
                                 <Form.Label column>Status</Form.Label>
                                 
                                 <Col xs={8}>
-                                <Form.Control value={detail.status}
+                                <Form.Control value={data?.status}
                                 className='text-break' plaintext readOnly></Form.Control>
                                 </Col>
                             </Form.Group>
@@ -137,18 +138,18 @@ export default function DetailTimeline(){
                                 <Form.Label column>Progress</Form.Label>
                                 
                                 <Col xs={8}>
-                                <Form.Control value={detail.progress + '%'}
+                                <Form.Control value={data?.progress + '%'}
                                 className='text-break' plaintext readOnly></Form.Control>
                                 </Col>
                             </Form.Group>
                             {
-                                detail.users != null ?
+                                data?.users != null ?
                                 <Form.Group as={Row} className="m-2">
                                 <Form.Label column>Users</Form.Label>
                                 
                                 <Col xs={8}>
                                 {
-                                    detail.users.map((user)=>(
+                                    data?.users.map((user)=>(
                                         <Form.Control value={user['name']} key={user['id']}
                                         className='text-break' plaintext readOnly></Form.Control>
                                     ))
@@ -178,7 +179,7 @@ export default function DetailTimeline(){
                     </Col>
                     <Col md={6} className='mb-3'>
                     <h1>Timeline</h1>
-                    <TimelineOnly data={detail}/>
+                    <TimelineOnly data={data}/>
                     </Col>
                 </Row>
             </Container>
