@@ -56,7 +56,15 @@ const PersonCard = () => {
         setData(newData);
         setFilteredData(newData);
       } catch(error){
+
         console.error('error fetching data:', error);
+        if (error.response && error.response.status === 500) {
+          console.error('Server Error: 500 Internal Server Error');
+          // Tampilkan pesan khusus untuk kesalahan 500
+          // Misalnya, Anda dapat menggunakan notifikasi atau mengubah state untuk menampilkan pesan di antarmuka pengguna.
+        } else {
+          // Tangani kesalahan lain jika diperlukan
+        }
       }finally{
         setLoading(false);
       }

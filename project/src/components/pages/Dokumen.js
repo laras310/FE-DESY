@@ -3,13 +3,12 @@ import { useEffect, useState } from "react";
 import ZeroList from "../includes/ZeroList";
 import axios from "axios";
 import MyBurgerMenu from "../includes/MyBurgerMenu";
-import { Container, Button, Row, Col, Form, InputGroup, FormControl, Tab, Tabs, TabContent} from "react-bootstrap";
+import { Container, Button, Row, Col, Form, InputGroup, FormControl, Tab} from "react-bootstrap";
 import { Table, Pagination } from 'rsuite';
-import { FilePdf, FileWord,  FileImage, FileArrowDown,Plus, Trash, Pencil, CloudArrowDown, CloudArrowDownFill, PencilFill, TrashFill } from "react-bootstrap-icons";
+import { FilePdf, FileWord,  FileImage,Plus, CloudArrowDownFill, PencilFill, TrashFill } from "react-bootstrap-icons";
 import Spinner from 'react-bootstrap/Spinner';
-import styled from 'styled-components';
 import { useSelector } from "react-redux";
-import { useHistory } from "react-router-dom";
+import { useHistory, Link } from "react-router-dom";
 import { CustomTabs } from "../includes/Atom/StyledComponents";
 import swal from 'sweetalert';
 
@@ -236,7 +235,7 @@ export default function Dokumen(){
                   >
                       <Column align="center" width={80}>
                           <HeaderCell>No</HeaderCell>
-                          <Cell>{(rowData, rowIndex) => <div>{rowIndex + 1}</div>}</Cell>
+                          <Cell>{(rowData, rowIndex) => <div>{rowIndex + 1} </div>}</Cell>
                       </Column>
                       
                       <Column align="center" width={80} >
@@ -279,22 +278,28 @@ export default function Dokumen(){
                               {rowData =>
                             
                             <>
+                            
+                            {/* Download button */}
                             <a class="link-dark link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover"
                             href={`https://jobcard-api.pins.co.id/`+ rowData.path} download="tes.pdf"
                             target="_blank" rel="noopener noreferrer"
                             >
-                              
+                          
                           <Button className="btn-success "
                           ><CloudArrowDownFill className='fs-4'/> </Button></a>
                           {
                             userRole === "admin" ?
                             <>
-                            <a class="link-dark link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover mx-2"
-                            href={'https://jobcard-api.pins.co.id/evidence/'+ rowData.name} 
+
+                            {/* Edit button */}
+                            <Link class="link-dark link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover mx-2"
+                            to={{pathname: "/edit-kms", state:rowData}} 
                             >
                           <Button className="btn-warning"
-                          ><PencilFill className='fs-4'/> </Button></a>
+                          ><PencilFill className='fs-4'/> </Button></Link>
                           
+
+                          {/* delete button */}
                           <Button className="btn-danger" onClick={()=>handleDelete(rowData.id)}
                           ><TrashFill className='fs-4'/> </Button>
                             </>

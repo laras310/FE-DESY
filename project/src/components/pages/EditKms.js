@@ -1,33 +1,46 @@
 import AdminMenu from "../includes/MenuAdmin";
-import { Form, Button, Card, Container  } from "react-bootstrap";
+import { Form, Button, Card, Container, Row, Spinner} from "react-bootstrap";
 import { useEffect, useState } from "react";
-import { useHistory } from "react-router-dom";
+import { useHistory, useLocation } from "react-router-dom";
 import axios from "axios";
-import { useSelector } from "react-redux";
 import { ArrowLeftShort} from "react-bootstrap-icons";
-import { Uploader} from 'rsuite';
+import Select from 'react-select';
 import swal from 'sweetalert';
+import { useSelector } from "react-redux";
+import { Uploader } from "rsuite";
 import { useRef } from "react";
 
-export default function TambahKms(){
-  const history = useHistory()
+export default function EditKms(){
+  const history = useHistory()  
+  const location = useLocation()
+  const [loading, setLoading] = useState(false)
   const session = useSelector(state=>state.user.session)
-
-  const [fileList, setFileList] = useState([]);
-  const [selectedValue, setSelectedValue] = useState({
-    projectName:'',
-    fileName:'',
-    file:''
-  });
+  const data = location.state;
   const uploader = useRef();
+  const [fileList, setFileList] = useState([{
+    name:data.file_name,
+    url : data.path
+  }]);
+  
+  const [selectedValue, setSelectedValue] = useState({
+    project_name:data.project_name,
+    file_name:data.file_name,
+  });
 
+  const handlePreview = (filelist) => {
+    // Tampilkan pratinjau file dalam tampilan modul atau lakukan tindakan kustom lainnya
+    window.open(`https://jobcard-api.pins.co.id/`+filelist.url, '_blank').focus()
+  };
+
+
+// handle change project name and file name
   const handleInputChange = (event) =>{
     setSelectedValue(prevNote=> ({
       ...prevNote, [event.target.name]:event.target.value
       }))
       
   }
-
+  //handle change file
   const handleChange = (fileList) => {
     // Validasi jumlah file
     if (fileList.length > 1) {
@@ -48,13 +61,8 @@ export default function TambahKms(){
     // Set file list jika validasi berhasil
     setFileList(fileList);
   };
-  console.log(fileList)
-
-  function handleClick() {
-    history.goBack();
-  }
-
-  const sendForm = async (event) => {
+  
+  const patchForm = async (event) => {
     event.preventDefault();
     const formData = new FormData();
 
@@ -68,18 +76,63 @@ export default function TambahKms(){
           console.error(`File at index ${i} is undefined`);
         }
       }
-    formData.append('project_name', selectedValue.projectName);
-    formData.append('file_name', selectedValue.fileName);
+    formData.append('project_name', selectedValue.project_name);
+    formData.append('file_name', selectedValue.file_name);
 
-    const response = await axios.post(`${process.env.REACT_APP_API_JOBCARD}/kms`, formData, {
+    const response = await axios.post(`${process.env.REACT_APP_API_JOBCARD}/kms/${data.path}`, formData, {
         headers: {
           Authorization: 'Bearer ' + session,
           'Content-Type': 'multipart/form-data',
         },
       });
-      swal('Berhasil', 'Dokumen berhasil ditambahkan', "success");
+      swal('Berhasil', 'Dokumen berhasil diedit', "success");
       history.goBack()
   }
+
+  // const patchForm = (e) =>{
+  //   axios({
+  //     method: 'PATCH',
+  //     headers: {
+  //       Authorization: 'Bearer ' + session
+  //     },
+  //     url: `${process.env.REACT_APP_API_JOBCARD}/kms/${data.path}`,
+  //     data: {
+  //       project_name:selectedValue.project_name,
+  //       file_name:selectedValue.file_name
+  //     },
+  //   })
+  //     .then(response => {
+  //       swal("Berhasil", "Project ditambahkan", "success");
+  //       history.goBack()
+  //     })
+  //     .catch(error => {
+  //       if (error.response) {
+  //         // The request was made, but the server responded with a non-2xx status code
+  //         console.error("Error status:", error.response.status);
+  //         console.error("Error data:", error.response.data);
+  //       } else {
+  //         // Something happened in setting up the request that triggered an error
+  //         console.error("Error message:", error.message);
+  //       }
+  //     });
+  //     e.preventDefault();
+  // }
+
+  function handleClick() {
+    history.goBack();
+  }
+
+  if (loading) {
+    return     <div >
+      <AdminMenu></AdminMenu>
+      <Container className='justify-content-center d-flex align-items-center flex-column p-3 pt-5'>
+      <Spinner animation="border" role="status">
+    <span className="visually-hidden">Loading...</span>
+  </Spinner></Container>
+  </div>
+  }
+
+
     return(
         
       <>
@@ -89,23 +142,24 @@ export default function TambahKms(){
           <Card style={{  marginBottom:'4rem' }}> 
                 <Card.Body>
                 <a onClick={()=>handleClick()} style={{ cursor: 'pointer' }}><ArrowLeftShort/> Back</a>
-                  <h4>Tambah Dokumen KMS</h4>
-                    <Form onSubmit={sendForm}  autoComplete="off">
+                  <h4>Edit  </h4>
+                    <Form 
+                    onSubmit={patchForm}  autoComplete="off"
+                    >
                         <Form.Group>
                             <Form.Label>Nama Proyek</Form.Label>
+                            
                             <Form.Control 
-                            required
                             onChange= {handleInputChange}
-                            name="projectName"
-                            value={selectedValue.projectName}/>
+                            name="project_name"
+                            value={selectedValue.project_name}/>
                         </Form.Group>
                         <Form.Group>
                             <Form.Label>Nama File</Form.Label>
                             <Form.Control 
-                            required
                             onChange= {handleInputChange}
-                            name="fileName"
-                            value={selectedValue.fileName}/>
+                            name="file_name"
+                            value={selectedValue.file_name}/>
                         </Form.Group>
 
                         <Form.Group>
@@ -118,6 +172,7 @@ export default function TambahKms(){
                             onChange={handleChange}
                             ref={uploader}
                             draggable
+                            onPreview={handlePreview}
                             onUpload={() => {
                                 // Menggunakan ref untuk mendapatkan status unggahan
                                 if (uploader.current) {
@@ -125,14 +180,11 @@ export default function TambahKms(){
                                 }
                             }}
                             >
-                                <div style={{ height: 200, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                                    <span>Click or Drag files to this area to upload</span>
-                                </div>
+                                <Button className="btn btn-warning" style={{backgroundColor:"#f0f0f0", color:"black"}}>Select file</Button>
                             </Uploader>
                         </Form.Group>
-                                
-                        <Button onClick={()=>history.goBack()} className="btn-danger" size="small">Batal</Button>
-                        <Button type="submit" className="mx-4">Submit</Button>
+                        <Button onClick={()=>history.goBack()} className="btn-danger my-4" size="small">Batal</Button>
+                        <Button type="submit" className="m-4">Submit</Button>
                     </Form>
                 </Card.Body>
             
