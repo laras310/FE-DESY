@@ -22,8 +22,6 @@ export default function TableAdmin({ data }) {
   const filteredData = allData.filter(item=>{
     return (
       item.name.toLowerCase().includes(searchTerm.toLowerCase()) 
-      // || item.gender.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      // item.email.toLowerCase().includes(searchTerm.toLowerCase())
     );
   })
   const getData = () => {
@@ -62,11 +60,6 @@ export default function TableAdmin({ data }) {
   const handleSearch = (e) => {
     const searchTerm = e.target.value;
     setSearchTerm(searchTerm);
-    // Lakukan sesuatu dengan nilai pencarian, misalnya filter data
-    // const filteredData = filteredData.filter((item) =>
-    //   item.name.toLowerCase().includes(searchTerm.toLowerCase())
-    // );
-    // setFilteredData(filteredData);
     setPage(1); // Reset halaman ketika melakukan pencarian
   };
 

@@ -40,6 +40,7 @@ export default function EditKms(){
       }))
       
   }
+  console.log(selectedValue, fileList)
   //handle change file
   const handleChange = (fileList) => {
     // Validasi jumlah file
@@ -65,58 +66,36 @@ export default function EditKms(){
   const patchForm = async (event) => {
     event.preventDefault();
     const formData = new FormData();
+    formData.append('project_name', selectedValue.project_name);
+    formData.append('file_name', selectedValue.file_name);
 
     for (let i = 0; i < fileList.length; i++) {
         const file = fileList[i];
       
-        if (file) {
-          formData.append('file', file.blobFile, file.name);
+        if (file.type!=='blob') {
+          formData.append('file', null);
+          
         } else {
           // Handle the case where fileList[i] is undefined
-          console.error(`File at index ${i} is undefined`);
+          formData.append('file', file.blobFile, file.name);
         }
       }
-    formData.append('project_name', selectedValue.project_name);
-    formData.append('file_name', selectedValue.file_name);
 
-    const response = await axios.post(`${process.env.REACT_APP_API_JOBCARD}/kms/${data.path}`, formData, {
+    const response = await axios.patch(`${process.env.REACT_APP_API_JOBCARD}/kms/${data.id}`, formData, {
         headers: {
           Authorization: 'Bearer ' + session,
           'Content-Type': 'multipart/form-data',
         },
       });
-      swal('Berhasil', 'Dokumen berhasil diedit', "success");
+    if (response.status === 200){
+      swal('Berhasil', 'Dokumen berhasil ditambahkan', "success");
       history.goBack()
+    }
+    else{
+      swal('Gagal', 'Dokumen gagal ditambahkan', "error");
+      // history.goBack()
+    }
   }
-
-  // const patchForm = (e) =>{
-  //   axios({
-  //     method: 'PATCH',
-  //     headers: {
-  //       Authorization: 'Bearer ' + session
-  //     },
-  //     url: `${process.env.REACT_APP_API_JOBCARD}/kms/${data.path}`,
-  //     data: {
-  //       project_name:selectedValue.project_name,
-  //       file_name:selectedValue.file_name
-  //     },
-  //   })
-  //     .then(response => {
-  //       swal("Berhasil", "Project ditambahkan", "success");
-  //       history.goBack()
-  //     })
-  //     .catch(error => {
-  //       if (error.response) {
-  //         // The request was made, but the server responded with a non-2xx status code
-  //         console.error("Error status:", error.response.status);
-  //         console.error("Error data:", error.response.data);
-  //       } else {
-  //         // Something happened in setting up the request that triggered an error
-  //         console.error("Error message:", error.message);
-  //       }
-  //     });
-  //     e.preventDefault();
-  // }
 
   function handleClick() {
     history.goBack();

@@ -11,6 +11,8 @@ import { useSelector } from "react-redux";
 import { useHistory, Link } from "react-router-dom";
 import { CustomTabs } from "../includes/Atom/StyledComponents";
 import swal from 'sweetalert';
+import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
+import Tooltip from 'react-bootstrap/Tooltip';
 
 const { Column, HeaderCell, Cell } = Table;
 

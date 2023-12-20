@@ -48,7 +48,6 @@ export default function TambahKms(){
     // Set file list jika validasi berhasil
     setFileList(fileList);
   };
-  console.log(fileList)
 
   function handleClick() {
     history.goBack();
@@ -77,8 +76,15 @@ export default function TambahKms(){
           'Content-Type': 'multipart/form-data',
         },
       });
+    if (response.status === 200){
       swal('Berhasil', 'Dokumen berhasil ditambahkan', "success");
       history.goBack()
+    }
+    else{
+      swal('Gagal', 'Dokumen gagal ditambahkan', "error");
+      // history.goBack()
+    }
+      
   }
     return(
         

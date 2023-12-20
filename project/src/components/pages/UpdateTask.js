@@ -7,6 +7,7 @@ import {Slider, InputNumber, Uploader} from 'rsuite';
 import { useRef } from "react";
 import { ArrowLeftShort } from "react-bootstrap-icons";
 import swal from "sweetalert";
+import { useSelector } from "react-redux";
 
 export default function UpdateTask(){
     const location = useLocation()
@@ -16,7 +17,7 @@ export default function UpdateTask(){
     const [value, setValue] = useState(data.progress);
     const [fileList, setFileList] = useState([]);
     const uploader = useRef();
-    const user_id=sessionStorage.getItem('user_id')
+    const user_id = useSelector(state=>state.user.profile.id)
 
     function handleClick() {
       history.goBack();
@@ -69,6 +70,7 @@ export default function UpdateTask(){
         formData.append('task_id', data.id);
         formData.append('progress', value);
         formData.append('description', description);
+        console.log(user_id)
     
         const response = await axios.post(`${process.env.REACT_APP_API_JOBCARD}/activity`, formData, {
           headers: {
@@ -77,7 +79,8 @@ export default function UpdateTask(){
           },
         });
         swal('Berhasil', 'Update berhasil ditambahkan', "success");
-        window.location.replace("/user-dashboard");
+        
+        window.location.replace("/");
       } 
       catch (error) {
         console.error('Error uploading files:', error);

@@ -2,6 +2,8 @@ import { Timeline } from 'rsuite';
 import { format, parseISO } from 'date-fns'; 
 import { FileArrowDown } from 'react-bootstrap-icons';
 import { Row, Col } from 'react-bootstrap';
+import { useEffect, useState } from 'react';
+import axios from 'axios';
 
 export default function TimelineOnly({data}){
 
@@ -23,10 +25,10 @@ export default function TimelineOnly({data}){
           }
 
             {
-              data.activities != null ?
-              (data.activities.map((task)=>(
+              data?.activities != null ?
+              (data?.activities.map((task)=>(
                 
-                <Timeline.Item 
+                <Timeline.Item  key={data?.activities.id}
                 >
                 
                 <Row >
@@ -48,8 +50,6 @@ export default function TimelineOnly({data}){
                   ) : (
                     null
                   )}
-                  {/* </Card.Body>
-                  </Card> */}
                   </Col>
                   </Row>
                 </Timeline.Item>

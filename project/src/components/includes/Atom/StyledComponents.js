@@ -43,7 +43,7 @@ export const StyledStarFill = styled(StarFill)`
 
 
 export const StyledNavbar = styled(Nav.Link)`
-
+color:grey;
 &.active {
     border-bottom: 2px solid #DC3545 !important; /* Ganti dengan warna yang diinginkan */
     color: #DC3545 !important; /* Warna teks saat aktif */
@@ -51,7 +51,7 @@ export const StyledNavbar = styled(Nav.Link)`
   }
 
   &:hover {
-    // color: #DC3545 !important;
+    color: #DC3545 !important;
     border-bottom: 2px solid #DC3545; /* Ganti dengan warna yang diinginkan */
   }
 `;
