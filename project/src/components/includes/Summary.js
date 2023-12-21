@@ -13,8 +13,8 @@ ChartJS.register(ArcElement, Tooltip, Legend);
 const { Column, HeaderCell, Cell } = Table;
 
 export default function Summary({data}){
-    const [startDate, setStartDate]=useState([]);
-    const [endDate, setEndDate]=useState([]);
+    const [startDate, setStartDate]=useState('');
+    const [endDate, setEndDate]=useState('');
     const session = useSelector(state=>state.user.session)
     // const allData =[...data.idle,...data.progress, ...data.done]; // Define filteredData state
     const [loading, setLoading]= useState(false)
@@ -60,7 +60,7 @@ export default function Summary({data}){
             headers: {
               Authorization: 'Bearer ' + session
             },
-            data:{
+            params:{
                 start_date:startDate,
                 end_date: endDate
             }
@@ -68,6 +68,8 @@ export default function Summary({data}){
             .then((response) => {
               const res = response.data.data;
               allData=res
+              console.log(allData)
+              getData()
             })
             .catch((error) => {
               if (error.response) {
