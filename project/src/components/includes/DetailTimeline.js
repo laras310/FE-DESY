@@ -66,7 +66,6 @@ export default function DetailTimeline(){
               });
             // Set the state with the activity counts
             setActivityCounts(counts);
-            console.log(counts)
           })
           .catch((error) => {
             if (error.response) {

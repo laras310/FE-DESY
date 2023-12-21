@@ -5,6 +5,7 @@ import { Container, Card, Row, Col, Form, InputGroup, FormControl } from 'react-
 import { format, parseISO } from 'date-fns';
 import { useHistory } from 'react-router-dom';
 import Spinner from 'react-bootstrap/Spinner';
+import Summary from './Summary';
 
 const { Column, HeaderCell, Cell } = Table;
 
@@ -17,71 +18,71 @@ export default function TableAdmin({ data }) {
   const [sortType, setSortType] = React.useState();
   const history = useHistory();
   
-  const allData =[...data.idle,...data.progress, ...data.done]; // Define filteredData state
+  // const allData =[...data.idle,...data.progress, ...data.done]; // Define filteredData state
 
-  const filteredData = allData.filter(item=>{
-    return (
-      item.name.toLowerCase().includes(searchTerm.toLowerCase()) 
-    );
-  })
-  const getData = () => {
-    let sortedData = filteredData;
-    if (sortColumn && sortType) {
-      sortedData = filteredData.sort((a, b) => {
-        let x = a[sortColumn];
-        let y = b[sortColumn];
-        if (typeof x === 'string') {
-          x = new Date(x);
-        }
-        if (typeof y === 'string') {
-          y = new Date(y);
-        }
-        if (sortType === 'asc') {
-          return x - y;
-        } else {
-          return y - x;
-        }
-      });
-    }
-    return sortedData.slice((page - 1) * limit, page * limit);
-  };
+  // const filteredData = allData.filter(item=>{
+  //   return (
+  //     item.name.toLowerCase().includes(searchTerm.toLowerCase()) 
+  //   );
+  // })
+  // const getData = () => {
+  //   let sortedData = filteredData;
+  //   if (sortColumn && sortType) {
+  //     sortedData = filteredData.sort((a, b) => {
+  //       let x = a[sortColumn];
+  //       let y = b[sortColumn];
+  //       if (typeof x === 'string') {
+  //         x = new Date(x);
+  //       }
+  //       if (typeof y === 'string') {
+  //         y = new Date(y);
+  //       }
+  //       if (sortType === 'asc') {
+  //         return x - y;
+  //       } else {
+  //         return y - x;
+  //       }
+  //     });
+  //   }
+  //   return sortedData.slice((page - 1) * limit, page * limit);
+  // };
 
-  const handleSortColumn = (sortColumn, sortType) => {
-    setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
-      setSortColumn(sortColumn);
-      setSortType(sortType);
-      setPage(1); // Reset page to 1 when sorting
-    }, 500);
-  };
+  // const handleSortColumn = (sortColumn, sortType) => {
+  //   setLoading(true);
+  //   setTimeout(() => {
+  //     setLoading(false);
+  //     setSortColumn(sortColumn);
+  //     setSortType(sortType);
+  //     setPage(1); // Reset page to 1 when sorting
+  //   }, 500);
+  // };
 
 
-  const handleSearch = (e) => {
-    const searchTerm = e.target.value;
-    setSearchTerm(searchTerm);
-    setPage(1); // Reset halaman ketika melakukan pencarian
-  };
+  // const handleSearch = (e) => {
+  //   const searchTerm = e.target.value;
+  //   setSearchTerm(searchTerm);
+  //   setPage(1); // Reset halaman ketika melakukan pencarian
+  // };
 
-  const handleChangeLimit = (dataKey) => {
-    setPage(1);
-    setLimit(dataKey);
-  };
-  const handleRowClick = (rowData) => {
-    history.push({
-      pathname: '/timeline',
-      state: { data: rowData },
-    });
-  };
+  // const handleChangeLimit = (dataKey) => {
+  //   setPage(1);
+  //   setLimit(dataKey);
+  // };
+  // const handleRowClick = (rowData) => {
+  //   history.push({
+  //     pathname: '/timeline',
+  //     state: { data: rowData },
+  //   });
+  // };
 
   return (
     <Container className='mt-5'>
       <Card style={{  marginBottom:'4rem' }}>
         <Card.Body>
           <h2>All Task</h2>
-          <Button className='btn btn-danger mb-3 btn-sm'
-          onClick={()=>history.push("/buat-task")}>Buat Task Baru</Button>
-          <Row>
+          <Summary data={data}/>
+
+          {/* <Row>
             <Col>
               <Form className='d-flex'>
                 <InputGroup>
@@ -94,6 +95,10 @@ export default function TableAdmin({ data }) {
                 </InputGroup>
               </Form>
             </Col>
+            <Col>
+            <Button className='btn btn-danger mb-3 btn-sm'
+          onClick={()=>history.push("/buat-task")}>Buat Task Baru</Button>
+          </Col>
           </Row>
 {       !filteredData ?    <Spinner animation="border" /> :
   <>
@@ -172,7 +177,7 @@ export default function TableAdmin({ data }) {
             
           </div>
           </>
-            }
+            } */}
         </Card.Body>
       </Card>
     </Container>

@@ -40,7 +40,6 @@ export default function EditKms(){
       }))
       
   }
-  console.log(selectedValue, fileList)
   //handle change file
   const handleChange = (fileList) => {
     // Validasi jumlah file
@@ -68,33 +67,42 @@ export default function EditKms(){
     const formData = new FormData();
     formData.append('project_name', selectedValue.project_name);
     formData.append('file_name', selectedValue.file_name);
+    formData.append('_method', "PATCH");
+
 
     for (let i = 0; i < fileList.length; i++) {
         const file = fileList[i];
       
-        if (file.type!=='blob') {
-          formData.append('file', null);
-          
-        } else {
-          // Handle the case where fileList[i] is undefined
+        if (file.type==='blob') {
           formData.append('file', file.blobFile, file.name);
-        }
+        } 
       }
-
-    const response = await axios.patch(`${process.env.REACT_APP_API_JOBCARD}/kms/${data.id}`, formData, {
+      axios({
+        method: "POST",
+        url: `${process.env.REACT_APP_API_JOBCARD}/kms/${data.id}`,
         headers: {
           Authorization: 'Bearer ' + session,
           'Content-Type': 'multipart/form-data',
         },
+        data:formData
+      })
+      .then((response) => {
+        swal('Berhasil', 'Dokumen berhasil ditambahkan', "success");
+        history.goBack()
+      })
+      .catch((error) => {
+        swal('Gagal', 'Dokumen gagal ditambahkan', "error");
+        if (error.response) {
+          console.log(error.response.data);
+          console.log(error.response.status);
+          console.log(error.response.headers);
+        } else if (error.request) {
+          console.log(error.request);
+        } else {
+          console.log(error.message);
+        }
       });
-    if (response.status === 200){
-      swal('Berhasil', 'Dokumen berhasil ditambahkan', "success");
-      history.goBack()
-    }
-    else{
-      swal('Gagal', 'Dokumen gagal ditambahkan', "error");
-      // history.goBack()
-    }
+
   }
 
   function handleClick() {
@@ -121,7 +129,7 @@ export default function EditKms(){
           <Card style={{  marginBottom:'4rem' }}> 
                 <Card.Body>
                 <a onClick={()=>handleClick()} style={{ cursor: 'pointer' }}><ArrowLeftShort/> Back</a>
-                  <h4>Edit  </h4>
+                  <h4>Edit Dokumen KMS</h4>
                     <Form 
                     onSubmit={patchForm}  autoComplete="off"
                     >
