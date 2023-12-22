@@ -5,7 +5,7 @@ import { Container, Card, Row, Col, Form, InputGroup, FormControl } from 'react-
 import { format, parseISO } from 'date-fns';
 import { useHistory } from 'react-router-dom';
 import Spinner from 'react-bootstrap/Spinner';
-import Summary from './Summary';
+import DataTable from './DataTable';
 
 const { Column, HeaderCell, Cell } = Table;
 
@@ -80,7 +80,8 @@ export default function TableAdmin({ data }) {
       <Card style={{  marginBottom:'4rem' }}>
         <Card.Body>
           <h2>All Task</h2>
-          <Summary data={data}/>
+          <DataTable data={data}/>
+          {/* <Summary data={data}/> */}
 
           {/* <Row>
             <Col>
