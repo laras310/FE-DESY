@@ -407,7 +407,15 @@ export default function Dokumen(){
                           </Cell>
                       </Column>
                       <Column align="center" flexGrow={2} minWidth={200}>
-                          <HeaderCell>Nama Proyek</HeaderCell>
+                          <HeaderCell>Task</HeaderCell>
+                          <Cell dataKey="activity.task.name" />
+                      </Column>
+                      <Column align="center" flexGrow={2} minWidth={200}>
+                          <HeaderCell>Aktivitas</HeaderCell>
+                          <Cell dataKey="activity.description" />
+                      </Column>
+                      <Column align="center" flexGrow={2} minWidth={200}>
+                          <HeaderCell>Nama File</HeaderCell>
                           <Cell dataKey="name" />
                       </Column>
 
