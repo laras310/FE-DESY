@@ -118,11 +118,11 @@ const DataTable = () => {
 
   return (
     <div>
-          <Row className="mb-3">
+          <Row className="mb-5">
         <Col>
-        <Card>
+        {/* <Card>
             
-            <Card.Body>
+            <Card.Body> */}
                 <Row className="justify-content-md-center">
                     
                 <Col s lg="4">
@@ -164,14 +164,15 @@ const DataTable = () => {
                 </Col>
                 </Row>
                     
-            </Card.Body>
-        </Card>
+            {/* </Card.Body>
+        </Card> */}
         </Col>
 
     </Row>
     
     
       <Form>
+        
       <Stack direction="horizontal" gap={3}>
       {/* <div className="py-2 me-auto"> */}
       <Form className="py-2 me-auto">
