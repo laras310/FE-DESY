@@ -7,14 +7,18 @@ import { Image, Dropdown} from 'react-bootstrap';
 import ProfilToggle from './Atom/ProfilToggle';
 import NotifToggle from './Atom/NotifToggle';
 import { useLocation } from 'react-router-dom';
-// import ModalBuatProject from './Atom/ModalBuatProject';
-
+import Cookies from 'js-cookie';
+import axios from 'axios';
+import { useSelector } from 'react-redux';
 import { useState } from 'react';
+
+import StyledNavbar from './Atom/StyledComponents';
 
 export default function AdminMenu(){
   const [showProfilDropdown, setShowProfilDropdown] = useState(false);
   const [showNotifDropdown, setShowNotifDropdown] = useState(false);
   const location = useLocation();
+  const USER = useSelector((state) => state.user);
 
   const handleProfilDropdownToggle = () => {
     setShowProfilDropdown(!showProfilDropdown);
@@ -25,11 +29,15 @@ export default function AdminMenu(){
   };
 
   function logout(event){
+    Cookies.remove('session');
+    axios.get(`${process.env.REACT_APP_API_HOST}auth/token/revoke`)
+    sessionStorage.clear()
     localStorage.clear()
   }
   const menuItems = [
-    { path: '/admin-dashboard', label: 'Home' },
+    { path: '/', label: 'Home' },
     { path: '/all-task', label: 'Proyek' },
+    { path: '/dokumen', label: 'Dokumen' },
     // Tambahkan menu lain jika ada
   ];
   return(
@@ -39,6 +47,7 @@ export default function AdminMenu(){
           <Navbar.Toggle />
           <Navbar.Brand href="/admin-dashboard">
             <Image
+            // src={USER.avatar}
               src="/assets/images/PINS-Logo-IoT2.png"
               height="40"
               className="d-inline-block align-top"
@@ -58,11 +67,11 @@ export default function AdminMenu(){
             </Offcanvas.Title>
           </Offcanvas.Header>
           <Offcanvas.Body>
-          <Nav className="justify-content-end flex-grow-1 pe-3" variant="underline" activeKey={location.pathname}>
+          <Nav className="justify-content-end flex-grow-1 pe-3" activeKey={location.pathname}>
             {menuItems.map((item) => (
-              <Nav.Link key={item.path} href={item.path} className={location.pathname === item.path ? 'active' : ''}>
+              <StyledNavbar key={item.path} href={item.path} className={location.pathname === item.path ? 'active' : ''}>
                 {item.label}
-              </Nav.Link>
+              </StyledNavbar>
             ))}
             </Nav>
                 
@@ -72,6 +81,8 @@ export default function AdminMenu(){
           <Dropdown show={showProfilDropdown} onToggle={handleProfilDropdownToggle} align={'end'}>
             <Dropdown.Toggle as={ProfilToggle} id="dropdown-custom-toggle" />
             <Dropdown.Menu>
+            <Dropdown.Item>{USER?.profile?.name}</Dropdown.Item>
+              <Dropdown.Item>Role : {USER?.role}</Dropdown.Item>
               <Dropdown.Item href="/login"><Button onClick={(logout)} className='btn-danger w-100'
               >Logout</Button></Dropdown.Item>
             </Dropdown.Menu>

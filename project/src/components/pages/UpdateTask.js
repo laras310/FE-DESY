@@ -7,6 +7,7 @@ import {Slider, InputNumber, Uploader} from 'rsuite';
 import { useRef } from "react";
 import { ArrowLeftShort } from "react-bootstrap-icons";
 import swal from "sweetalert";
+import { useSelector } from "react-redux";
 
 export default function UpdateTask(){
     const location = useLocation()
@@ -16,11 +17,33 @@ export default function UpdateTask(){
     const [value, setValue] = useState(data.progress);
     const [fileList, setFileList] = useState([]);
     const uploader = useRef();
-    const user_id=localStorage.getItem('user_id')
+    const user_id = useSelector(state=>state.user.profile.id)
 
     function handleClick() {
       history.goBack();
   }
+
+  const handleChange = (fileList) => {
+    // Validasi jumlah file
+    if (fileList.length > 3) {
+      swal("Warning","Hanya dapat mengunggah maksimal 3 file.","warning");
+      setFileList(fileList.slice(0,3))
+      return;
+    }
+
+    // Validasi ukuran file
+    const invalidFiles = fileList.filter((file) => file.blobFile.size > 2 * 1024 * 1024);
+    if (invalidFiles.length > 0) {
+      swal("Warning","Ukuran total file melebihi batas 2 MB.","warning")
+      const validFiles = fileList.filter((file) => file.blobFile.size <= 2 * 1024 * 1024);
+      setFileList(validFiles);
+      return;
+    }
+
+    // Set file list jika validasi berhasil
+    setFileList(fileList);
+  };
+
   
 
     const handleUpload = async (event) => {
@@ -47,15 +70,17 @@ export default function UpdateTask(){
         formData.append('task_id', data.id);
         formData.append('progress', value);
         formData.append('description', description);
+        console.log(user_id)
     
         const response = await axios.post(`${process.env.REACT_APP_API_JOBCARD}/activity`, formData, {
           headers: {
-            Authorization: 'Bearer ' + localStorage.getItem('access_token'),
+            Authorization: 'Bearer ' + sessionStorage.getItem('access_token'),
             'Content-Type': 'multipart/form-data',
           },
         });
         swal('Berhasil', 'Update berhasil ditambahkan', "success");
-        window.location.replace("/user-dashboard");
+        
+        window.location.replace("/");
       } 
       catch (error) {
         console.error('Error uploading files:', error);
@@ -129,9 +154,10 @@ export default function UpdateTask(){
                       fileList={fileList}
                       accept="image/*,.pdf"
                       autoUpload={false}
-                      onChange={setFileList}
+                      onChange={handleChange}
                       ref={uploader}
                       draggable
+                      multiple
                       onUpload={() => {
                         // Menggunakan ref untuk mendapatkan status unggahan
                         if (uploader.current) {

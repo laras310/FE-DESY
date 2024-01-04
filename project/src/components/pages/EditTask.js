@@ -6,30 +6,29 @@ import axios from "axios";
 import { ArrowLeftShort} from "react-bootstrap-icons";
 import Select from 'react-select';
 import swal from 'sweetalert';
+import { useSelector } from "react-redux";
 
 export default function EditTask(){
   const history = useHistory()  
   const location = useLocation()
   const task = location.state.detail
   const [loading, setLoading] = useState(true)
-
+  const session = useSelector(state=>state.user.session)
   const [namaUser, setNamaUser] = useState([])
   const [namaUnit, setNamaUnit] = useState([])
   const [userTags, setUserTags] = useState([]);
   const [isProject, setIsProject] = useState(task.type);
 
-
-  
   useEffect(()=>{
     
     const fetchPic = async ()=>{
       try{
         const [request1, request2] = await Promise.all([
           axios.get(`${process.env.REACT_APP_API_HOST}cms/user/get`, {headers: {
-            Authorization: 'Bearer ' + localStorage.getItem('access_token')
+            Authorization: 'Bearer ' + session
           }}),
           axios.get(`${process.env.REACT_APP_API_JOBCARD}/task/each-unit`, {headers: {
-            Authorization: 'Bearer ' + localStorage.getItem('access_token')
+            Authorization: 'Bearer ' + session
           }}),
         ]);
 
@@ -120,7 +119,7 @@ const userSuggestions= namaUser.map(user=>{
     axios({
       method: 'PATCH',
       headers: {
-        Authorization: 'Bearer ' + localStorage.getItem('access_token')
+        Authorization: 'Bearer ' + session
       },
       url: `${process.env.REACT_APP_API_JOBCARD}/task/`+task.id,
       data: {

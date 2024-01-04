@@ -4,12 +4,17 @@ import { Navbar, Image, Button } from 'react-bootstrap';
 import { Offcanvas, Nav, Container, Dropdown } from 'react-bootstrap';
 import ProfilToggle from './Atom/ProfilToggle';
 import NotifToggle from './Atom/NotifToggle';
-import { Link, useLocation } from 'react-router-dom';
+import {  useLocation } from 'react-router-dom';
+import axios from 'axios';
+import Cookies from 'js-cookie';
+import { useSelector } from 'react-redux';
+import StyledNavbar from './Atom/StyledComponents';
 
 function MyBurgerMenu() {
   const [showProfilDropdown, setShowProfilDropdown] = useState(false);
   const [showNotifDropdown, setShowNotifDropdown] = useState(false);
   const location = useLocation();
+  const USER = useSelector((state) => state.user);
 
   const handleProfilDropdownToggle = () => {
     setShowProfilDropdown(!showProfilDropdown);
@@ -20,11 +25,15 @@ function MyBurgerMenu() {
   };
 
   function logout(event){
+    Cookies.remove('session');
+    axios.get(`${process.env.REACT_APP_API_HOST}auth/token/revoke`)
+    sessionStorage.clear()
     localStorage.clear()
   }
   const menuItems = [
-    { path: '/user-dashboard', label: 'Home' },
+    { path: '/', label: 'Home' },
     { path: '/daftar-pekerjaan', label: 'Daftar Pekerjaan' },
+    { path: '/dokumen', label: 'Dokumen' },
     // Tambahkan menu lain jika ada
   ];
 
@@ -54,11 +63,12 @@ function MyBurgerMenu() {
             </Offcanvas.Title>
           </Offcanvas.Header>
           <Offcanvas.Body>
-          <Nav className="justify-content-end flex-grow-1 pe-3" variant="underline" activeKey={location.pathname}>
+          <Nav className="justify-content-end flex-grow-1 pe-3" activeKey={location.pathname}>
           {menuItems.map((item) => (
-            <Nav.Link key={item.path} href={item.path} className={location.pathname === item.path ? 'active' : ''}>
-              {item.label}
-            </Nav.Link>
+            <StyledNavbar key={item.path} href={item.path} className={location.pathname === item.path ? 'active' : ''}>
+              <p className="p-0 m-0">{item.label}</p>
+              {/* {item.label} */}
+            </StyledNavbar>
           ))}
           </Nav>
             {/* <Nav className="justify-content-end flex-grow-1 pe-3" variant="pills" activeKey={location.pathname === '/user-dashboard' ? '/user-dashboard' : '/daftar-pekerjaan'}>
@@ -76,6 +86,8 @@ function MyBurgerMenu() {
           <Dropdown show={showProfilDropdown} onToggle={handleProfilDropdownToggle} align={'end'}>
             <Dropdown.Toggle as={ProfilToggle} id="dropdown-custom-toggle" />
             <Dropdown.Menu>
+            <Dropdown.Item>{USER?.profile?.name}</Dropdown.Item>
+              <Dropdown.Item>Role : {USER.role}</Dropdown.Item>
               <Dropdown.Item href="/login"><Button onClick={(logout)} className='btn-danger w-100'
               >Logout</Button></Dropdown.Item>
             </Dropdown.Menu>

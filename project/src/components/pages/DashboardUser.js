@@ -3,55 +3,12 @@ import CardUser from '../includes/CardUser';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Spinner, Container } from 'react-bootstrap';
+import { useSelector } from 'react-redux';
 
-function DashboardUser() {
-  const [profil, setProfil] = useState([]);
-  const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const responseToken = await axios({
-          method: "GET",
-          url: `${process.env.REACT_APP_API_HOST}auth/token/detail`,
-          headers: {
-            Authorization: 'Bearer ' + localStorage.getItem('access_token')
-          }
-        });
-
-        const userId = responseToken.data.data.id;
-        await getProfil(userId);
-        localStorage.setItem(
-          'user_id',
-          userId
-        )
-
-        setLoading(false);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-        setLoading(false);
-      }
-    };
-
-    fetchData();
-  }, []);
-
-  async function getProfil(user_id) {
-    try {
-      const responseProfil = await axios({
-        method: "GET",
-        url: `${process.env.REACT_APP_API_JOBCARD}/task/by-user?user_id=` + user_id,
-        headers: {
-          Authorization: 'Bearer ' + localStorage.getItem('access_token')
-        }
-      });
-
-      const resProfil = responseProfil.data.data;
-      setProfil(resProfil);
-    } catch (error) {
-      console.error("Error fetching profil data:", error);
-    }
-  }
+function DashboardUser({id}) {
+  const [loading, setLoading] = useState(false);
+  const user = useSelector((state) => state.user.profile);
 
   if (loading) {
     return     <div >
@@ -66,9 +23,16 @@ function DashboardUser() {
   return (
     <div>
       <MyBurgerMenu />
-      <Container>
-      <CardUser profil={profil} />
+      <Container >
+        {
+          user ? 
+          // <p>{user.id}</p>
+          <CardUser user_id={user.id} />
+          :
+          null
+        }
       </Container>
+      
     </div>
   );
 }

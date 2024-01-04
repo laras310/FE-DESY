@@ -7,36 +7,67 @@ import { useLocation, useHistory } from "react-router-dom";
 import { format, parseISO } from 'date-fns';
 import TimelineOnly from './TimelineOnly';
 import axios from 'axios';
+import { useSelector } from 'react-redux';
+import {
+    Chart as ChartJS,
+    CategoryScale,
+    LinearScale,
+    BarElement,
+    Title,
+    Tooltip, Colors
+  } from 'chart.js';
+  import { Bar } from 'react-chartjs-2';
+
+  ChartJS.register(
+    CategoryScale,
+    LinearScale,
+    BarElement,
+    Title,
+    Tooltip,
+    Colors
+  );
 
 export default function DetailTimeline(){
     const location = useLocation();
-    const [userRole, setUserRole] = useState([]);
     const data = location.state.data
-    const task_id= data.id
-    const [detail, setDetail]= useState([]);
+    const [activities, setActivities] = useState([]);
+    const [activityCounts, setActivityCounts] = useState({});
+    const userRole = useSelector(state=>state.user.role)
 
     const history = useHistory()
-    useEffect(() => {
-        
-        setUserRole(localStorage.getItem('role')) ;
-        },[])
+
     function handleClick() {
         history.goBack();
     }
-
-    useEffect(() => {
+    useEffect(()=>{
         axios({
-            method: "GET",
-            url: `${process.env.REACT_APP_API_JOBCARD}/task?task_id=`+task_id,
-            headers: {
-              Authorization: 'Bearer ' + localStorage.getItem('access_token')
-            },
-          })
-        .then((response)=>{
-            const res= response.data.data
-            setDetail(res)
+          method: "GET",
+          url: `${process.env.REACT_APP_API_JOBCARD}/task/?task_id=${data.id}`,
+          headers: {
+            Authorization: 'Bearer ' + sessionStorage.getItem('access_token')
+          }
         })
-        .catch((error) => {
+          .then((response) => {
+            const res = response.data.data;
+            setActivities(res);
+            
+            // Create a mapping of user IDs to activity counts
+            const counts = {};
+
+            // Iterate through activities and count for each user
+            res.activities.forEach(activity => {
+                const userId = activity.user_id;
+
+                if (!counts[userId]) {
+                  counts[userId] = 1;
+                } else {
+                  counts[userId]++;
+                }
+              });
+            // Set the state with the activity counts
+            setActivityCounts(counts);
+          })
+          .catch((error) => {
             if (error.response) {
               console.log(error.response.data);
               console.log(error.response.status);
@@ -47,8 +78,32 @@ export default function DetailTimeline(){
               console.log(error.message);
             }
           });
-    },[])
+      }, [])
 
+  // Generate random colors for each user ID
+  const getRandomColor = () => {
+    const letters = '0123456789ABCDEF';
+    let color = '#';
+    for (let i = 0; i < 6; i++) {
+      color += letters[Math.floor(Math.random() * 16)];
+    }
+    return color;
+  };
+    
+      // Convert data for chart
+      const chartData = {
+        labels: Object.keys(activityCounts).map(userId => {
+          const userName = activities?.users.find(user => user.id === parseInt(userId, 10)).name;
+          return `${userName}`;
+        }),
+        datasets: [
+          {
+            label: 'Activity Counts',
+            backgroundColor: Object.keys(activityCounts).map((userId) => getRandomColor()),
+            data: Object.values(activityCounts),
+          },
+        ],
+      };
     return(
         <>
         {
@@ -66,7 +121,7 @@ export default function DetailTimeline(){
                             {userRole === "admin" ?
                             <Container className='d-flex justify-content-end'>
                             <Button className='btn-danger px-3' size="sm"
-                            onClick={()=>history.push({pathname:"/edit-task", state:{detail:detail}})}
+                            onClick={()=>history.push({pathname:"/edit-task", state:{detail:data}})}
                             >Edit</Button>
                             </Container>
                             :
@@ -77,17 +132,17 @@ export default function DetailTimeline(){
                                 <Form.Label column>Nama Proyek</Form.Label>
                                 
                                 <Col xs={8}>
-                                <Form.Control value={detail.name}
+                                <Form.Control value={data?.name}
                                 className='text-break' plaintext readOnly></Form.Control>
                                 </Col>
                             </Form.Group>
                             {
-                                detail.unit != null ? 
+                                data.unit != null ? 
                                 <Form.Group as={Row} className="m-2">
                                 <Form.Label column>Nama Unit</Form.Label>
                                 
                                 <Col xs={8}>
-                                <Form.Control value={detail.unit['name']}
+                                <Form.Control value={data?.unit['name']}
                                 className='text-break' plaintext readOnly></Form.Control>
                                 </Col>
                             </Form.Group>
@@ -95,12 +150,12 @@ export default function DetailTimeline(){
                             null
                             }
                             {
-                                detail.created_at != null ?
+                                data?.created_at != null ?
                                 <Form.Group as={Row} className="m-2">
                                 <Form.Label column>Tanggal Mulai</Form.Label>
                                 
                                 <Col xs={8}>
-                                <Form.Control value={format(parseISO(detail.created_at), 'dd MMMM yyyy HH:mm:ss')
+                                <Form.Control value={format(parseISO(data?.created_at), 'dd MMMM yyyy HH:mm:ss')
                                     }
                                     className='text-break' plaintext readOnly></Form.Control>
                                 </Col>
@@ -111,26 +166,25 @@ export default function DetailTimeline(){
 
 
                             {
-                                detail.pic != null ?
+                                data?.pic != null ?
                                 // <p>tes</p>
                                 <Form.Group as={Row} className="m-2">
                                     <Form.Label column>Nama PIC</Form.Label>
                                     
                                     <Col xs={8}>
-                                    <Form.Control value={detail.pic.name}
+                                    <Form.Control value={data?.pic.name}
                                     className='text-break' plaintext readOnly></Form.Control>
                                     </Col>
                                 </Form.Group>
                                 :
                                 null
-                                // console.log(data)
                             }
                             
                             <Form.Group as={Row} className="m-2">
                                 <Form.Label column>Status</Form.Label>
                                 
                                 <Col xs={8}>
-                                <Form.Control value={detail.status}
+                                <Form.Control value={data?.status}
                                 className='text-break' plaintext readOnly></Form.Control>
                                 </Col>
                             </Form.Group>
@@ -138,18 +192,18 @@ export default function DetailTimeline(){
                                 <Form.Label column>Progress</Form.Label>
                                 
                                 <Col xs={8}>
-                                <Form.Control value={detail.progress + '%'}
+                                <Form.Control value={data?.progress + '%'}
                                 className='text-break' plaintext readOnly></Form.Control>
                                 </Col>
                             </Form.Group>
                             {
-                                detail.users != null ?
+                                data?.users != null ?
                                 <Form.Group as={Row} className="m-2">
                                 <Form.Label column>Users</Form.Label>
                                 
                                 <Col xs={8}>
                                 {
-                                    detail.users.map((user)=>(
+                                    data?.users.map((user)=>(
                                         <Form.Control value={user['name']} key={user['id']}
                                         className='text-break' plaintext readOnly></Form.Control>
                                     ))
@@ -163,11 +217,26 @@ export default function DetailTimeline(){
                         </Form>
                         </Card.Body>
                     </Card>
+                    {
+                        userRole === "admin" ?
+                        <Card className='mt-3' style={{maxHeight:"50rem"}}>
+                        <Card.Body>
+                            <Card.Title>Update Task Frequency (total: {activities?.activities?.length})
+                                {console.log(activities?.activities?.length)}
+                                
+                            </Card.Title>
+                            <Bar data={chartData} />
+                        </Card.Body>
+                    </Card>
+                        :
+                        null
+                    }
+                    
                         
                     </Col>
                     <Col md={6} className='mb-3'>
                     <h1>Timeline</h1>
-                    <TimelineOnly data={detail}/>
+                    <TimelineOnly data={activities}/>
                     </Col>
                 </Row>
             </Container>

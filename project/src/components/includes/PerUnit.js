@@ -1,9 +1,12 @@
 import React from 'react';
-import { Card, Col, Container, Form, Row, InputGroup, FormControl } from 'react-bootstrap';
+import { Card, Col, Container, Form, Row, InputGroup, FormControl, Spinner} from 'react-bootstrap';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import styled from 'styled-components';
+import { useDispatch } from 'react-redux';
+import { Pagination } from 'rsuite';
+import { fetchPerUnit } from '../redux/actions/dashboardAdmin';
 
 const StyledCard = styled(Card)`
   // cursor: pointer; 
@@ -25,11 +28,15 @@ const StyledContainer = styled(Container)`
 `;
 
 const ProjectCard = () => {
+    const dispatch = useDispatch()
     const [data, setData]=useState([])
     const [searchTerm, setSearchTerm] =useState('')
-    const history = useHistory()
-
+    const history=useHistory()
+    const [page, setPage] = useState(1)
+    const [loading, setLoading] = useState(false);
+    
     const [filteredData, setFilteredData] = useState([]);
+
     const handleSearch = (e) => {
       const searchTerm = e.target.value;
       setSearchTerm(searchTerm);
@@ -39,65 +46,28 @@ const ProjectCard = () => {
     );
     setFilteredData(filteredData);
     };
-      useEffect(() => {
-          axios({
-            method: "GET",
-            url:`${process.env.REACT_APP_API_JOBCARD}/task/each-unit`,
-            headers: {
-              Authorization: 'Bearer ' + localStorage.getItem('access_token')
-            }
-          })
-            .then((response) => {
-              const res = response.data.data;
-              setData(res);
-              setFilteredData(res)
-              console.log(res)
-            })
-            .catch((error) => {
-              if (error.response) {
-                console.log(error.response.data);
-                console.log(error.response.status);
-                console.log(error.response.headers);
-              } else if (error.request) {
-                console.log(error.request);
-              } else {
-                console.log(error.message);
-              }
-            });
-        }, []);
-        
-        useEffect(() => {
-          // Memantau perubahan nilai profil
-        }, [data]);
-    const calculateProjectCounts = (tasks) => {
-      let idleCount = 0;
-      let onProgressCount = 0;
-      let finishedCount = 0;
-
-      tasks.forEach((task) => {
-        switch (task.status) {
-          case 'Idle':
-            idleCount++;
-            break;
-          case 'On progress':
-            onProgressCount++;
-            break;
-          case 'Finished':
-            finishedCount++;
-            break;
-          default:
-            // Do nothing for other statuses
-            break;
+    useEffect(() => {
+      const fetchData = async () => {
+        setLoading(true)
+        try{
+          const response = await dispatch(fetchPerUnit());
+          const newData=response.data.data;
+          setData(newData);
+          setFilteredData(newData);
+        } catch(error){
+          console.error('error fetching data:', error);
+        }finally{
+          setLoading(false);
         }
-      });
+      };
+      fetchData()
+    }, [page]);
 
-      return { idleCount, onProgressCount, finishedCount };
-    };
-
+    const dataPaginated = filteredData.slice((page - 1) * 9, page * 9);
 
   return (
     <>
-        <Container fluid className="mt-3">
+    <Container fluid className="mt-3">
         <Row>
           <Col >
             <Form className="d-flex">
@@ -113,10 +83,9 @@ const ProjectCard = () => {
           </Col>
         </Row>
       </Container>
-      {filteredData.map((item) => {
-        const { idleCount, onProgressCount, finishedCount } = calculateProjectCounts(item.tasks);
-
-        return (
+      
+      {!loading ? 
+      (dataPaginated.map((item) => 
           <Col md={4} key={item.id}>
             <StyledCard className='my-3 shadow' style={{ minHeight: '30vh' }}>
               <Card.Body className='text-center'>
@@ -126,26 +95,46 @@ const ProjectCard = () => {
 
                 <Card.Text className='d-flex justify-content-center flex-row'>
                   <StyledContainer className='d-flex justify-content-center flex-column'
-                  onClick={()=>history.push("/list-pekerjaan", {status:'idle', user_id:item.id})}>
+                  onClick={()=>history.push("/list-pekerjaan", {status:'idle', data:item.tasks.idle})}>
                     <h5>Idle</h5>
-                    <p className='fs-1'>{idleCount}</p>
+                    <p className='fs-1'>
+                      {item.tasks.idle.length}
+                      </p>
                   </StyledContainer>
                   <StyledContainer className='d-flex justify-content-center flex-column'
-                  onClick={()=>history.push("/listperunit", {status:'On progress', data:item.tasks})}>
+                  onClick={()=>history.push("/list-pekerjaan", {status:'progress', data:item.tasks.progress})}>
                     <h5>Berjalan</h5>
-                    <p className='fs-1'>{onProgressCount}</p>
+                    <p className='fs-1'>{item.tasks.progress.length}</p>
                   </StyledContainer>
                   <StyledContainer className='d-flex justify-content-center flex-column'
-                  onClick={()=>history.push("/list-pekerjaan", {status:'finished', user_id:item.id})}>
+                  onClick={()=>history.push("/list-pekerjaan", {status:'done', data:item.tasks.done})}>
                     <h5>Selesai</h5>
-                    <p className='fs-1'>{finishedCount}</p>
+                    <p className='fs-1'>{item.tasks.done.length}</p>
                   </StyledContainer>
                 </Card.Text>
               </Card.Body>
             </StyledCard>
           </Col>
-        );
-      })}
+      ))
+      :
+      <Container className='d-flex justify-content-center mt-4'>
+      <Spinner></Spinner>
+      </Container>
+    }
+      <div style={{padding:20}}>
+      <Pagination 
+      prev
+      next
+      last
+      first
+      maxButtons={5}
+      size='xs'
+      layout={['total', '-',  '|', 'pager']}
+      total={filteredData.length} 
+      limit={9} 
+      activePage={page} 
+      onChangePage={setPage} />
+      </div>
     </>
   );
 };

@@ -6,6 +6,7 @@ import { useLocation } from "react-router-dom";
 import { format, parseISO } from 'date-fns';
 import AdminMenu from "../includes/MenuAdmin";
 import {Pagination} from "rsuite";
+import { useSelector } from "react-redux";
 import { useState, useEffect } from "react";
 
 export default function ListPekerjaanUnit(){
@@ -13,7 +14,7 @@ export default function ListPekerjaanUnit(){
   const location = useLocation();
   const statusNama = location.state.status;
   const data = location.state.data;
-  const userRole= localStorage.getItem('role')
+  const userRole = useSelector(state=>state.user.role)
   const [dataProject, setDataProject] = useState([])
   const [dataTask, setDataTask] = useState([])
   const [page, setPage] = useState(1);
@@ -66,9 +67,6 @@ const dataTaskPaginated = dataTask.slice((pageTask - 1) * 10, pageTask * 5);
                 (dataProjectPaginated.map((item) => (
                  item.status === statusNama ? (
                   <tr key={item.id} >
-                    {/* <td onClick={() => toggleStar(item.id,item.pivot.is_favorite)}>
-                      {item.pivot.is_favorite === 0 ? <StyledStar className="align-middle" /> : <StyledStarFill className="text-warning" />}
-                    </td> */}
                     <td 
                     onClick={() => history.push({pathname:'/timeline',
                         state:{data:item}})}
@@ -161,9 +159,6 @@ const dataTaskPaginated = dataTask.slice((pageTask - 1) * 10, pageTask * 5);
                 (data.map((item) => (
                  item.status === statusNama ? (
                   <tr key={item.id} >
-                    {/* <td onClick={() => toggleStar(item.id,item.pivot.is_favorite)}>
-                      {item.pivot.is_favorite === 0 ? <StyledStar className="align-middle" /> : <StyledStarFill className="text-warning" />}
-                    </td> */}
                     <td 
                     onClick={() => history.push({pathname:'/timeline',
                         state:{data:item}})}

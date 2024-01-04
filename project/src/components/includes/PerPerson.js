@@ -1,10 +1,13 @@
 import React from 'react';
-import { Card, Col, Container, Form, Row, InputGroup, FormControl } from 'react-bootstrap';
+import { Card, Col, Container, Form, Row, InputGroup, 
+  FormControl, Spinner } from 'react-bootstrap';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom/cjs/react-router-dom.min';
 import styled from 'styled-components';
 import { Pagination } from 'rsuite';
+import { fetchPerPerson } from '../redux/actions/dashboardAdmin';
+import { useDispatch } from 'react-redux';
 
 const StyledCard = styled(Card)`
   // cursor: pointer; 
@@ -27,6 +30,7 @@ const StyledContainer = styled(Container)`
 
 
 const PersonCard = () => {
+    const dispatch = useDispatch()
     const [data, setData]=useState([])
     const [searchTerm, setSearchTerm] =useState('')
     const history=useHistory()
@@ -43,50 +47,24 @@ const PersonCard = () => {
       );
       setFilteredData(filteredData);
       };
-
-  const calculateProjectCounts = (tasks) => {
-    let idleCount = 0;
-    let onProgressCount = 0;
-    let finishedCount = 0;
-
-    tasks.forEach((task) => {
-      switch (task.status) {
-        case 'Idle':
-          idleCount++;
-          break;
-        case 'On progress':
-          onProgressCount++;
-          break;
-        case 'Finished':
-          finishedCount++;
-          break;
-        default:
-          // Do nothing for other statuses
-          break;
-      }
-    });
-
-    return { idleCount, onProgressCount, finishedCount };
-  };
-
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true)
       try{
-        const response = await axios.get(`${process.env.REACT_APP_API_JOBCARD}/task/each-user`, {
-          headers:{
-            Authorization: 'Bearer' + localStorage.getItem('access_token'),
-          },
-          params:{
-            page,
-          },
-          'Access-Control-Allow-Origin':'*',
-        });
+        const response = await dispatch(fetchPerPerson());
         const newData=response.data.data;
         setData(newData);
         setFilteredData(newData);
       } catch(error){
+
         console.error('error fetching data:', error);
+        if (error.response && error.response.status === 500) {
+          console.error('Server Error: 500 Internal Server Error');
+          // Tampilkan pesan khusus untuk kesalahan 500
+          // Misalnya, Anda dapat menggunakan notifikasi atau mengubah state untuk menampilkan pesan di antarmuka pengguna.
+        } else {
+          // Tangani kesalahan lain jika diperlukan
+        }
       }finally{
         setLoading(false);
       }
@@ -112,10 +90,9 @@ const PersonCard = () => {
           </Col>
         </Row>
       </Container>
-      {dataPaginated.map((item) => {
-        const { idleCount, onProgressCount, finishedCount } = calculateProjectCounts(item.tasks);
-
-        return (
+      
+      {!loading ? 
+      (dataPaginated.map((item) => 
           <Col md={4} key={item.id}>
             <StyledCard className='my-3 shadow' style={{ minHeight: '30vh' }}>
               <Card.Body className='text-center'>
@@ -125,26 +102,32 @@ const PersonCard = () => {
 
                 <Card.Text className='d-flex justify-content-center flex-row'>
                   <StyledContainer className='d-flex justify-content-center flex-column'
-                  onClick={()=>history.push("/list-pekerjaan", {status:'idle', user_id:item.id})}>
+                  onClick={()=>history.push("/list-pekerjaan", {status:'idle', data:item.tasks.idle})}>
                     <h5>Idle</h5>
-                    <p className='fs-1'>{idleCount}</p>
+                    <p className='fs-1'>
+                      {item.tasks.idle.length}
+                      </p>
                   </StyledContainer>
                   <StyledContainer className='d-flex justify-content-center flex-column'
-                  onClick={()=>history.push("/list-pekerjaan", {status:'On progress', user_id:item.id})}>
+                  onClick={()=>history.push("/list-pekerjaan", {status:'progress', data:item.tasks.progress})}>
                     <h5>Berjalan</h5>
-                    <p className='fs-1'>{onProgressCount}</p>
+                    <p className='fs-1'>{item.tasks.progress.length}</p>
                   </StyledContainer>
                   <StyledContainer className='d-flex justify-content-center flex-column'
-                  onClick={()=>history.push("/list-pekerjaan", {status:'finished', user_id:item.id})}>
+                  onClick={()=>history.push("/list-pekerjaan", {status:'done', data:item.tasks.done})}>
                     <h5>Selesai</h5>
-                    <p className='fs-1'>{finishedCount}</p>
+                    <p className='fs-1'>{item.tasks.done.length}</p>
                   </StyledContainer>
                 </Card.Text>
               </Card.Body>
             </StyledCard>
           </Col>
-        );
-      })}
+      ))
+      :
+      <Container className='d-flex justify-content-center mt-4'>
+      <Spinner></Spinner>
+      </Container>
+    }
       <div style={{padding:20}}>
       <Pagination 
       prev

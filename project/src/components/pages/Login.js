@@ -5,64 +5,56 @@ import Form from 'react-bootstrap/Form';
 import Card from 'react-bootstrap/Card';
 import { FloatingLabel } from 'react-bootstrap';
 import axios from 'axios';
-import { useState} from 'react';
+import { useEffect, useState} from 'react';
 import Cookies from 'js-cookie';
 import { useHistory } from 'react-router-dom';
 import swal from 'sweetalert';
-
+import { useDispatch } from 'react-redux';
+import {userLogin} from '../redux/actions/user'
 
 export default function Login() {
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
-  const [role, setRole] = useState('')
+  // const [username, setUsername] = useState('')
+  // const [password, setPassword] = useState('')
+  // const [role, setRole] = useState('')
+  const [didMount, setDidMount] = useState(false);
+  const [isSubmit, setIsSubmit] = useState(false);
+  const dispatch = useDispatch();
   const history = useHistory()
   const [validated, setValidated]= useState(false)
+  const [form, setForm] = useState({
+    username: '',
+    password: '',
+    role: ''
+  });
 
-  function LogMeIn(event){
-    const form = event.currentTarget;
-    if (form.checkValidity() === false) {
-      event.preventDefault();
-      event.stopPropagation();
-    }
+  const handlerForm = (event) => {
+    setForm({
+      ...form,
+      [event.target.name]: event.target.value,
+    });
+  };
 
-    setValidated(true);
-    axios({
-      method: 'POST',
-      headers: {
-        "Content-Type": "application/json",
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Headers': '*',
-        // 'Access-Control-Allow-Credentials':'true'
-      },
-      // withCredentials: true,
-      url: `${process.env.REACT_APP_API_HOST}auth/token/request`,
-      data: {
-        username: username,
-        password: password
-      },
-    })
-      .then(response => {swal('Berhasil Login','', 'success')
-        Cookies.set('access_token', response.data.data.access_token);
-        localStorage.setItem(
-          'access_token',
-          response.data.data.access_token
-        )
-        localStorage.setItem(
-          'token_type', response.data.data.token_type
-        )
-        localStorage.setItem('role', role)
-        
-        if (role === 'user') {
-          // history.push({pathname: '/user-dashboard', state:{}})
-          window.location.replace("/user-dashboard");
-          
-        } 
-        else if (role === 'admin') {
-          window.location.replace("/admin-dashboard");
+  const handlerLogin = async (event) => {
+    event.preventDefault();
+
+    if (form.username.length > 1 && form.password.length > 1) {
+      setIsSubmit(true);
+      try {
+        const result = await dispatch(userLogin(form));
+
+        if (result.status === 200) {
+          setIsSubmit(false);
+          swal('Success!', 'Login Successfull!', 'success');
+          // window.location.replace("/");
+          history.push( '/');
+        } else {
+          setIsSubmit(false);
+
+          swal('Something Happened!', result.message, 'error');
         }
-      })
-      .catch(error => {
-        if (error.response) {
+      } catch (error) {
+        setIsSubmit(false);
+                if (error.response) {
           // The request was made, but the server responded with a non-2xx status code
           console.error("Error status:", error.response.status);
           console.error("Error data:", error.response.data);
@@ -70,9 +62,28 @@ export default function Login() {
           // Something happened in setting up the request that triggered an error
           console.error("Error message:", error.message);
         }
-      });
-    
-    event.preventDefault();    
+
+        swal('Something Happened!', 'Login Gagal', 'error');
+      }
+    } else {
+      swal(
+        'Something Happened!',
+        'Username dan Password tidak boleh kosong!',
+        'error',
+      );
+    }
+  };
+
+  useEffect(() => {
+    setDidMount(true);
+
+    return () => {
+      setDidMount(false);
+    };
+  }, [dispatch]);
+
+  if (!didMount) {
+    return null;
   }
   
 
@@ -87,25 +98,26 @@ export default function Login() {
          </Card.Title>
          <Card.Body>Silahkan login untuk melanjutkan</Card.Body>
         
-         <Form className='w-100' onSubmit={LogMeIn}>
+         <Form className='w-100' onSubmit={handlerLogin}>
             <FloatingLabel  controlId="username" label="Username" className='mb-3'
             >
               <Form.Control
               type="text" required
-                placeholder='Username' name="username" onChange={e => setUsername(e.target.value)} value={username}
+                placeholder='Username' name="username" onChange={handlerForm} value={form.username ?? ''}
             />
             </FloatingLabel>
             
            <FloatingLabel  controlId="password" label="Password" className='mb-3'>
             <Form.Control
               type="password" required
-                placeholder='Password' name="password" onChange={e => setPassword(e.target.value)} value={password}
+                placeholder='Password' name="password" onChange={handlerForm} value={form.password ?? ''}
             />
            </FloatingLabel>
            <FloatingLabel controlId="floatingSelect" label="Login as" className='mb-3'>
               <Form.Select aria-label="Floating label select example"
-              value={role}
-              onChange={e => setRole(e.target.value)}
+              value={form.role ?? ''}
+              name="role"
+              onChange={handlerForm}
               required
               >
                 <option  disabled value=""> -- select an option -- </option>
